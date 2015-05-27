@@ -1,0 +1,10 @@
+#
+# spaceship.mtl
+#
+
+newmtl spaceship
+Ka 0.537255 0.196078 0.196078
+Kd 0.537255 0.196078 0.196078
+Ks 0.898039 0.898039 0.898039
+Ns 0.000000
+map_Kd POLYSHIP.JPG
