@@ -1,3 +1,5 @@
 jass.xcodeproj/
 jass*
 *.dll
+Debug/*
+stdout.txt
