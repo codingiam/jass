@@ -1,41 +1,44 @@
-#if !defined(VIDEO_H)
-#define VIDEO_H
+// Copyright (c) 2011, Doru Catalin Budai. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
-#include "main.h"
+#ifndef JASS_SRC_JASS_VIDEO_H_
+#define JASS_SRC_JASS_VIDEO_H_
+#pragma once
+
+#include "jass/jass.h"
 
 typedef GLint vertex2i[2];
 typedef GLfloat vertex3f[3];
 
-class Video {
-	Video();
-	Video(Video &) { }
-    Video & operator= (Video &);
+class Video : boost::noncopyable {
 public:
-	static Video * getVideo() {
-		static Video video;
+  static Video* GetVideo() {
+    static Video video;
+    return &video;
+  }
 
-		return &video;
-	}
-public:
-	void init2DScene( int width, int height );
-	void init3DScene( int width, int height );
-	void initFont();
-	void print( GLint x, GLint y, char *string, int set = 1 );
-	SDL_Surface* loadTexture( char* name );
-	void makeTexture( SDL_Surface* surface, GLuint &texture );
-	void drawTexture(int x, int y, int w, int h, GLuint texture, GLfloat yamount = 0.0f );
-	void getNormal(vertex3f v0, vertex3f v1, vertex3f v2, vertex3f &normal);
-public:
-	~Video();
-public:
-	GLuint fontTexture;
-	GLuint base;
+  ~Video();
 
+  void init2DScene(int width, int height);
+  void init3DScene(int width, int height);
+  void InitFont();
+  void print(GLint x, GLint y, const char* string, int set = 1);
+  SDL_Surface* loadTexture(char* name);
+  void makeTexture(SDL_Surface* surface, GLuint& texture);
+  void drawTexture(int x, int y, int w, int h, GLuint texture, GLfloat yamount = 0.0f);
+  void getNormal(vertex3f v0, vertex3f v1, vertex3f v2, vertex3f& normal);
+
+  GLuint fontTexture;
+  GLuint base;
+
+private:
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	enum { rmask = 0xff000000, gmask = 0x00ff0000, bmask = 0x0000ff00, amask = 0x000000ff };
+  enum { rmask = 0xff000000, gmask = 0x00ff0000, bmask = 0x0000ff00, amask = 0x000000ff };
 #else
-	enum { rmask = 0x000000ff, gmask = 0x0000ff00, bmask = 0x00ff0000, amask = 0xff000000 };
-#endif
+  enum { rmask = 0x000000ff, gmask = 0x0000ff00, bmask = 0x00ff0000, amask = 0xff000000 };
+#endif    
+  Video();
 };
 
-#endif
+#endif  // JASS_SRC_JASS_VIDEO_H_

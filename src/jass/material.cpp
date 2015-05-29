@@ -1,110 +1,117 @@
-#include "material.h"
-#include "video.h"
+// Copyright (c) 2011, Doru Catalin Budai. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#include "jass/material.h"
 
 #include <iostream>
 #include <cstdio>
 
+#include "jass/video.h"
+
 Material::Material() {
-	*name = 0;
-	path = NULL;
-	filename = NULL;
-	format = 0;
-	matTexture = 0;
+  *name = 0;
+  *path = 0;
+  filename = NULL;
+  format = 0;
+  matTexture = 0;
 }
 
 Material::~Material() {
-	if (matTexture) glDeleteTextures( 1, &matTexture );
+  if (matTexture) glDeleteTextures( 1, &matTexture );
 }
 
-void Material::loadMaterial(char *filename, char *path) {
-	char buffer[100];
-	
-	sprintf( buffer, "%s%s", path, filename );
+void Material::loadMaterial(char *filename, const char *path) {
+  char buffer[100];
+  
+  sprintf( buffer, "%s%s", path, filename );
 
-	FILE* fp = fopen( buffer, "r" );
-	if (!fp) return ;
+  FILE* fp = fopen( buffer, "r" );
+  if (!fp) return ;
 
-	this->path = path;
-	this->filename = filename;
+  strncpy(this->path, path, PATH_LENGTH - 1);
+  this->path[PATH_LENGTH - 1] = 0;
 
-	char *cmd, *params, *trimer;
+  this->filename = filename;
 
-	while( !feof( fp ) ) {
-		*buffer = 0; fgets( buffer, 100, fp );
-		cmd = params = trimer = buffer;
+  char *cmd, *params, *trimer;
 
-		while( *trimer >= 32 ) trimer++; *trimer = 0;
+  while( !feof( fp ) ) {
+    *buffer = 0; fgets( buffer, 100, fp );
+    cmd = params = trimer = buffer;
 
-		while( (*params) && (*params != ' ')) params++;
-		
-		cmd[params - buffer] = 0; params++;
+    while( *trimer >= 32 ) trimer++; *trimer = 0;
 
-		if (*cmd) processCmdMat(cmd, params);
-	}
+    while( (*params) && (*params != ' ')) params++;
+    
+    cmd[params - buffer] = 0; params++;
 
-	fclose(fp);
+    if (*cmd) processCmdMat(cmd, params);
+  }
+
+  fclose(fp);
 }
 
 void Material::processCmdMat(char *cmd, char *params) {
-	if (strcmp( cmd, "newmtl" ) == 0) {
-		sprintf( name, "%s", params );
+  if (strcmp( cmd, "newmtl" ) == 0) {
+    sprintf( name, "%s", params );
 
-		return ;
-	}
+    return ;
+  }
 
-	if (strcmp( cmd, "Ka" ) == 0) {
-		sscanf( params, "%f %f %f", &matAmbient[0], &matAmbient[1], &matAmbient[2] );
-		format |= MAT_AMBIENT;
+  if (strcmp( cmd, "Ka" ) == 0) {
+    sscanf( params, "%f %f %f", &matAmbient[0], &matAmbient[1], &matAmbient[2] );
+    format |= MAT_AMBIENT;
 
-		return ;
-	}
+    return ;
+  }
 
-	if (strcmp( cmd, "Kd" ) == 0) {
-		sscanf( params, "%f %f %f", &matDiffuse[0], &matDiffuse[1], &matDiffuse[2] );
-		format |= MAT_DIFFUSE;
+  if (strcmp( cmd, "Kd" ) == 0) {
+    sscanf( params, "%f %f %f", &matDiffuse[0], &matDiffuse[1], &matDiffuse[2] );
+    format |= MAT_DIFFUSE;
 
-		return ;
-	}
+    return ;
+  }
 
-	if (strcmp( cmd, "Ks" ) == 0) {
-		sscanf( params, "%f %f %f", &matSpecular[0], &matSpecular[1], &matSpecular[2] );
-		format |= MAT_SPECULAR;
+  if (strcmp( cmd, "Ks" ) == 0) {
+    sscanf( params, "%f %f %f", &matSpecular[0], &matSpecular[1], &matSpecular[2] );
+    format |= MAT_SPECULAR;
 
-		return ;
-	}
+    return ;
+  }
 
-	if (strcmp( cmd, "Ns" ) == 0) {
-		sscanf( params, "%f", &matShiness );
-		format |= MAT_SHINESS;
+  if (strcmp( cmd, "Ns" ) == 0) {
+    sscanf( params, "%f", &matShiness );
+    format |= MAT_SHINESS;
 
-		return ;
-	}
+    return ;
+  }
 
-	if (strcmp( cmd, "map_Kd" ) == 0) {
-		char buffer[100];
+  if (strcmp( cmd, "map_Kd" ) == 0) {
+    char buffer[100];
 
-		Video* video = Video::getVideo();
-		
-		sprintf( buffer, "%s%s", path, params );
+    Video* video = Video::GetVideo();
+    
+    sprintf( buffer, "%s%s", path, params );
 
-		SDL_Surface * tmp = video->loadTexture( buffer );
-		video->makeTexture( tmp, matTexture );
-		SDL_FreeSurface( tmp );
+    SDL_Surface * tmp = video->loadTexture( buffer );
+    video->makeTexture( tmp, matTexture );
+    SDL_FreeSurface( tmp );
 
-		format |= MAT_TEXTURE;
-	}
+    format |= MAT_TEXTURE;
+  }
 }
 
 void Material::useMaterial() {
-	if (format & MAT_TEXTURE)
-		glBindTexture( GL_TEXTURE_2D, matTexture );
+  if (format & MAT_TEXTURE)
+    glBindTexture( GL_TEXTURE_2D, matTexture );
 
-	if (format & MAT_AMBIENT)
-		glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbient);
-	if (format & MAT_DIFFUSE)
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse);
-	if (format & MAT_SPECULAR)
-		glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
-	if (format & MAT_SHINESS)
-		glMaterialfv(GL_FRONT, GL_SHININESS, &matShiness);
+  if (format & MAT_AMBIENT)
+    glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbient);
+  if (format & MAT_DIFFUSE)
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse);
+  if (format & MAT_SPECULAR)
+    glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
+  if (format & MAT_SHINESS)
+    glMaterialfv(GL_FRONT, GL_SHININESS, &matShiness);
 }

@@ -1,38 +1,37 @@
-#if !defined(APPLICATION_H)
-#define APPLICATION_H
+// Copyright (c) 2011, Doru Catalin Budai. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
-#include "state.h"
-#include "stateintro.h"
-#include "stateplay.h"
-#include "main.h"
+#ifndef JASS_SRC_JASS_APPLICATION_H_
+#define JASS_SRC_JASS_APPLICATION_H_
+#pragma once
 
-class Application {
-	Application();
-	Application(Application &) { }
-    Application & operator= (Application &);
+#include <boost/shared_ptr.hpp>
+
+#include "jass/jass.h"
+
+class StateIntro;
+class StatePlay;
+
+class Application : boost::noncopyable  {
 public:
-	static Application* getApp() {
-		static Application app;
+  enum { kWidth = 800, kHeight = 600, kBpp = 16, kFull = 0 };
 
-		return &app;
-	}
-	
-	void run();
-	void init();
+  Application();
+  ~Application();
+
+  void Initialise();
+  void Run();
+  void Shutdown();
+
 private:
-	void initSDL();
-	void initFMOD();
-//	FMUSIC_MODULE* intromusic;
+  void InitialiseSDL();
+  // void InitialiseFMOD();
+  void InitialiseStates();
 
-public:
-	~Application();
-	enum { width = 800, height = 600, full = 0 };
-
-public:
-	StateIntro* stateIntro;
-	StatePlay* statePlay;
-    SDL_Window *window;
-    SDL_GLContext gl_context;
+  boost::shared_ptr<StateIntro> state_intro_;
+  boost::shared_ptr<StatePlay> state_play_;
+  // FMUSIC_MODULE* intro_music_;
 };
 
-#endif
+#endif  // JASS_SRC_JASS_APPLICATION_H_
