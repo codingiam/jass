@@ -3,3 +3,5 @@ jass*
 *.dll
 Debug/*
 stdout.txt
+packages.config
+packages/
