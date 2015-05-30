@@ -4,10 +4,26 @@
 
 #include "jass/video.h"
 
+#include <iostream>
 #include <sstream>
 #include <cmath>
 
 #include "jass/application.h"
+
+void perspectiveGL( GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar ) {
+    const GLdouble pi = 3.1415926535897932384626433832795;
+    GLdouble fW, fH;
+    
+    //fH = tan( (fovY / 2) / 180 * pi ) * zNear;
+    fH = tan( fovY / 360 * pi ) * zNear;
+    fW = fH * aspect;
+    
+    glFrustum( -fW, fW, -fH, fH, zNear, zFar );
+}
+
+void ortho2D( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top) {
+    glOrtho( left, right, bottom, top, -1, 1 );
+}
 
 Video::Video() {
   fontTexture = 0;
@@ -127,7 +143,7 @@ void Video::init2DScene(int width, int height) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 
-  gluOrtho2D(0.0f, width, height, 0.0f);
+  ortho2D(0.0f, width, height, 0.0f);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -143,7 +159,7 @@ void Video::init3DScene(int width, int height) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 
-  gluPerspective(45.0f, (GLfloat) width / (GLfloat) height, 1.0f, 300.0f);
+  perspectiveGL(45.0f, (GLfloat) width / (GLfloat) height, 1.0f, 300.0f);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
