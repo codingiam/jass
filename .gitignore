@@ -1,7 +1,7 @@
-jass.xcodeproj/
-jass*
+/jass.xcodeproj/
+/jass*
 *.dll
-Debug/*
-stdout.txt
-packages.config
-packages/
+/Debug/*
+/stdout.txt
+/packages.config
+/packages/
