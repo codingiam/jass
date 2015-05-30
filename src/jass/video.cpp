@@ -4,7 +4,6 @@
 
 #include "jass/video.h"
 
-#include <iostream>
 #include <sstream>
 #include <cmath>
 

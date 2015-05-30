@@ -16,6 +16,8 @@
 
 #include <stdexcept>
 
+#include <iostream>
+
 #include "jass/debug.h"
 
 #endif  // JASS_SRC_JASS_JASS_H_

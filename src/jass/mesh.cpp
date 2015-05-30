@@ -4,7 +4,6 @@
 
 #include "jass/mesh.h"
 
-#include <iostream>
 #include <cstdio>
 
 Mesh::Mesh() {

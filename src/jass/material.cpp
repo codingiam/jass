@@ -4,7 +4,6 @@
 
 #include "jass/material.h"
 
-#include <iostream>
 #include <cstdio>
 
 #include "jass/video.h"

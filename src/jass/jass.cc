@@ -4,8 +4,6 @@
 
 #include "jass/jass.h"
 
-#include <iostream>
-
 #include "jass/application.h"
 
 #define STATUS_OK 1
