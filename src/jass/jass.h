@@ -6,11 +6,9 @@
 #define JASS_SRC_JASS_JASS_H_
 #pragma once
 
-#include <glee.h>
-
-#include <SDL/SDL.h>
-#include <SDL/SDL_opengl.h>
-#include <SDL/SDL_image.h>
+#include <SDL.h>
+#include <SDL_opengl.h>
+#include <SDL_image.h>
 
 // #include <fmodex/fmod.h>
 
