@@ -9,15 +9,16 @@
 #include "jass/jass.h"
 
 class Ship : boost::noncopyable {
-public:
+ public:
   Ship(GLfloat xpos, GLfloat ypos, Uint32 id, GLfloat angle);
   void update(const Uint32 dt, const Uint8 *keystate);
-  void getPosition(GLfloat& x, GLfloat& y, GLfloat& angle) { x = xpos; y = ypos; angle = this->angle; };
+  void getPosition(GLfloat *x, GLfloat *y, GLfloat *angle)
+    { *x = xpos; *y = ypos; *angle = this->angle; }
   void setkeys(Uint32 keys[]);
   bool colide(GLfloat x, GLfloat y);
-  GLfloat getLife() { return life; };
+  GLfloat getLife() { return life; }
 
-private:
+ private:
   enum { K_UP = 0, K_DOWN, K_LEFT, K_RIGHT, K_SHOOT, K_SHIELD };
 
   GLfloat angle;

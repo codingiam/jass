@@ -13,14 +13,14 @@
 #define PATH_LENGTH 100
 
 class Mesh : boost::noncopyable {
-public:
+ public:
   Mesh();
   ~Mesh();
 
   void loadMeshObj(const char* filename, const char* path = "./");
   void display();
 
-private:
+ private:
   void processCmdObj(char* cmd, char* params);
   void loadMaterialObj(char* filename);
   void processFace(char* face);

@@ -8,7 +8,7 @@
 
 #include <SDL.h>
 #include <SDL_opengl.h>
-#include <IL/il.h> 
+#include <IL/il.h>
 
 // #include <fmodex/fmod.h>
 

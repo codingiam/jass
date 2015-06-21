@@ -6,16 +6,17 @@
 #define JASS_SRC_JASS_STATE_H_
 #pragma once
 
-#include <map>
-
 #include <boost/weak_ptr.hpp>
+
+#include <map>
+#include <string>
 
 #include "jass/jass.h"
 
 class Video;
 
 class State : boost::noncopyable {
-public:
+ public:
   State(void) { }
   virtual ~State(void) { }
 
@@ -27,15 +28,16 @@ public:
   virtual void Destroy(void) { }
 
   static void Update(void);
-  
+
   static void set_state(State* state);
   static State* state(void) { return state_; }
 
-  static void Register(const std::string& name, const boost::weak_ptr<State>& state);
+  static void Register(const std::string& name,
+    const boost::weak_ptr<State>& state);
   static boost::weak_ptr<State> Find(const std::string& name);
   static boost::weak_ptr<State> Unregister(const std::string& name);
 
-private:
+ private:
   static std::map<std::string, boost::weak_ptr<State>> states;
   static State* state_;
   static State* next_;

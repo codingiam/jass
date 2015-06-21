@@ -17,7 +17,7 @@ class Ship;
 class Mesh;
 
 class StatePlay : public State {
-public:
+ public:
   StatePlay(void);
   virtual ~StatePlay(void);
 
@@ -26,12 +26,12 @@ public:
 
   void addProiectile(Proiectile* proiectil);
 
-protected:
+ protected:
   void Create(void) override;
   void Start(void) override;
   void Stop(void) override;
 
-private:
+ private:
   GLuint bgSpace;
   GLuint bgHealthbar;
   GLuint bgBoard;

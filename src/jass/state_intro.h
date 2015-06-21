@@ -11,19 +11,19 @@
 #include "jass/jass.h"
 
 class StateIntro : public State {
-public:
+ public:
   StateIntro(void);
   virtual ~StateIntro(void);
 
   void Execute(const Uint32 dt, const Uint8 *keystate) override;
   void Render(Video *const video) override;
 
-protected:
+ protected:
   void Create(void) override;
   void Start(void) override;
   void Stop(void) override;
 
-private:
+ private:
   GLuint bgSpace;
   GLuint bgIntro;
   GLuint bgAction;

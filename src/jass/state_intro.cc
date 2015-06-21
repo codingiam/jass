@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/state_introduction.h"
+#include "jass/state_intro.h"
 
 #include "jass/video.h"
 #include "jass/application.h"
@@ -27,39 +27,39 @@ StateIntro::StateIntro() {
   ticksTitle = 0;
   ticksAction = 0;
   ticksIntroText = 0;
-  
+
   speedTitle = 1 * 1000;
   speedAction = 2 * 1000;
   speedIntroText = 10 * 1000;
-    
+
   sizeIntroText = 0;
 
     for (int i = 0; i < 7; i++) {
-      sizeIntroText += strlen(introText[i]); //introText[i].length();
+      sizeIntroText += strlen(introText[i]);  // introText[i].length();
     }
 }
 
 StateIntro::~StateIntro() {
-  if (bgSpace) glDeleteTextures( 1, &bgSpace );
-  if (bgIntro) glDeleteTextures( 1, &bgSpace );
-  if (bgAction) glDeleteTextures( 1, &bgAction );
+  if (bgSpace) glDeleteTextures(1, &bgSpace);
+  if (bgIntro) glDeleteTextures(1, &bgSpace);
+  if (bgAction) glDeleteTextures(1, &bgAction);
 }
 
 void StateIntro::Create() {
   Video* video = Video::GetVideo();
-  //std::cout << video->fontTexture << std::endl;
+  // std::cout << video->fontTexture << std::endl;
 
-  boost::shared_ptr<Image> tmp = video->loadImage( "data\\texturi\\introbg.png" );
-  video->makeTexture( tmp, bgSpace );
+  boost::shared_ptr<Image> tmp = video->loadImage("data\\texturi\\introbg.png");
+  video->makeTexture(tmp, &bgSpace);
 
-  tmp = video->loadImage( "data\\texturi\\title.png" );
-  video->makeTexture( tmp, bgIntro );
+  tmp = video->loadImage("data\\texturi\\title.png");
+  video->makeTexture(tmp, &bgIntro);
 
-  tmp = video->loadImage( "data\\texturi\\action.png" );
-  video->makeTexture( tmp, bgAction );
+  tmp = video->loadImage("data\\texturi\\action.png");
+  video->makeTexture(tmp, &bgAction);
 
   if (!(bgSpace) || !(bgIntro) || !(bgAction)) {
-    throw( std::runtime_error( "Nu am putut crea texturile pentru 'stateintro'." ) );
+    throw std::runtime_error("Nu am putut crea texturile pentru 'stateintro'");
   }
 }
 
@@ -76,10 +76,10 @@ void StateIntro::Execute(const Uint32 dt, const Uint8 *keystate) {
   ticksTitle += dt;
   ticksAction += dt;
   ticksIntroText += dt;
-  
-  alphaTitle = (float) ticksTitle / (float) speedTitle;
-  blueAction = (float) ticksAction / (float) speedAction;
-  positionText = (float) ticksIntroText / (float) speedIntroText;
+
+  alphaTitle = static_cast<float>(ticksTitle) / speedTitle;
+  blueAction = static_cast<float>(ticksAction) / speedAction;
+  positionText = static_cast<float>(ticksIntroText) / speedIntroText;
 
   if (alphaTitle >= 1.0f) alphaTitle = 1.0f;
   if (blueAction >= 1.0f) ticksAction -= speedAction;
@@ -95,31 +95,31 @@ void StateIntro::Execute(const Uint32 dt, const Uint8 *keystate) {
 }
 
 void StateIntro::Render(Video *const video) {
-  glClear( GL_COLOR_BUFFER_BIT ); 
-  video->init2DScene( Window::kWidth, Window::kHeight );
-  
-  glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
-  video->drawTexture( 0, 0, Window::kWidth, Window::kHeight, bgSpace );
+  glClear(GL_COLOR_BUFFER_BIT);
+  video->init2DScene(Window::kWidth, Window::kHeight);
 
-  glColor4f( 1.0f, 1.0f, 1.0f, alphaTitle );
-  video->drawTexture( 272, 8, 256, 64, bgIntro );
+  glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+  video->drawTexture(0, 0, Window::kWidth, Window::kHeight, bgSpace);
 
-  glColor4f( 1.0f, 1.0f - blueAction, blueAction, 1.0f );
-  video->drawTexture( 262, 440, 276, 64, bgAction );
+  glColor4f(1.0f, 1.0f, 1.0f, alphaTitle);
+  video->drawTexture(272, 8, 256, 64, bgIntro);
 
-  glColor3f( 1.0f, 1.0f, 1.0f );
+  glColor4f(1.0f, 1.0f - blueAction, blueAction, 1.0f);
+  video->drawTexture(262, 440, 276, 64, bgAction);
+
+  glColor3f(1.0f, 1.0f, 1.0f);
 
   Uint32 marime = 0;
   char buffer[100 + 1];
 
   for (int i = 0; showTo > 0; i++) {
-    marime = strlen(introText[i]); //introText[i].length();
+    marime = strlen(introText[i]);  // introText[i].length();
     if (marime > showTo) marime = showTo;
-        if (marime > 100) marime = 100;
-        //size_t copied = introText[i].copy(buffer, marime);
-        strncpy(buffer, introText[i], marime);
-        buffer[marime] = '\0';
+    if (marime > 100) marime = 100;
+    // size_t copied = introText[i].copy(buffer, marime);
+    strncpy(buffer, introText[i], marime);
+    buffer[marime] = '\0';
     showTo -= marime;
-    video->print( 90, 105 + 20 * i, buffer);
+    video->print(90, 105 + 20 * i, buffer);
   }
 }

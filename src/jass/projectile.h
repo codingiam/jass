@@ -9,16 +9,16 @@
 #include "jass/jass.h"
 
 class Proiectile : boost::noncopyable {
-public:
+ public:
   Proiectile(GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner);
   void update(const Uint32 dt);
-  void getPos(GLfloat& x, GLfloat& y) { x = xpos; y = ypos; };
+  void getPos(GLfloat *x, GLfloat *y) { *x = xpos; *y = ypos; }
 
   bool sterge;
   GLuint owner;
   GLfloat xpos, ypos;
 
-private:
+ private:
   GLfloat angle;
   Uint32 lifetime;
 };

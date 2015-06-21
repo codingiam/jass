@@ -9,11 +9,11 @@
 #include "jass/jass.h"
 
 class MeshReader : boost::noncopyable {
-public:
-  MeshReader(const char* filename, const char* path = "./");
+ public:
+  explicit MeshReader(const char* filename, const char* path = "./");
   ~MeshReader();
 
-private:
+ private:
   FILE* fp;
 };
 

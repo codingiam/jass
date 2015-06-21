@@ -4,24 +4,27 @@
 
 #include "jass/video.h"
 
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <sstream>
 #include <cmath>
-
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/type_ptr.hpp> 
-#include <glm/gtc/matrix_transform.hpp>
+#include <string>
 
 #include "jass/application.h"
 #include "jass/image.h"
 
-static void perspectiveGL( GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar ) { 
+static void perspectiveGL(GLdouble fovY, GLdouble aspect,
+                          GLdouble zNear, GLdouble zFar) {
   glm::mat4 persp = glm::perspective(fovY, aspect, zNear, zFar);
   glLoadMatrixf(glm::value_ptr(persp));
 }
 
-static void ortho2D( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top) {
-   glm::mat4 ortho = glm::ortho(left, right, bottom, top);
-   glLoadMatrixf(glm::value_ptr(ortho));
+static void ortho2D(GLdouble left, GLdouble right,
+                    GLdouble bottom, GLdouble top) {
+  glm::mat4 ortho = glm::ortho(left, right, bottom, top);
+  glLoadMatrixf(glm::value_ptr(ortho));
 }
 
 Video::Video() {
@@ -39,18 +42,20 @@ boost::shared_ptr<Image> Video::loadImage(boost::filesystem::path const &path) {
   return image;
 }
 
-void Video::makeTexture(boost::shared_ptr<Image> const &image, GLuint &texture) {
-  glGenTextures(1, &texture);
+void Video::makeTexture(boost::shared_ptr<Image> const &image,
+                        GLuint *texture) {
+  glGenTextures(1, texture);
 
-  auto func = [&] (GLuint* pixels, GLuint width, GLuint height) {
-    glBindTexture(GL_TEXTURE_2D, texture);
+  auto func = [texture] (GLubyte *pixels, GLuint width, GLuint height) {
+    glBindTexture(GL_TEXTURE_2D, *texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+      0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
   };
 
   image->withData(func);
@@ -61,7 +66,7 @@ void Video::InitFont() {
     return;
 
   boost::shared_ptr<Image> textura = loadImage("data\\fonturi\\font.png");
-  makeTexture(textura, fontTexture);
+  makeTexture(textura, &fontTexture);
 
   float cx = 0, cy = 0;
 
@@ -95,7 +100,7 @@ void Video::InitFont() {
   }
 }
 
-void Video::print(GLint x, GLint y, const char *string, int set) {
+void Video::print(GLint x, GLint y, const char *text, int set) {
   glBindTexture(GL_TEXTURE_2D, fontTexture);
 
   glLoadIdentity();
@@ -104,7 +109,7 @@ void Video::print(GLint x, GLint y, const char *string, int set) {
 
   glListBase(base - 32 + (128 * 1));
 
-  glCallLists((GLsizei) strlen(string), GL_BYTE, string);
+  glCallLists((GLsizei) strlen(text), GL_BYTE, text);
 }
 
 void Video::init2DScene(int width, int height) {
@@ -161,8 +166,9 @@ void Video::init3DScene(int width, int height) {
   glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 }
 
-void Video::getNormal(const glm::vec3 v0, const glm::vec3 v1, const glm::vec3 v2, glm::vec3 &normal) {
-  normal = glm::normalize(glm::cross(v2 - v0, v1 - v0));
+glm::vec3 Video::getNormal(const glm::vec3 v0, const glm::vec3 v1,
+                           const glm::vec3 v2) {
+  return glm::normalize(glm::cross(v2 - v0, v1 - v0));
 }
 
 void Video::drawTexture(int x, int y, int w, int h, GLuint texture,

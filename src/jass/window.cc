@@ -40,7 +40,7 @@ void Window::Initialize() {
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-  Uint32 video_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;  // | SDL_HWSURFACE;
+  Uint32 video_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;  // SDL_HWSURFACE
 
   if (kFull) {
     video_flags |= SDL_WINDOW_FULLSCREEN;
@@ -61,9 +61,11 @@ void Window::Initialize() {
 
   SDL_GL_SetSwapInterval(0);  // vsync
 
-  std::cout << "SDL initialised succesfully. Video information follows: " << std::endl;
+  std::cout << "SDL initialised succesfully. " <<
+    "Video information follows: " << std::endl;
 
-  // std::cout << " Screen BPP : " << SDL_GetVideoSurface()->format->BitsPerPixel << std::endl;
+  // std::cout << " Screen BPP : " <<
+  //   SDL_GetVideoSurface()->format->BitsPerPixel << std::endl;
   std::cout << " Vendor     : " << glGetString(GL_VENDOR) << std::endl;
   std::cout << " Renderer   : " << glGetString(GL_RENDERER) << std::endl;
   std::cout << " Version    : " << glGetString(GL_VERSION) << std::endl;
@@ -88,7 +90,8 @@ void Window::Initialize() {
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
 
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // GL_PERSPECTIVE_CORRECTION_HINT ||  GL_LINE_SMOOTH_HINT
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); \
+  // GL_PERSPECTIVE_CORRECTION_HINT ||  GL_LINE_SMOOTH_HINT
 
   // glPolygonMode(GL_BACK, GL_LINE);
 

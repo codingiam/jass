@@ -10,31 +10,23 @@
 #define STATUS_ERROR 1
 
 int main(int argc, char *argv[]) {
-//#if defined(_DEBUG) && defined(_WINDOWS)
-//  _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF);
-//#endif
-
   int result = STATUS_ERROR;
 
   try {
-    Application application;  
-    
+    Application application;
+
     application.Initialize();
-    
+
     application.Run();
 
     result = STATUS_OK;
   } catch (const std::runtime_error &e) {
-    std::cout << "Runtime exception caught: " << e.what() << std::endl << "Exiting." << std::endl;
+    std::cout << "Runtime exception caught: " << e.what() << std::endl;
   } catch (const std::exception &e) {
-    std::cout << "Exception caught: " << e.what() << std::endl << "Exiting." << std::endl;
+    std::cout << "Exception caught: " << e.what() << std::endl;
   } catch (...) {
-    std::cout << "Unknown exception caught." << std::endl << "Exiting." << std::endl;
+    std::cout << "Unknown exception caught." << std::endl;
   }
-
-//#if defined(_DEBUG) && defined(_WINDOWS)
-//  _CrtDumpMemoryLeaks();
-//#endif
 
   return result;
 }

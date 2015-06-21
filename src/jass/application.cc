@@ -10,7 +10,7 @@
 #include "jass/states_manager.h"
 
 const Uint32 TARGET_FPS = 60;
-const Uint32 MAX_DT = 1000; // ms
+const Uint32 MAX_DT = 1000;  // ms
 
 const Uint32 TARGET_DT = MAX_DT / TARGET_FPS;
 
@@ -92,7 +92,7 @@ void Application::Tick(const Uint32 dt) {
     window_->SwapBuffers();
 
     SDL_Event sdl_event;
-    
+
     while (SDL_PollEvent(&sdl_event)) {
       if (sdl_event.type == SDL_QUIT) {
         State::set_state(NULL);

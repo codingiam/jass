@@ -7,16 +7,19 @@
 #include <cassert>
 #include <string>
 #include <map>
+#include <utility>
 
-#include "jass/state_introduction.h"
+#include "jass/state_intro.h"
 
 State* State::state_ = NULL;
 State* State::next_ = NULL;
 
 std::map<std::string, boost::weak_ptr<State>> State::states;
 
-void State::Register(const std::string& name, const boost::weak_ptr<State>& state) {
-  const std::map<std::string, boost::weak_ptr<State>>::iterator it = states.find(name); 
+void State::Register(const std::string& name,
+                     const boost::weak_ptr<State>& state) {
+  const std::map<std::string, boost::weak_ptr<State>>::iterator it =
+    states.find(name);
 
   if (it != states.end())
     throw(std::runtime_error("State already registered."));
@@ -28,7 +31,8 @@ void State::Register(const std::string& name, const boost::weak_ptr<State>& stat
 boost::weak_ptr<State> State::Find(const std::string& name) {
   boost::weak_ptr<State> state;
 
-  const std::map<std::string, boost::weak_ptr<State>>::iterator it = states.find(name); 
+  const std::map<std::string, boost::weak_ptr<State>>::iterator it =
+    states.find(name);
   if (it != states.end())
     state = it->second;
 
@@ -38,7 +42,8 @@ boost::weak_ptr<State> State::Find(const std::string& name) {
 boost::weak_ptr<State> State::Unregister(const std::string& name) {
   boost::weak_ptr<State> state;
 
-  const std::map<std::string, boost::weak_ptr<State>>::iterator it = states.find(name); 
+  const std::map<std::string, boost::weak_ptr<State>>::iterator it =
+    states.find(name);
   if (it != states.end()) {
     state = it->second;
     states.erase(it);

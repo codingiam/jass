@@ -6,7 +6,8 @@
 
 #include <cmath>
 
-Proiectile::Proiectile( GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner ) {
+Proiectile::Proiectile(GLfloat xpos, GLfloat ypos,
+                       GLfloat angle, GLuint owner) {
   this->xpos = xpos;
   this->ypos = ypos;
 
@@ -19,12 +20,10 @@ Proiectile::Proiectile( GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner 
 
 void Proiectile::update(const Uint32 dt) {
   Uint32 diff = dt > 25 ? 25 : dt;
-  
-  printf("%u \n", dt);
 
-  GLfloat amy = -0.5f * cos( (float) M_PI * angle / 180 );
-  GLfloat amx = 0.5f * sin( (float) M_PI * angle / 180 );
-  
+  GLfloat amy = -0.5f * cos(static_cast<float>(M_PI) * angle / 180);
+  GLfloat amx = 0.5f * sin(static_cast<float>(M_PI) * angle / 180);
+
   ypos += amy * 0.5f * (diff / 25.0f);
   xpos += amx * 0.5f * (diff / 25.0f);
 

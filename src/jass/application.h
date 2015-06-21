@@ -14,7 +14,7 @@ class Window;
 class StatesManager;
 
 class Application : boost::noncopyable  {
-public:
+ public:
   Application(void);
   ~Application(void);
 
@@ -23,7 +23,7 @@ public:
 
   void Run(void);
 
-private:
+ private:
   void InitializeWindow(void);
   void InitializeVideo(void);
   void InitialiseStates(void);
