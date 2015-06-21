@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_MESH_H_
-#define JASS_SRC_JASS_MESH_H_
+#ifndef JASS_MESH_H_
+#define JASS_MESH_H_
 #pragma once
 
 #include <vector>
@@ -22,7 +22,7 @@ class Mesh : boost::noncopyable {
 
  private:
   void processCmdObj(char* cmd, char* params);
-  void loadMaterialObj(char* filename);
+  void loadMaterialObj(const char* filename);
   void processFace(char* face);
 
   char path_[PATH_LENGTH];
@@ -36,4 +36,4 @@ class Mesh : boost::noncopyable {
   GLuint mesh_;
 };
 
-#endif  // JASS_SRC_JASS_MESH_H_
+#endif  // JASS_MESH_H_

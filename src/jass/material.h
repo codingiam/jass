@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_MATERIAL_H_
-#define JASS_SRC_JASS_MATERIAL_H_
+#ifndef JASS_MATERIAL_H_
+#define JASS_MATERIAL_H_
 #pragma once
 
 #include "jass/jass.h"
@@ -36,4 +36,4 @@ class Material : boost::noncopyable {
   GLfloat matAmbient_[3], matDiffuse_[3], matSpecular_[3], matShiness_;
 };
 
-#endif  // JASS_SRC_JASS_MATERIAL_H_
+#endif  // JASS_MATERIAL_H_

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_APPLICATION_H_
-#define JASS_SRC_JASS_APPLICATION_H_
+#ifndef JASS_APPLICATION_H_
+#define JASS_APPLICATION_H_
 #pragma once
 
 #include <boost/shared_ptr.hpp>
@@ -36,4 +36,4 @@ class Application : boost::noncopyable  {
   boost::shared_ptr<StatesManager> states_manager_;
 };
 
-#endif  // JASS_SRC_JASS_APPLICATION_H_
+#endif  // JASS_APPLICATION_H_

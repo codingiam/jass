@@ -152,7 +152,7 @@ void Mesh::processCmdObj(char *cmd, char *params) {
 */
 }
 
-void Mesh::loadMaterialObj(char *filename) {
+void Mesh::loadMaterialObj(const char *filename) {
   Material* mat = new Material();
 
   mat->loadMaterial(filename, path_);

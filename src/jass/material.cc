@@ -23,7 +23,7 @@ Material::~Material() {
 void Material::loadMaterial(const char *filename, const char *path) {
   char buffer[100];
 
-  _snprintf(buffer, sizeof(buffer), "%s%s\0", path, filename);
+  snprintf(buffer, sizeof(buffer), "%s%s\0", path, filename);
 
   FILE* fp = fopen(buffer, "r");
   if (!fp) return;
@@ -53,7 +53,7 @@ void Material::loadMaterial(const char *filename, const char *path) {
 
 void Material::processCmdMat(char *cmd, char *params) {
   if (strcmp(cmd, "newmtl") == 0) {
-    _snprintf(name_, sizeof(name_), "%s", params);
+    snprintf(name_, sizeof(name_), "%s", params);
 
     return;
   }
@@ -94,7 +94,7 @@ void Material::processCmdMat(char *cmd, char *params) {
 
     Video* video = Video::GetVideo();
 
-    _snprintf(buffer, sizeof(buffer), "%s%s", path_, params);
+    snprintf(buffer, sizeof(buffer), "%s%s", path_, params);
 
     boost::shared_ptr<Image> tmp = video->loadImage(buffer);
     video->makeTexture(tmp, &matTexture_);

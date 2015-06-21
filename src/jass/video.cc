@@ -37,7 +37,9 @@ Video::Video() {
 boost::shared_ptr<Image> Video::loadImage(boost::filesystem::path const &path) {
   boost::shared_ptr<Image> image = boost::shared_ptr<Image>(new Image());
   if (!image->loadImage(path.string())) {
-    throw(std::runtime_error("Could not load image.") );
+    boost::format message =
+      boost::format("Could not load image: %s") % path.string();
+    throw std::runtime_error(message.str());
   }
   return image;
 }
@@ -65,7 +67,7 @@ void Video::InitFont() {
   if ((fontTexture) || (base))
     return;
 
-  boost::shared_ptr<Image> textura = loadImage("data\\fonturi\\font.png");
+  boost::shared_ptr<Image> textura = loadImage("data/fonturi/font.png");
   makeTexture(textura, &fontTexture);
 
   float cx = 0, cy = 0;

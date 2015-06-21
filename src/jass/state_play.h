@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_STATE_PLAY_H_
-#define JASS_SRC_JASS_STATE_PLAY_H_
+#ifndef JASS_STATE_PLAY_H_
+#define JASS_STATE_PLAY_H_
 #pragma once
 
 #include <vector>
@@ -41,4 +41,4 @@ class StatePlay : public State {
   Ship* nava2;
 };
 
-#endif  // JASS_SRC_JASS_STATE_PLAY_H_
+#endif  // JASS_STATE_PLAY_H_

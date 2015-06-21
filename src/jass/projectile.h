@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_PROJECTILE_H_
-#define JASS_SRC_JASS_PROJECTILE_H_
+#ifndef JASS_PROJECTILE_H_
+#define JASS_PROJECTILE_H_
 #pragma once
 
 #include "jass/jass.h"
@@ -23,4 +23,4 @@ class Proiectile : boost::noncopyable {
   Uint32 lifetime;
 };
 
-#endif  // JASS_SRC_JASS_PROJECTILE_H_
+#endif  // JASS_PROJECTILE_H_

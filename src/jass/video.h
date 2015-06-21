@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_VIDEO_H_
-#define JASS_SRC_JASS_VIDEO_H_
+#ifndef JASS_VIDEO_H_
+#define JASS_VIDEO_H_
 #pragma once
 
 #include <glm/vec3.hpp>
@@ -55,4 +55,4 @@ class Video : boost::noncopyable {
   Video();
 };
 
-#endif  // JASS_SRC_JASS_VIDEO_H_
+#endif  // JASS_VIDEO_H_

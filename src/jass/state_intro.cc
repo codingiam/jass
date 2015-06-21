@@ -49,13 +49,13 @@ void StateIntro::Create() {
   Video* video = Video::GetVideo();
   // std::cout << video->fontTexture << std::endl;
 
-  boost::shared_ptr<Image> tmp = video->loadImage("data\\texturi\\introbg.png");
+  boost::shared_ptr<Image> tmp = video->loadImage("data/texturi/introbg.png");
   video->makeTexture(tmp, &bgSpace);
 
-  tmp = video->loadImage("data\\texturi\\title.png");
+  tmp = video->loadImage("data/texturi/title.png");
   video->makeTexture(tmp, &bgIntro);
 
-  tmp = video->loadImage("data\\texturi\\action.png");
+  tmp = video->loadImage("data/texturi/action.png");
   video->makeTexture(tmp, &bgAction);
 
   if (!(bgSpace) || !(bgIntro) || !(bgAction)) {

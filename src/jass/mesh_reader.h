@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_MESHREADER_H_
-#define JASS_SRC_JASS_MESHREADER_H_
+#ifndef JASS_MESH_READER_H_
+#define JASS_MESH_READER_H_
 #pragma once
 
 #include "jass/jass.h"
@@ -17,4 +17,4 @@ class MeshReader : boost::noncopyable {
   FILE* fp;
 };
 
-#endif  // JASS_SRC_JASS_MESHREADER_H_
+#endif  // JASS_MESH_READER_H_

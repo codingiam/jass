@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_JASS_H_
-#define JASS_SRC_JASS_JASS_H_
+#ifndef JASS_JASS_H_
+#define JASS_JASS_H_
 #pragma once
 
 #include <SDL.h>
@@ -21,4 +21,8 @@
 
 #include "jass/debug.h"
 
-#endif  // JASS_SRC_JASS_JASS_H_
+#ifdef _WINDOWS
+  #define snprintf _snprintf
+#endif
+
+#endif  // JASS_JASS_H_

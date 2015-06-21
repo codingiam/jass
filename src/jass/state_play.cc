@@ -47,13 +47,13 @@ void StatePlay::Create() {
 
   Video *video = Video::GetVideo();
 
-  boost::shared_ptr<Image> tmp = video->loadImage("data\\texturi\\spacebg.png");
+  boost::shared_ptr<Image> tmp = video->loadImage("data/texturi/spacebg.png");
   video->makeTexture(tmp, &bgSpace);
 
-  tmp = video->loadImage("data\\texturi\\healthbar.png");
+  tmp = video->loadImage("data/texturi/healthbar.png");
   video->makeTexture(tmp, &bgHealthbar);
 
-  tmp = video->loadImage("data\\texturi\\board.png");
+  tmp = video->loadImage("data/texturi/board.png");
   video->makeTexture(tmp, &bgBoard);
 }
 

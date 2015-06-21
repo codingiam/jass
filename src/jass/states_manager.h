@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_STATES_MANAGER_H_
-#define JASS_SRC_JASS_STATES_MANAGER_H_
+#ifndef JASS_STATES_MANAGER_H_
+#define JASS_STATES_MANAGER_H_
 #pragma once
 
 #include <string>
@@ -29,4 +29,4 @@ class StatesManager : boost::noncopyable {
   boost::shared_ptr<StatePlay> state_play_;
 };
 
-#endif  // JASS_SRC_JASS_STATES_MANAGER_H_
+#endif  // JASS_STATES_MANAGER_H_

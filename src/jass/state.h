@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_STATE_H_
-#define JASS_SRC_JASS_STATE_H_
+#ifndef JASS_STATE_H_
+#define JASS_STATE_H_
 #pragma once
 
 #include <boost/weak_ptr.hpp>
@@ -38,9 +38,9 @@ class State : boost::noncopyable {
   static boost::weak_ptr<State> Unregister(const std::string& name);
 
  private:
-  static std::map<std::string, boost::weak_ptr<State>> states;
+  static std::map<std::string, boost::weak_ptr<State> > states;
   static State* state_;
   static State* next_;
 };
 
-#endif  // JASS_SRC_JASS_STATE_H_
+#endif  // JASS_STATE_H_

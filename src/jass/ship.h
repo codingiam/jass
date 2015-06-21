@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_SHIP_H_
-#define JASS_SRC_JASS_SHIP_H_
+#ifndef JASS_SHIP_H_
+#define JASS_SHIP_H_
 #pragma once
 
 #include "jass/jass.h"
@@ -35,4 +35,4 @@ class Ship : boost::noncopyable {
   Uint32 ticks;
 };
 
-#endif  // JASS_SRC_JASS_SHIP_H_
+#endif  // JASS_SHIP_H_

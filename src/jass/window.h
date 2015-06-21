@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_SRC_JASS_WINDOW_H_
-#define JASS_SRC_JASS_WINDOW_H_
+#ifndef JASS_WINDOW_H_
+#define JASS_WINDOW_H_
 #pragma once
 
 #include "jass/jass.h"
@@ -27,4 +27,4 @@ class Window : boost::noncopyable {
   SDL_Window *sdl_window;
 };
 
-#endif  // JASS_SRC_JASS_WINDOW_H_
+#endif  // JASS_WINDOW_H_
