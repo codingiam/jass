@@ -16,10 +16,10 @@ class Material : boost::noncopyable {
   ~Material();
 
   void loadMaterial(const char* filename, const char* path = "./");
-  const char* getName() { return name; }
+  const char* getName() { return name_; }
   void useMaterial();
 
-  GLuint matTexture;
+  GLuint matTexture_;
 
  private:
   enum  { MAT_AMBIENT = 1, MAT_DIFFUSE = 2, MAT_SPECULAR = 4, MAT_SHINESS = 8,
@@ -27,13 +27,13 @@ class Material : boost::noncopyable {
 
   void processCmdMat(char* cmd, char* params);
 
-  char path[PATH_LENGTH];
-  const char* filename;
-  char name[50];
+  char path_[PATH_LENGTH];
+  const char* filename_;
+  char name_[50];
 
-  GLushort format;
+  GLushort format_;
 
-  GLfloat matAmbient[3], matDiffuse[3], matSpecular[3], matShiness;
+  GLfloat matAmbient_[3], matDiffuse_[3], matSpecular_[3], matShiness_;
 };
 
 #endif  // JASS_SRC_JASS_MATERIAL_H_

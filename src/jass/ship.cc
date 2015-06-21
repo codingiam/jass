@@ -100,8 +100,8 @@ void Ship::update(const Uint32 dt, const Uint8 *keystate) {
   GLfloat amy = - cos(3.141516f * angle / 180);
   GLfloat amx = sin(3.141516f * angle / 180);
 
-  ypos += accel * 0.25f * (diff / 100) * amy;
-  xpos += accel * 0.25f * (diff / 100) * amx;
+  ypos += accel * 0.25f * (diff / 100.f) * amy;
+  xpos += accel * 0.25f * (diff / 100.f) * amx;
 
   if (xpos <= -5.8f) xpos = 5.75f;
   if (xpos >= 5.8f) xpos = -5.75f;

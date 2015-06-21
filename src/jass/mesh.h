@@ -25,15 +25,15 @@ class Mesh : boost::noncopyable {
   void loadMaterialObj(char* filename);
   void processFace(char* face);
 
-  char path[PATH_LENGTH];
-  const char* filename;
+  char path_[PATH_LENGTH];
+  const char* filename_;
 
-  std::vector<Material*> materials;
-  std::vector<GLfloat*> verticies;
-  std::vector<GLdouble*> tcoords;
-  std::vector<GLfloat*> normals;
+  std::vector<Material*> materials_;
+  std::vector<GLfloat*> verticies_;
+  std::vector<GLdouble*> tcoords_;
+  std::vector<GLfloat*> normals_;
 
-  GLuint mesh;
+  GLuint mesh_;
 };
 
 #endif  // JASS_SRC_JASS_MESH_H_

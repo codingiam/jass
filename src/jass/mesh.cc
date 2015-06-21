@@ -4,56 +4,60 @@
 
 #include "jass/mesh.h"
 
+#include <boost/filesystem.hpp>
+
 #include <cstdio>
+#include <string>
 
 Mesh::Mesh() {
-  *path = 0;
-  filename = NULL;
-  mesh = 0;
+  *path_ = 0;
+  filename_ = NULL;
+  mesh_ = 0;
 }
 
 Mesh::~Mesh() {
-  for (unsigned int i = 1; i <= materials.size(); i++) {
-    delete materials[i - 1];
+  for (unsigned int i = 1; i <= materials_.size(); i++) {
+    delete materials_[i - 1];
   }
 
-  for (unsigned int i = 1; i <= verticies.size(); i++) {
-    delete[] verticies[i - 1];
+  for (unsigned int i = 1; i <= verticies_.size(); i++) {
+    delete[] verticies_[i - 1];
   }
 
-  for (unsigned int i = 1; i <= tcoords.size(); i++) {
-    delete[] tcoords[i - 1];
+  for (unsigned int i = 1; i <= tcoords_.size(); i++) {
+    delete[] tcoords_[i - 1];
   }
 
-  for (unsigned int i = 1; i <= normals.size(); i++) {
-    delete[] normals[i - 1];
+  for (unsigned int i = 1; i <= normals_.size(); i++) {
+    delete[] normals_[i - 1];
   }
 
-  if (mesh) glDeleteLists(mesh, 1);
+  if (mesh_) glDeleteLists(mesh_, 1);
 }
 
 void Mesh::loadMeshObj(const char* filename, const char *path) {
-  char buffer[100];
+  if (mesh_) return;
 
-  _snprintf(buffer, sizeof(buffer), "%s%s", path, filename);
+  FILE* fp = fopen((boost::filesystem::path(path) /= filename).
+    string().c_str(), "r");
+  if (!fp) return;
 
-  FILE* fp = fopen(buffer, "r");
-  if ((!fp) || (mesh)) return;
+  strncpy(this->path_, path, PATH_LENGTH - 1);
+  this->path_[PATH_LENGTH - 1] = 0;
 
-  strncpy(this->path, path, PATH_LENGTH - 1);
-  this->path[PATH_LENGTH - 1] = 0;
-
-  this->filename = filename;
+  this->filename_ = filename;
 
   char *cmd, *params, *trimer;
 
   loadMaterialObj("spaceship.mtl");
 
-  mesh = glGenLists(1);
+  mesh_ = glGenLists(1);
 
-  glNewList(mesh, GL_COMPILE);
+  glNewList(mesh_, GL_COMPILE);
 
   glBegin(GL_TRIANGLES);
+
+  char buffer[100];
 
   while (!feof(fp)) {
     *buffer = 0; fgets(buffer, 100, fp);
@@ -85,29 +89,28 @@ void Mesh::processCmdObj(char *cmd, char *params) {
   if (strcmp(cmd, "v") == 0) {
     float *vertex = new float[3];
     memset(vertex, 0, sizeof(float[3]));
-    sscanf(params, "%f %f %f", &vertex[0], &vertex[1], &vertex[2]);
-
-    verticies.push_back(vertex);
+    if (sscanf(params, "%f %f %f", &vertex[0], &vertex[1], &vertex[2]) != EOF) {
+      verticies_.push_back(vertex);
+    }
 
     return;
   }
 
   if (strcmp(cmd, "vt") == 0) {
     GLdouble *tcoord = new GLdouble[2];
-    sscanf(params, "%lf %lf", &tcoord[0], &tcoord[1]);
-
-    tcoord[1] = 1.0f - tcoord[1];
-
-    tcoords.push_back(tcoord);
+    if (sscanf(params, "%lf %lf", &tcoord[0], &tcoord[1]) != EOF) {
+      tcoord[1] = 1.0f - tcoord[1];
+      tcoords_.push_back(tcoord);
+    }
 
     return;
   }
 
   if (strcmp(cmd, "vn") == 0) {
     float *normal = new float[3];
-    sscanf(params, "%f %f %f", &normal[0], &normal[1], &normal[2]);
-
-    normals.push_back(normal);
+    if (sscanf(params, "%f %f %f", &normal[0], &normal[1], &normal[2]) != EOF) {
+      normals_.push_back(normal);
+    }
 
     return;
   }
@@ -152,25 +155,27 @@ void Mesh::processCmdObj(char *cmd, char *params) {
 void Mesh::loadMaterialObj(char *filename) {
   Material* mat = new Material();
 
-  mat->loadMaterial(filename, path);
+  mat->loadMaterial(filename, path_);
 
-  materials.push_back(mat);
+  materials_.push_back(mat);
 }
 
 void Mesh::display() {
-  if (!mesh) {
+  if (!mesh_) {
     std::cout << "mesh not loaded" << std::endl;
 
     return;
   }
 
-  for (unsigned int i = 1; i <= materials.size(); i++) {
-    Material* mat = materials[i - 1];
+  for (unsigned int i = 1; i <= materials_.size(); i++) {
+    Material* mat = materials_[i - 1];
     mat->useMaterial();
-    break;
+    if (i == 1) {
+      break;
+    }
   }
 
-  glCallList(mesh);
+  glCallList(mesh_);
 }
 
 void Mesh::processFace(char *face) {
@@ -178,20 +183,20 @@ void Mesh::processFace(char *face) {
   unsigned int v2, t2, n2;
   unsigned int v3, t3, n3;
 
-  sscanf(face, "%u/%u/%u %u/%u/%u %u/%u/%u",
-    &v1, &t1, &n1,
-    &v2, &t2, &n2,
-    &v3, &t3, &n3);
+  if (sscanf(face, "%u/%u/%u %u/%u/%u %u/%u/%u",
+      &v1, &t1, &n1,
+      &v2, &t2, &n2,
+      &v3, &t3, &n3) != EOF) {
+    glNormal3fv(normals_[--n1]);
+    glTexCoord2dv(tcoords_[--t1]);
+    glVertex3fv(verticies_[--v1]);
 
-  glNormal3fv(normals[--n1]);
-  glTexCoord2dv(tcoords[--t1]);
-  glVertex3fv(verticies[--v1]);
+    glNormal3fv(normals_[--n2]);
+    glTexCoord2dv(tcoords_[--t2]);
+    glVertex3fv(verticies_[--v2]);
 
-  glNormal3fv(normals[--n2]);
-  glTexCoord2dv(tcoords[--t2]);
-  glVertex3fv(verticies[--v2]);
-
-  glNormal3fv(normals[--n3]);
-  glTexCoord2dv(tcoords[--t3]);
-  glVertex3fv(verticies[--v3]);
+    glNormal3fv(normals_[--n3]);
+    glTexCoord2dv(tcoords_[--t3]);
+    glVertex3fv(verticies_[--v3]);
+  }
 }
