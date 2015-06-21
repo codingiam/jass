@@ -20,7 +20,7 @@ Material::~Material() {
   if (matTexture) glDeleteTextures( 1, &matTexture );
 }
 
-void Material::loadMaterial(char *filename, const char *path) {
+void Material::loadMaterial(const char *filename, const char *path) {
   char buffer[100];
   
   sprintf( buffer, "%s%s", path, filename );
@@ -93,9 +93,8 @@ void Material::processCmdMat(char *cmd, char *params) {
     
     sprintf( buffer, "%s%s", path, params );
 
-    SDL_Surface * tmp = video->loadTexture( buffer );
+    boost::shared_ptr<Image> tmp = video->loadImage( buffer );
     video->makeTexture( tmp, matTexture );
-    SDL_FreeSurface( tmp );
 
     format |= MAT_TEXTURE;
   }

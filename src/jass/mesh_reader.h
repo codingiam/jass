@@ -10,7 +10,7 @@
 
 class MeshReader : boost::noncopyable {
 public:
-  MeshReader(char* filename, char* path = "./");
+  MeshReader(const char* filename, const char* path = "./");
   ~MeshReader();
 
 private:

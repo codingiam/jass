@@ -7,87 +7,61 @@
 #include <sstream>
 #include <cmath>
 
-#include "jass/application.h"
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp> 
+#include <glm/gtc/matrix_transform.hpp>
 
-void perspectiveGL( GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar ) {
-    const GLdouble pi = 3.1415926535897932384626433832795;
-    GLdouble fW, fH;
-    
-    //fH = tan( (fovY / 2) / 180 * pi ) * zNear;
-    fH = tan( fovY / 360 * pi ) * zNear;
-    fW = fH * aspect;
-    
-    glFrustum( -fW, fW, -fH, fH, zNear, zFar );
+#include "jass/application.h"
+#include "jass/image.h"
+
+static void perspectiveGL( GLdouble fovY, GLdouble aspect, GLdouble zNear, GLdouble zFar ) { 
+  glm::mat4 persp = glm::perspective(fovY, aspect, zNear, zFar);
+  glLoadMatrixf(glm::value_ptr(persp));
 }
 
-void ortho2D( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top) {
-    glOrtho( left, right, bottom, top, -1, 1 );
+static void ortho2D( GLdouble left, GLdouble right, GLdouble bottom, GLdouble top) {
+   glm::mat4 ortho = glm::ortho(left, right, bottom, top);
+   glLoadMatrixf(glm::value_ptr(ortho));
 }
 
 Video::Video() {
+  ilInit();
   fontTexture = 0;
   base = 0;
+  zpos = 1.0f;
 }
 
-SDL_Surface* Video::loadTexture(char* name) {
-  char buffer[100];
-  int i = 0;
-  for ( ; i < 100 && *(name + i) != '\0'; i++) {
-    char tmp = *(name + i);
-    if (tmp == '\\')
-      tmp = '/';
-    buffer[i] = tmp;
+boost::shared_ptr<Image> Video::loadImage(boost::filesystem::path const &path) {
+  boost::shared_ptr<Image> image = boost::shared_ptr<Image>(new Image());
+  if (!image->loadImage(path.string())) {
+    throw(std::runtime_error("Could not load image.") );
   }
-  buffer[i] = '\0';
-
-  printf("Incarc textura: %s\n", buffer);
-
-  SDL_Surface* textura = IMG_Load(buffer);
-
-  if ((!textura) || (textura->format->BitsPerPixel <= 8)) {
-    if (!textura) {
-      throw(std::runtime_error("Nu am putut incarca textura.") );
-    }
-
-        std::ostringstream oss(std::ostringstream::out);
-        oss << "Numar de BPP invalid : " << textura->format->BitsPerPixel;
-//    char message[100];
-//    sprintf(message, "Numar de BPP invalid : %d",
-//        textura->format->BitsPerPixel);
-    SDL_FreeSurface(textura);
-
-        throw(std::runtime_error(oss.str()));
-  }
-
-  std::cout << name << " = " << (int) textura->format->BitsPerPixel << "bpp"
-      << std::endl;
-
-  return textura;
+  return image;
 }
 
-void Video::makeTexture(SDL_Surface* surface, GLuint &texture) {
+void Video::makeTexture(boost::shared_ptr<Image> const &image, GLuint &texture) {
   glGenTextures(1, &texture);
 
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  auto func = [&] (GLuint* pixels, GLuint width, GLuint height) {
+    glBindTexture(GL_TEXTURE_2D, texture);
 
-  GLenum format = GL_RGB;
-  if (surface->format->BytesPerPixel == 4)
-    format = GL_RGBA;
-  glTexImage2D(GL_TEXTURE_2D, 0, surface->format->BytesPerPixel, surface->w,
-      surface->h, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
+  };
+
+  image->withData(func);
 }
 
 void Video::InitFont() {
   if ((fontTexture) || (base))
     return;
 
-  SDL_Surface* textura = loadTexture("data\\fonturi\\font.png");
+  boost::shared_ptr<Image> textura = loadImage("data\\fonturi\\font.png");
   makeTexture(textura, fontTexture);
-  SDL_FreeSurface(textura);
 
   float cx = 0, cy = 0;
 
@@ -140,11 +114,11 @@ void Video::init2DScene(int width, int height) {
   glDisable(GL_COLOR_MATERIAL);
 
   glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
 
   ortho2D(0.0f, width, height, 0.0f);
 
   glMatrixMode(GL_MODELVIEW);
+
   glLoadIdentity();
 }
 
@@ -156,12 +130,16 @@ void Video::init3DScene(int width, int height) {
   glClear(GL_DEPTH_BUFFER_BIT);
 
   glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
 
-  perspectiveGL(45.0f, (GLfloat) width / (GLfloat) height, 1.0f, 300.0f);
+  perspectiveGL(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 100.0f);
 
   glMatrixMode(GL_MODELVIEW);
+
   glLoadIdentity();
+
+  glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, zpos),
+    glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+  glLoadMatrixf(glm::value_ptr(cam));
 
   GLfloat lmodel_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
@@ -183,53 +161,47 @@ void Video::init3DScene(int width, int height) {
   glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 }
 
-void Video::getNormal(vertex3f v0, vertex3f v1, vertex3f v2, vertex3f &normal) {
-  GLfloat x01 = v0[0] - v1[0];
-  GLfloat y01 = v0[1] - v1[1];
-  GLfloat z01 = v0[2] - v1[2];
-
-  GLfloat x02 = v0[0] - v2[0];
-  GLfloat y02 = v0[1] - v2[1];
-  GLfloat z02 = v0[2] - v2[2];
-
-  GLfloat cpx = (y01 * z02) - (z01 * y02);
-  GLfloat cpy = (z01 * x02) - (x01 * z02);
-  GLfloat cpz = (x01 * y02) - (y01 * x02);
-
-  GLfloat r = (float) sqrt(cpx * cpx + cpy * cpy + cpz * cpz);
-
-  normal[0] = cpx / r;
-  normal[1] = cpy / r;
-  normal[2] = cpz / r;
+void Video::getNormal(const glm::vec3 v0, const glm::vec3 v1, const glm::vec3 v2, glm::vec3 &normal) {
+  normal = glm::normalize(glm::cross(v2 - v0, v1 - v0));
 }
 
 void Video::drawTexture(int x, int y, int w, int h, GLuint texture,
     GLfloat yamount) {
-  vertex2i v0 = { x, y };
-  vertex2i v1 = { x, y + h };
-  vertex2i v2 = { x + w, y };
-  vertex2i v3 = { x + w, y + h };
+  glm::i32vec2 v0(x, y);
+  glm::i32vec2 v1(x, y + h);
+  glm::i32vec2 v2(x + w, y);
+  glm::i32vec2 v3(x + w, y + h);
 
   glBindTexture(GL_TEXTURE_2D, texture);
 
   glBegin(GL_TRIANGLE_STRIP);
   glTexCoord2f(0.0f, yamount);
-  glVertex2iv(v0);
+  glVertex2iv(glm::value_ptr(v0));
 
   glTexCoord2f(0.0f, 1.0f);
-  glVertex2iv(v1);
+  glVertex2iv(glm::value_ptr(v1));
 
   glTexCoord2f(1.0f, yamount);
-  glVertex2iv(v2);
+  glVertex2iv(glm::value_ptr(v2));
 
   glTexCoord2f(1.0f, 1.0f);
-  glVertex2iv(v3);
+  glVertex2iv(glm::value_ptr(v3));
   glEnd();
 }
 
 Video::~Video() {
+  ilShutDown();
+
   if (base)
     glDeleteLists(base, 256);
   if (fontTexture)
     glDeleteTextures(1, &fontTexture);
+}
+
+void Video::plusZpos() {
+  this->zpos -= 0.1f;
+}
+
+void Video::minusZpos() {
+  this->zpos += 0.1f;
 }

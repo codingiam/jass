@@ -7,7 +7,7 @@
 #include <string>
 #include <fstream>
 
-MeshReader::MeshReader( char *filename, char* path ) {
+MeshReader::MeshReader(const char *filename, const char* path ) {
   std::string openfile = path;
   openfile += filename;
 

@@ -32,7 +32,7 @@ Mesh::~Mesh() {
   if (mesh) glDeleteLists( mesh, 1 );
 }
 
-void Mesh::loadMeshObj(char* filename, const char *path) {
+void Mesh::loadMeshObj(const char* filename, const char *path) {
   char buffer[100];
       
   sprintf( buffer, "%s%s", path, filename );

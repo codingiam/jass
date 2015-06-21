@@ -5,166 +5,99 @@
 #include "jass/application.h"
 
 #include "jass/video.h"
-#include "jass/state_introduction.h"
-#include "jass/state_play.h"
+#include "jass/state.h"
+#include "jass/window.h"
+#include "jass/states_manager.h"
+
+const Uint32 TARGET_FPS = 60;
+const Uint32 MAX_DT = 1000; // ms
+
+const Uint32 TARGET_DT = MAX_DT / TARGET_FPS;
 
 Application::Application() {
-  std::cout << "Application being created ..." << std::endl;
-
-  state_intro_ = boost::shared_ptr<StateIntro>(new StateIntro);
-  state_play_ = boost::shared_ptr<StatePlay>(new StatePlay); 
+  std::cout << "Application being constructed ..." << std::endl;
+  this->sdl_initialized_ = false;
 }
 
 Application::~Application() {
-  Shutdown();
-
-  std::cout << "Application closed." << std::endl;
+  ShutDown();
+  std::cout << "Application destroyed." << std::endl;
 }
 
-void Application::Initialise() {
-  InitialiseSDL();
-  //InitialiseFMOD();
+void Application::Initialize() {
+  this->sdl_initialized_ = SDL_Init(SDL_INIT_TIMER) == 0;
+  if (!sdl_initialized_) {
+    boost::format message =
+      boost::format("Could not initialise SDL: %s") % SDL_GetError();
+    throw std::runtime_error(message.str());
+  }
+
+  InitializeWindow();
+  InitializeVideo();
   InitialiseStates();
 }
 
-void Application::InitialiseStates() {
-  State::Register(kStateIntro, state_intro_);
-  State::Register(kStatePlay, state_play_);
-}
+void Application::ShutDown() {
+  this->states_manager_ = boost::shared_ptr<StatesManager>();
 
-void Application::InitialiseSDL() {
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
-    char message[100]; sprintf(message, "Could not initialise SDL: %s", SDL_GetError());
-    throw(std::runtime_error(message));
+  this->window_ = boost::shared_ptr<Window>();
+
+  if (sdl_initialized_) {
+    this->sdl_initialized_ = false;
+    SDL_Quit();
   }
-
-  SDL_ShowCursor(SDL_DISABLE);
-
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); 
-
-  Uint32 video_flags = SDL_OPENGLBLIT | SDL_HWSURFACE;
-
-  if (kFull)
-    video_flags |= SDL_FULLSCREEN;
-
-  if (SDL_SetVideoMode(kWidth, kHeight, kBpp, video_flags) == NULL)
-    throw(std::runtime_error("Could not initialise video mode !"));
-
-  std::cout << "SDL initialised succesfully. Video information follows: " << std::endl;
-
-  std::cout << " Screen BPP : " << SDL_GetVideoSurface()->format->BitsPerPixel << std::endl;
-  std::cout << " Vendor     : " << glGetString(GL_VENDOR) << std::endl;
-  std::cout << " Renderer   : " << glGetString(GL_RENDERER) << std::endl;
-  std::cout << " Version    : " << glGetString(GL_VERSION) << std::endl;
-  std::cout << " Extensions : " << glGetString(GL_EXTENSIONS) << std::endl;
-
-  int value;
-
-  SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &value);
-  std::cout << " Red component " << value << "b" << std::endl;
-
-  SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &value);
-  std::cout << " Green component " << value << "b" << std::endl;
-
-  SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &value);
-  std::cout << " Blue component " << value << "b" << std::endl;
-
-  SDL_WM_SetCaption("J.A.S.S - Project", "data/iconita/jass.ico");
-
-  glShadeModel(GL_SMOOTH); // GL_FLAT
-
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-
-  glClearDepth(1.0f);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
-
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // GL_PERSPECTIVE_CORRECTION_HINT ||  GL_LINE_SMOOTH_HINT
-
-  //glPolygonMode(GL_BACK, GL_LINE);
-
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);
-
-  glEnable(GL_TEXTURE_2D);
-
-  glViewport(0, 0, kWidth, kHeight);
-
-  Video * video = Video::GetVideo();
-  video->InitFont();
-
-  std::cout << "OpenGL initialised." << std::endl;
 }
 
-//void Application::InitialiseFMOD() {
-//  if (FSOUND_GetVersion() < FMOD_VERSION) {
-//    char mesaj[100]; sprintf_s( mesaj, 100, "Veriune FMOD inavlida, ar trebui sa fie : %.02f", FMOD_VERSION );
-//    throw( std::runtime_error( mesaj ) );
-//  }
-//
-//  bool retval = (FSOUND_SetOutput( -1 ) == TRUE);
-//  retval &= (FSOUND_SetDriver( 0 ) == TRUE);
-//  retval &= (FSOUND_Init(44100, 32, FSOUND_INIT_USEDEFAULTMIDISYNTH) == TRUE);
-//
-//  if (!retval) {
-//    throw( std::runtime_error( "Nu am putut initializa FMOD !" ) );
-//  }
-//
-//  intromusic = FMUSIC_LoadSong( "data\\muzica\\intro.s3m" );
-//  if (!intromusic) {
-//    throw( std::runtime_error( "Nu am putut incarca data\\muzica\\intro.s3m" ) );
-//  }
-//  std::cout << "data\\muzica\\intro.s3m a fost incarcat" << std::endl;
-//
-//  FMUSIC_PlaySong( intromusic );
-//
-//  std::cout << "FMOD a fost initializat." << std::endl;
-//}
+void Application::InitializeWindow() {
+  this->window_ = boost::shared_ptr<Window>(new Window);
+  window_->Initialize();
+}
+
+void Application::InitializeVideo() {
+  Video *video = Video::GetVideo();
+  video->InitFont();
+}
+
+void Application::InitialiseStates() {
+  this->states_manager_ = boost::shared_ptr<StatesManager>(new StatesManager);
+  states_manager_->Initialize();
+}
 
 void Application::Run() {
-  Uint32 milliseconds = 0;
-  Uint8 * keys_state = NULL;
-  State * state = NULL;
+  Uint32 dt = TARGET_DT;
+  Uint32 begin_ms = SDL_GetTicks();
 
-  SDL_Event sdl_event;
+  while (State::state() != NULL) {
+    Tick(dt);
 
-  State::set_state(state_intro_.get());
-  State::Update();
+    const Uint32 end_ms = SDL_GetTicks();
 
-  while ((state = State::state()) != NULL) {
-    milliseconds = SDL_GetTicks();
+    dt = end_ms - begin_ms;
 
-    SDL_PumpEvents();
+    if (dt > MAX_DT) {
+      dt = TARGET_DT;
+    }
 
-    keys_state = SDL_GetKeyState(NULL);
+    begin_ms = end_ms;
+  }
+}
 
-    state->Execute(milliseconds, keys_state);
+void Application::Tick(const Uint32 dt) {
+    const Uint8 *keys_state = SDL_GetKeyboardState(NULL);
 
-    if (keys_state[SDLK_F10])
-      State::set_state(NULL);
+    State::state()->Execute(dt, keys_state);
 
+    State::state()->Render(Video::GetVideo());
+
+    window_->SwapBuffers();
+
+    SDL_Event sdl_event;
+    
     while (SDL_PollEvent(&sdl_event)) {
-      if (sdl_event.type == SDL_QUIT)
+      if (sdl_event.type == SDL_QUIT) {
         State::set_state(NULL);
+      }
     }
 
     State::Update();
-  }
-}
-
-void Application::Shutdown() {
-  State::Unregister(kStatePlay);
-  State::Unregister(kStateIntro);
-
-  //if (intro_music_) {
-  //  FMUSIC_StopAllSongs();
-  //  FMUSIC_FreeSong(intro_music_);
-  //}
-  //FSOUND_Close();
-
-  SDL_Quit();
 }

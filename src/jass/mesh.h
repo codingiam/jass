@@ -17,7 +17,7 @@ public:
   Mesh();
   ~Mesh();
 
-  void loadMeshObj(char* filename, const char* path = "./");
+  void loadMeshObj(const char* filename, const char* path = "./");
   void display();
 
 private:
@@ -26,7 +26,7 @@ private:
   void processFace(char* face);
 
   char path[PATH_LENGTH];
-  char* filename;
+  const char* filename;
 
   std::vector<Material*> materials;
   std::vector<GLfloat*> verticies;

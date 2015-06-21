@@ -15,7 +15,7 @@ public:
   Material();
   ~Material();
 
-  void loadMaterial(char* filename, const char* path = "./");
+  void loadMaterial(const char* filename, const char* path = "./");
   const char* getName() { return name; }
   void useMaterial();
 
@@ -27,7 +27,7 @@ private:
   void processCmdMat(char* cmd, char* params);
 
   char path[PATH_LENGTH];
-  char* filename;
+  const char* filename;
   char name[50];
 
   unsigned short format;

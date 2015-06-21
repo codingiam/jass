@@ -6,7 +6,8 @@
 
 #include "jass/video.h"
 #include "jass/application.h"
-#include "jass/state_play.h"
+#include "jass/states_manager.h"
+#include "jass/window.h"
 
 static const char * introText[] = {
   "  Acest joc este proiectul nostru pentru cursul de grafica.\0",
@@ -48,17 +49,14 @@ void StateIntro::Create() {
   Video* video = Video::GetVideo();
   //std::cout << video->fontTexture << std::endl;
 
-  SDL_Surface* tmp = video->loadTexture( "data\\texturi\\introbg.png" );
+  boost::shared_ptr<Image> tmp = video->loadImage( "data\\texturi\\introbg.png" );
   video->makeTexture( tmp, bgSpace );
-  SDL_FreeSurface( tmp );
 
-  tmp = video->loadTexture( "data\\texturi\\title.png" );
+  tmp = video->loadImage( "data\\texturi\\title.png" );
   video->makeTexture( tmp, bgIntro );
-  SDL_FreeSurface( tmp );
 
-  tmp = video->loadTexture( "data\\texturi\\action.png" );
+  tmp = video->loadImage( "data\\texturi\\action.png" );
   video->makeTexture( tmp, bgAction );
-  SDL_FreeSurface( tmp );
 
   if (!(bgSpace) || !(bgIntro) || !(bgAction)) {
     throw( std::runtime_error( "Nu am putut crea texturile pentru 'stateintro'." ) );
@@ -74,26 +72,34 @@ void StateIntro::Start() {
 void StateIntro::Stop() {
 }
 
-void StateIntro::Execute( Uint32 ticks, Uint8 *keystate ) {
-  Video* video = Video::GetVideo();
-
-  if (ticksTitle == 0) ticksTitle = ticks;
-  if (ticksAction == 0) ticksAction = ticks;
-  if (ticksIntroText == 0) ticksIntroText = ticks;
+void StateIntro::Execute(const Uint32 dt, const Uint8 *keystate) {
+  ticksTitle += dt;
+  ticksAction += dt;
+  ticksIntroText += dt;
   
-  float alphaTitle = (float) (ticks - ticksTitle) / (float) speedTitle;
-  float blueAction = (float) (ticks - ticksAction) / (float) speedAction;
-  float positionText = (float) (ticks - ticksIntroText) / (float) speedIntroText;
+  alphaTitle = (float) ticksTitle / (float) speedTitle;
+  blueAction = (float) ticksAction / (float) speedAction;
+  positionText = (float) ticksIntroText / (float) speedIntroText;
 
   if (alphaTitle >= 1.0f) alphaTitle = 1.0f;
-  if (blueAction >= 1.0f) ticksAction += speedAction;
+  if (blueAction >= 1.0f) ticksAction -= speedAction;
   if (positionText >= 1.0f) positionText = 1.0f;
 
+  showTo = (Uint32) (sizeIntroText * positionText);
+
+  if (keystate[SDL_SCANCODE_SPACE])
+      State::set_state(State::Find(kStatePlay).lock().get());
+
+  if (keystate[SDL_SCANCODE_F10])
+      State::set_state(NULL);
+}
+
+void StateIntro::Render(Video *const video) {
   glClear( GL_COLOR_BUFFER_BIT ); 
-  video->init2DScene( Application::kWidth, Application::kHeight );
+  video->init2DScene( Window::kWidth, Window::kHeight );
   
   glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
-  video->drawTexture( 0, 0, Application::kWidth, Application::kHeight, bgSpace );
+  video->drawTexture( 0, 0, Window::kWidth, Window::kHeight, bgSpace );
 
   glColor4f( 1.0f, 1.0f, 1.0f, alphaTitle );
   video->drawTexture( 272, 8, 256, 64, bgIntro );
@@ -102,12 +108,11 @@ void StateIntro::Execute( Uint32 ticks, Uint8 *keystate ) {
   video->drawTexture( 262, 440, 276, 64, bgAction );
 
   glColor3f( 1.0f, 1.0f, 1.0f );
-  
-  Uint32 showTo = (Uint32) (sizeIntroText * positionText);
+
   Uint32 marime = 0;
   char buffer[100 + 1];
 
-   for (int i = 0; showTo > 0; i++) {
+  for (int i = 0; showTo > 0; i++) {
     marime = strlen(introText[i]); //introText[i].length();
     if (marime > showTo) marime = showTo;
         if (marime > 100) marime = 100;
@@ -117,9 +122,4 @@ void StateIntro::Execute( Uint32 ticks, Uint8 *keystate ) {
     showTo -= marime;
     video->print( 90, 105 + 20 * i, buffer);
   }
-
-  SDL_GL_SwapBuffers( );
-
-  if (keystate[SDLK_SPACE])
-      State::set_state(State::Find(kStatePlay).lock().get());
 }

@@ -11,8 +11,9 @@
 #include "jass/application.h"
 #include "jass/mesh.h"
 #include "jass/ship.h"
-#include "jass/state_introduction.h"
+#include "jass/states_manager.h"
 #include "jass/projectile.h"
+#include "jass/window.h"
 
 StatePlay::StatePlay() {
   bgSpace = 0;
@@ -46,27 +47,24 @@ void StatePlay::Create() {
 
   Video *video = Video::GetVideo();
 
-  SDL_Surface* tmp = video->loadTexture( "data\\texturi\\spacebg.png" );
+  boost::shared_ptr<Image> tmp = video->loadImage( "data\\texturi\\spacebg.png" );
   video->makeTexture( tmp, bgSpace );
-  SDL_FreeSurface( tmp );
 
-  tmp = video->loadTexture( "data\\texturi\\healthbar.png" );
+  tmp = video->loadImage( "data\\texturi\\healthbar.png" );
   video->makeTexture( tmp, bgHealthbar );
-  SDL_FreeSurface( tmp );
 
-  tmp = video->loadTexture( "data\\texturi\\board.png" );
+  tmp = video->loadImage( "data\\texturi\\board.png" );
   video->makeTexture( tmp, bgBoard );
-  SDL_FreeSurface( tmp );
 }
 
 void StatePlay::Start() {
   nava1 = new Ship( -4.5f, 3.25f, 1, 0.0f );
   nava2 = new Ship( 4.5f, -2.40f, 2, 180.0f );
 
-  Uint32 keys1[] = { SDLK_q, SDLK_s, SDLK_c, SDLK_v, SDLK_LCTRL, 0 };
+  Uint32 keys1[] = { SDL_SCANCODE_Q, SDL_SCANCODE_S, SDL_SCANCODE_C, SDL_SCANCODE_V, SDL_SCANCODE_LCTRL, 0 };
   nava1->setkeys( keys1 );
   
-  Uint32 keys2[] = { SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_RCTRL, 0 };
+  Uint32 keys2[] = { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_RCTRL, 0 };
   nava2->setkeys( keys2 );
 }
 
@@ -75,10 +73,10 @@ void StatePlay::Stop() {
   delete nava2; nava2 = NULL;
 }
 
-void StatePlay::Execute( Uint32 ticks, Uint8 *keystate ) {
+void StatePlay::Execute(const Uint32 dt, const Uint8 *keystate) {
   for(unsigned int i = 0; i < proiectile.size(); i++) {
     Proiectile* p = proiectile[i];
-    p->update( ticks );
+    p->update( dt );
 
     Ship* tmp = (p->owner == 1) ? (nava2) : (nava1);
     if (tmp->colide(p->xpos, p->ypos)) p->sterge = true;
@@ -94,18 +92,30 @@ void StatePlay::Execute( Uint32 ticks, Uint8 *keystate ) {
       else it++;
     } while (it != proiectile.end());
 
-  nava1->update(ticks, keystate);
-  nava2->update(ticks, keystate);
+  nava1->update(dt, keystate);
+  nava2->update(dt, keystate);
+ 
+  if (keystate[SDL_SCANCODE_ESCAPE])
+      State::set_state(State::Find(kStateIntro).lock().get());
 
-  Video* video = Video::GetVideo();
+  if ((nava1->getLife() <= 0.0f) || (nava2->getLife() <= 0.0f))
+      State::set_state(State::Find(kStateIntro).lock().get());
+}
 
+void StatePlay::addProiectile(Proiectile *proiectil) {
+  proiectile.push_back(proiectil);
+}
+
+void StatePlay::Render(Video *const video) {
   glClear( GL_COLOR_BUFFER_BIT ); 
-  video->init2DScene( Application::kWidth, Application::kHeight );
+  video->init2DScene( Window::kWidth, Window::kHeight );
 
   glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
-  video->drawTexture( 0, 0, Application::kWidth, Application::kHeight, bgSpace );
+  video->drawTexture( 0, 0, Window::kWidth, Window::kHeight, bgSpace );
 
-  video->init3DScene( Application::kWidth, Application::kHeight );
+  video->init3DScene( Window::kWidth, Window::kHeight );
+
+  glPushMatrix();
   
   GLfloat x = .0f, y = .0f, angle = .0f;
   nava1->getPosition(x, y, angle);
@@ -117,7 +127,9 @@ void StatePlay::Execute( Uint32 ticks, Uint8 *keystate ) {
   glColor4f( 1.0f, 0.0f, 0.0f, 1.0f );
   ship->display();
   
-  glLoadIdentity();
+  glPopMatrix();
+  glPushMatrix();
+  
   nava2->getPosition(x, y, angle);
 
   glTranslatef( x, y, -10.0f );
@@ -127,7 +139,8 @@ void StatePlay::Execute( Uint32 ticks, Uint8 *keystate ) {
   glColor4f( 0.0f, 0.0f, 1.0f, 1.0f );
   ship->display();
 
-  glLoadIdentity();
+  glPopMatrix();
+
   glTranslatef( 0.0f, 0.0f, -10.f );
   
   glDisable( GL_TEXTURE_2D ); glDisable( GL_LIGHTING );
@@ -145,7 +158,7 @@ void StatePlay::Execute( Uint32 ticks, Uint8 *keystate ) {
     
   glEnable( GL_LIGHTING ); glEnable( GL_TEXTURE_2D );
 
-  video->init2DScene( Application::kWidth, Application::kHeight );
+  video->init2DScene( Window::kWidth, Window::kHeight );
 
   float life = nava1->getLife();
   glColor4f( 1.0f, 1.0f, 1.0f, 0.5f );
@@ -155,16 +168,4 @@ void StatePlay::Execute( Uint32 ticks, Uint8 *keystate ) {
   video->drawTexture( 770, 10, 20, 512, bgHealthbar, 1.0f - life );
 
   video->drawTexture( 10, 530, 780, 64, bgBoard );
-
-  SDL_GL_SwapBuffers( );
-  
-  if (keystate[SDLK_ESCAPE])
-      State::set_state(State::Find(kStateIntro).lock().get());
-
-  if ((nava1->getLife() <= 0.0f) || (nava2->getLife() <= 0.0f))
-      State::set_state(State::Find(kStateIntro).lock().get());
-}
-
-void StatePlay::addProiectile(Proiectile *proiectil) {
-  proiectile.push_back(proiectil);
 }

@@ -11,7 +11,7 @@
 class Ship : boost::noncopyable {
 public:
   Ship(GLfloat xpos, GLfloat ypos, Uint32 id, GLfloat angle);
-  void update(Uint32 ticks, Uint8* keystate);
+  void update(const Uint32 dt, const Uint8 *keystate);
   void getPosition(GLfloat& x, GLfloat& y, GLfloat& angle) { x = xpos; y = ypos; angle = this->angle; };
   void setkeys(Uint32 keys[]);
   bool colide(GLfloat x, GLfloat y);
@@ -31,6 +31,7 @@ private:
   Uint32 lastTimeROT;
   Uint32 lastTimeSHO;
   Uint32 keys[6];
+  Uint32 ticks;
 };
 
 #endif  // JASS_SRC_JASS_SHIP_H_

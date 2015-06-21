@@ -10,28 +10,30 @@
 
 #include "jass/jass.h"
 
-class StateIntro;
-class StatePlay;
+class Window;
+class StatesManager;
 
 class Application : boost::noncopyable  {
 public:
-  enum { kWidth = 800, kHeight = 600, kBpp = 16, kFull = 0 };
+  Application(void);
+  ~Application(void);
 
-  Application();
-  ~Application();
+  void Initialize(void);
+  void ShutDown(void);
 
-  void Initialise();
-  void Run();
-  void Shutdown();
+  void Run(void);
 
 private:
-  void InitialiseSDL();
-  // void InitialiseFMOD();
-  void InitialiseStates();
+  void InitializeWindow(void);
+  void InitializeVideo(void);
+  void InitialiseStates(void);
 
-  boost::shared_ptr<StateIntro> state_intro_;
-  boost::shared_ptr<StatePlay> state_play_;
-  // FMUSIC_MODULE* intro_music_;
+  void Tick(const Uint32 dt);
+
+  bool sdl_initialized_;
+
+  boost::shared_ptr<Window> window_;
+  boost::shared_ptr<StatesManager> states_manager_;
 };
 
 #endif  // JASS_SRC_JASS_APPLICATION_H_

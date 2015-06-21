@@ -10,19 +10,18 @@
 
 #include "jass/jass.h"
 
-static const std::string kStateIntro = "state_intro";
-
 class StateIntro : public State {
 public:
-  StateIntro();
-  virtual ~StateIntro();
+  StateIntro(void);
+  virtual ~StateIntro(void);
 
-  void Execute(Uint32 ticks, Uint8* keystate) override;
+  void Execute(const Uint32 dt, const Uint8 *keystate) override;
+  void Render(Video *const video) override;
 
 protected:
-  void Create() override;
-  void Start() override;
-  void Stop() override;
+  void Create(void) override;
+  void Start(void) override;
+  void Stop(void) override;
 
 private:
   GLuint bgSpace;
@@ -36,6 +35,12 @@ private:
   Uint32 speedTitle;
   Uint32 speedAction;
   Uint32 speedIntroText;
+
+  float alphaTitle;
+  float blueAction;
+  float positionText;
+
+  Uint32 showTo;
 
   Uint32 sizeIntroText;
 };

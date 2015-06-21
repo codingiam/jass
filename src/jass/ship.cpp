@@ -8,6 +8,7 @@
 #include <cmath>
 
 #include "jass/application.h"
+#include "jass/states_manager.h"
 #include "jass/state_play.h"
 #include "jass/projectile.h"
 
@@ -25,9 +26,13 @@ Ship::Ship(GLfloat xpos, GLfloat ypos, Uint32 id, GLfloat angle) {
   lastTimeMOV = 0;
   lastTimeROT = 0;
   lastTimeSHO = 0;
+
+  ticks = 0;
 }
 
-void Ship::update(Uint32 ticks, Uint8 *keystate) {
+void Ship::update(const Uint32 dt, const Uint8 *keystate) {
+  ticks += dt;
+
   if ((ticks - lastTimeACC) > 150) {
     if (keystate[keys[K_UP]]) {
       accel += 0.055f;

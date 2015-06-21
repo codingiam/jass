@@ -14,26 +14,20 @@ Proiectile::Proiectile( GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner 
 
   this->owner = owner;
 
-  lastUpdate = 0;
   sterge = false;
 }
 
-void Proiectile::update(Uint32 ticks) {
-  if (!lastUpdate) lastUpdate = ticks;
-
-  Uint32 diff = ticks - lastUpdate;
-  if (diff > 25) diff = 25;
+void Proiectile::update(const Uint32 dt) {
+  Uint32 diff = dt > 25 ? 25 : dt;
   
-  GLfloat amy = -0.5f * cos( 3.1415f * angle / 180 );
-  GLfloat amx = 0.5f * sin( 3.1415f * angle / 180 );
+  printf("%u \n", dt);
+
+  GLfloat amy = -0.5f * cos( (float) M_PI * angle / 180 );
+  GLfloat amx = 0.5f * sin( (float) M_PI * angle / 180 );
   
-  ypos += amy * 0.5f * (diff / 25);
-  xpos += amx * 0.5f * (diff / 25);
+  ypos += amy * 0.5f * (diff / 25.0f);
+  xpos += amx * 0.5f * (diff / 25.0f);
 
-  if (diff > 25) {
-    lastUpdate = ticks;
-  }
-
-  if (abs(xpos) >= 6.0f) sterge = true;
-  if (abs(ypos) >= 5.0f) sterge = true;
+  if (abs(xpos) >= 6.5f) sterge = true;
+  if (abs(ypos) >= 5.5f) sterge = true;
 }

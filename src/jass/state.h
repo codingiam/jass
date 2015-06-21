@@ -12,21 +12,24 @@
 
 #include "jass/jass.h"
 
+class Video;
+
 class State : boost::noncopyable {
 public:
-  State() { }
-  virtual ~State() { }
+  State(void) { }
+  virtual ~State(void) { }
 
-  virtual void Create() = 0;
-  virtual void Start() = 0;
-  virtual void Execute(Uint32 ticks, Uint8* keystate) = 0;
-  virtual void Stop() = 0;
-  virtual void Destroy() { }
+  virtual void Create(void) = 0;
+  virtual void Start(void) = 0;
+  virtual void Execute(const Uint32 dt, const Uint8 *keystate) = 0;
+  virtual void Render(Video *const video) = 0;
+  virtual void Stop(void) = 0;
+  virtual void Destroy(void) { }
 
-  static void Update();
+  static void Update(void);
   
   static void set_state(State* state);
-  static State* state() { return state_; }
+  static State* state(void) { return state_; }
 
   static void Register(const std::string& name, const boost::weak_ptr<State>& state);
   static boost::weak_ptr<State> Find(const std::string& name);

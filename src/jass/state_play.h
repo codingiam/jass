@@ -12,25 +12,24 @@
 
 #include "jass/jass.h"
 
-static const std::string kStatePlay = "state_play";
-
 class Proiectile;
 class Ship;
 class Mesh;
 
 class StatePlay : public State {
 public:
-  StatePlay();
-  virtual ~StatePlay();
+  StatePlay(void);
+  virtual ~StatePlay(void);
 
-  void Execute(Uint32 ticks, Uint8* keystate) override;
+  void Execute(const Uint32 dt, const Uint8 *keystate) override;
+  void Render(Video *const video) override;
 
   void addProiectile(Proiectile* proiectil);
 
 protected:
-  void Create() override;
-  void Start() override;
-  void Stop() override;
+  void Create(void) override;
+  void Start(void) override;
+  void Stop(void) override;
 
 private:
   GLuint bgSpace;

@@ -11,7 +11,7 @@
 class Proiectile : boost::noncopyable {
 public:
   Proiectile(GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner);
-  void update(Uint32 ticks);
+  void update(const Uint32 dt);
   void getPos(GLfloat& x, GLfloat& y) { x = xpos; y = ypos; };
 
   bool sterge;
@@ -20,7 +20,6 @@ public:
 
 private:
   GLfloat angle;
-  Uint32 lastUpdate;
   Uint32 lifetime;
 };
 

@@ -8,15 +8,16 @@
 
 #include <SDL.h>
 #include <SDL_opengl.h>
-#include <SDL_image.h>
+#include <IL/il.h> 
 
 // #include <fmodex/fmod.h>
 
-#include <boost/utility.hpp>
-
-#include <stdexcept>
+#include <boost/noncopyable.hpp>
+#include <boost/format.hpp>
 
 #include <iostream>
+
+#include <stdexcept>
 
 #include "jass/debug.h"
 
