@@ -14,134 +14,134 @@
 #include "jass/states_manager.h"
 #include "jass/projectile.h"
 #include "jass/window.h"
+#include "jass/image.h"
+#include "jass/texture.h"
 
 StatePlay::StatePlay() {
-  bgSpace = 0;
-  bgHealthbar = 0;
-  bgBoard = 0;
+  this->bg_space_ = 0;
+  this->bg_healthbar_ = 0;
+  this->bg_board_ = 0;
 
-  ship = new Mesh();
+  this->ship_ = new Mesh();
 
-  nava1 = NULL;
-  nava2 = NULL;
+  this->nava1_ = NULL;
+  this->nava2_ = NULL;
 }
 
 StatePlay::~StatePlay() {
-  delete ship;
+  delete ship_;
 
-  delete nava1;
-  delete nava2;
+  delete nava1_;
+  delete nava2_;
 
-  if (bgSpace) glDeleteTextures(1, &bgSpace);
-  if (bgHealthbar) glDeleteTextures(1, &bgHealthbar);
-  if (bgBoard) glDeleteTextures(1, &bgBoard);
+  bg_space_.reset();
+  bg_healthbar_.reset();
+  bg_board_.reset();
 
-  for (unsigned int i = 0; i < proiectile.size(); i++) {
-    Proiectile* p = proiectile[i];
+  for (unsigned int i = 0; i < projectiles_.size(); i++) {
+    Proiectile* p = projectiles_[i];
     delete p;
   }
 }
 
 void StatePlay::Create() {
-  ship->loadMeshObj("spaceship.obj", "data/obiecte/");
+  ship_->LoadMeshObj("spaceship.obj", "data/obiecte/");
 
-  Video *video = Video::GetVideo();
+  boost::shared_ptr<Image> image = Image::MakeImage("data/texturi/spacebg.png");
+  this->bg_space_ = Texture::MakeTexture(image);
 
-  boost::shared_ptr<Image> tmp = video->loadImage("data/texturi/spacebg.png");
-  video->makeTexture(tmp, &bgSpace);
+  image = Image::MakeImage("data/texturi/healthbar.png");
+  this->bg_healthbar_ = Texture::MakeTexture(image);
 
-  tmp = video->loadImage("data/texturi/healthbar.png");
-  video->makeTexture(tmp, &bgHealthbar);
-
-  tmp = video->loadImage("data/texturi/board.png");
-  video->makeTexture(tmp, &bgBoard);
+  image = Image::MakeImage("data/texturi/board.png");
+  this->bg_board_ = Texture::MakeTexture(image);
 }
 
 void StatePlay::Start() {
-  nava1 = new Ship(-4.5f, 3.25f, 1, 0.0f);
-  nava2 = new Ship(4.5f, -2.40f, 2, 180.0f);
+  this->nava1_ = new Ship(-4.5f, 3.25f, 1, 0.0f);
+  this->nava2_ = new Ship(4.5f, -2.40f, 2, 180.0f);
 
   Uint32 keys1[] = { SDL_SCANCODE_Q, SDL_SCANCODE_S, SDL_SCANCODE_C,
     SDL_SCANCODE_V, SDL_SCANCODE_LCTRL, 0 };
-  nava1->setkeys(keys1);
+  nava1_->SetKeys(keys1);
 
   Uint32 keys2[] = { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT,
     SDL_SCANCODE_RIGHT, SDL_SCANCODE_RCTRL, 0 };
-  nava2->setkeys(keys2);
+  nava2_->SetKeys(keys2);
 }
 
 void StatePlay::Stop() {
-  delete nava1; nava1 = NULL;
-  delete nava2; nava2 = NULL;
+  delete nava1_; this->nava1_ = NULL;
+  delete nava2_; this->nava2_ = NULL;
 }
 
 void StatePlay::Execute(const Uint32 dt, const Uint8 *keystate) {
-  for (unsigned int i = 0; i < proiectile.size(); i++) {
-    Proiectile* p = proiectile[i];
-    p->update(dt);
+  for (unsigned int i = 0; i < projectiles_.size(); i++) {
+    Proiectile* p = projectiles_[i];
+    p->Update(dt);
 
-    Ship* tmp = (p->owner == 1) ? (nava2) : (nava1);
-    if (tmp->colide(p->xpos, p->ypos)) p->sterge = true;
+    Ship* tmp = (p->owner_ == 1) ? (nava2_) : (nava1_);
+    if (tmp->Collide(p->xpos_, p->ypos_)) p->sterge_ = true;
   }
 
   std::vector<Proiectile*>::iterator it;
-  if ((it = proiectile.begin()) != proiectile.end()) {
+  if ((it = projectiles_.begin()) != projectiles_.end()) {
     do {
-      if ((*it)->sterge) {
+      if ((*it)->sterge_) {
         delete (*it);
-                it = proiectile.erase(it);
+                it = projectiles_.erase(it);
       } else {
         it++;
       }
-    } while (it != proiectile.end());
+    } while (it != projectiles_.end());
   }
 
-  nava1->update(dt, keystate);
-  nava2->update(dt, keystate);
+  nava1_->Update(dt, keystate);
+  nava2_->Update(dt, keystate);
 
   if (keystate[SDL_SCANCODE_ESCAPE])
-      State::set_state(State::Find(kStateIntro).lock().get());
+      State::SetState(State::Find(kStateIntro).lock().get());
 
-  if ((nava1->getLife() <= 0.0f) || (nava2->getLife() <= 0.0f))
-      State::set_state(State::Find(kStateIntro).lock().get());
+  if ((nava1_->GetLife() <= 0.0f) || (nava2_->GetLife() <= 0.0f))
+      State::SetState(State::Find(kStateIntro).lock().get());
 }
 
-void StatePlay::addProiectile(Proiectile *proiectil) {
-  proiectile.push_back(proiectil);
+void StatePlay::AddProjectile(Proiectile *projectile) {
+  projectiles_.push_back(projectile);
 }
 
 void StatePlay::Render(Video *const video) {
   glClear(GL_COLOR_BUFFER_BIT);
-  video->init2DScene(Window::kWidth, Window::kHeight);
+  video->Init2DScene(Window::kWidth, Window::kHeight);
 
   glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-  video->drawTexture(0, 0, Window::kWidth, Window::kHeight, bgSpace);
+  video->DrawTexture(0, 0, Window::kWidth, Window::kHeight, bg_space_);
 
-  video->init3DScene(Window::kWidth, Window::kHeight);
+  video->Init3DScene(Window::kWidth, Window::kHeight);
 
   glPushMatrix();
 
   GLfloat x = .0f, y = .0f, angle = .0f;
-  nava1->getPosition(&x, &y, &angle);
+  nava1_->GetPosition(&x, &y, &angle);
 
   glTranslatef(x, y, -10.0f);
   glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
   glRotatef(angle, 0.0f, 1.0f, 0.0f);
   glScalef(0.035f, 0.035f, 0.035f);
   glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-  ship->display();
+  ship_->Display();
 
   glPopMatrix();
   glPushMatrix();
 
-  nava2->getPosition(&x, &y, &angle);
+  nava2_->GetPosition(&x, &y, &angle);
 
   glTranslatef(x, y, -10.0f);
   glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
   glRotatef(angle, 0.0f, 1.0f, 0.0f);
   glScalef(0.035f, 0.035f, 0.035f);
   glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-  ship->display();
+  ship_->Display();
 
   glPopMatrix();
 
@@ -150,11 +150,11 @@ void StatePlay::Render(Video *const video) {
   glDisable(GL_TEXTURE_2D); glDisable(GL_LIGHTING);
     glPointSize(5.0f);
   glBegin(GL_POINTS);
-  for (unsigned int i = 0; i < proiectile.size(); i++) {
-    Proiectile* p = proiectile[i];
-    p->getPos(&x, &y);
+  for (unsigned int i = 0; i < projectiles_.size(); i++) {
+    Proiectile* p = projectiles_[i];
+    p->GetPos(&x, &y);
 
-    if (p->owner == 1) {
+    if (p->owner_ == 1) {
       glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
     } else {
       glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
@@ -165,14 +165,14 @@ void StatePlay::Render(Video *const video) {
 
   glEnable(GL_LIGHTING); glEnable(GL_TEXTURE_2D);
 
-  video->init2DScene(Window::kWidth, Window::kHeight);
+  video->Init2DScene(Window::kWidth, Window::kHeight);
 
-  float life = nava1->getLife();
+  float life = nava1_->GetLife();
   glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
-  video->drawTexture(10, 10, 20, 512, bgHealthbar, 1.0f - life);
+  video->DrawTexture(10, 10, 20, 512, bg_healthbar_, 1.0f - life);
 
-  life = nava2->getLife();
-  video->drawTexture(770, 10, 20, 512, bgHealthbar, 1.0f - life);
+  life = nava2_->GetLife();
+  video->DrawTexture(770, 10, 20, 512, bg_healthbar_, 1.0f - life);
 
-  video->drawTexture(10, 530, 780, 64, bgBoard);
+  video->DrawTexture(10, 530, 780, 64, bg_board_);
 }

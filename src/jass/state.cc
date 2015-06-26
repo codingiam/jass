@@ -14,26 +14,27 @@
 State* State::state_ = NULL;
 State* State::next_ = NULL;
 
-std::map<std::string, boost::weak_ptr<State> > State::states;
+std::map<std::string, boost::weak_ptr<State> > State::states_;
 
 void State::Register(const std::string& name,
-                     const boost::weak_ptr<State>& state) {
+                     const boost::weak_ptr<State>& state,
+                     Video *const video) {
   const std::map<std::string, boost::weak_ptr<State> >::iterator it =
-    states.find(name);
+    states_.find(name);
 
-  if (it != states.end())
+  if (it != states_.end())
     throw(std::runtime_error("State already registered."));
 
   state.lock()->Create();
-  states.insert(std::pair<std::string, boost::weak_ptr<State> >(name, state));
+  states_.insert(std::pair<std::string, boost::weak_ptr<State> >(name, state));
 }
 
 boost::weak_ptr<State> State::Find(const std::string& name) {
   boost::weak_ptr<State> state;
 
   const std::map<std::string, boost::weak_ptr<State> >::iterator it =
-    states.find(name);
-  if (it != states.end())
+    states_.find(name);
+  if (it != states_.end())
     state = it->second;
 
   return state;
@@ -43,10 +44,10 @@ boost::weak_ptr<State> State::Unregister(const std::string& name) {
   boost::weak_ptr<State> state;
 
   const std::map<std::string, boost::weak_ptr<State> >::iterator it =
-    states.find(name);
-  if (it != states.end()) {
+    states_.find(name);
+  if (it != states_.end()) {
     state = it->second;
-    states.erase(it);
+    states_.erase(it);
     state.lock()->Destroy();
   }
 
@@ -65,6 +66,6 @@ void State::Update() {
   }
 }
 
-void State::set_state(State* state) {
+void State::SetState(State* state) {
     next_ = state;
 }

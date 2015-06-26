@@ -13,6 +13,8 @@
 class StateIntro;
 class StatePlay;
 
+class Video;
+
 static const std::string kStateIntro = "state_intro";
 static const std::string kStatePlay = "state_play";
 
@@ -21,10 +23,11 @@ class StatesManager : boost::noncopyable {
   StatesManager(void);
   ~StatesManager(void);
 
-  void Initialize(void);
-  void ShutDown(void);
+  void Initialize(Video *const video);
 
  private:
+  void ShutDown(void);
+
   boost::shared_ptr<StateIntro> state_intro_;
   boost::shared_ptr<StatePlay> state_play_;
 };

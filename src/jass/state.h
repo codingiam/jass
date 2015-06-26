@@ -29,18 +29,20 @@ class State : boost::noncopyable {
 
   static void Update(void);
 
-  static void set_state(State* state);
-  static State* state(void) { return state_; }
+  static void SetState(State *state);
+  static State* GetState(void) { return state_; }
 
-  static void Register(const std::string& name,
-    const boost::weak_ptr<State>& state);
-  static boost::weak_ptr<State> Find(const std::string& name);
-  static boost::weak_ptr<State> Unregister(const std::string& name);
+  static void Register(const std::string &name,
+    const boost::weak_ptr<State> &state,
+    Video *const video);
+  static boost::weak_ptr<State> Find(const std::string &name);
+  static boost::weak_ptr<State> Unregister(const std::string &name);
 
  private:
-  static std::map<std::string, boost::weak_ptr<State> > states;
-  static State* state_;
-  static State* next_;
+  static std::map<std::string, boost::weak_ptr<State> > states_;
+
+  static State *state_;
+  static State *next_;
 };
 
 #endif  // JASS_STATE_H_

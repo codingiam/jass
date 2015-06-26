@@ -12,6 +12,7 @@
 
 class Window;
 class StatesManager;
+class Video;
 
 class Application : boost::noncopyable  {
  public:
@@ -19,11 +20,12 @@ class Application : boost::noncopyable  {
   ~Application(void);
 
   void Initialize(void);
-  void ShutDown(void);
 
   void Run(void);
 
  private:
+  void ShutDown(void);
+
   void InitializeWindow(void);
   void InitializeVideo(void);
   void InitialiseStates(void);
@@ -34,6 +36,7 @@ class Application : boost::noncopyable  {
 
   boost::shared_ptr<Window> window_;
   boost::shared_ptr<StatesManager> states_manager_;
+  boost::shared_ptr<Video> video_;
 };
 
 #endif  // JASS_APPLICATION_H_

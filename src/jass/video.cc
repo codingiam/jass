@@ -13,7 +13,9 @@
 #include <string>
 
 #include "jass/application.h"
+
 #include "jass/image.h"
+#include "jass/texture.h"
 
 static void perspectiveGL(GLdouble fovY, GLdouble aspect,
                           GLdouble zNear, GLdouble zFar) {
@@ -28,93 +30,93 @@ static void ortho2D(GLdouble left, GLdouble right,
 }
 
 Video::Video() {
-  ilInit();
-  fontTexture = 0;
-  base = 0;
-  zpos = 1.0f;
+  this->il_initialized_ = false;
+  this->font_texture_ = 0;
+  this->base_ = 0;
 }
 
-boost::shared_ptr<Image> Video::loadImage(boost::filesystem::path const &path) {
-  boost::shared_ptr<Image> image = boost::shared_ptr<Image>(new Image());
-  if (!image->loadImage(path.string())) {
-    boost::format message =
-      boost::format("Could not load image: %s") % path.string();
-    throw std::runtime_error(message.str());
+Video::~Video() {
+  if (il_initialized_) {
+    ilShutDown();
+    this->il_initialized_ = false;
   }
-  return image;
+
+  if (base_) {
+    glDeleteLists(base_, 256);
+    this->base_ = 0;
+  }
+
+  font_texture_.reset();
 }
 
-void Video::makeTexture(boost::shared_ptr<Image> const &image,
-                        GLuint *texture) {
-  glGenTextures(1, texture);
+void Video::Initialize() {
+  ilInit();
+  this->il_initialized_ = true;
 
-  auto func = [texture] (GLubyte *pixels, GLuint width, GLuint height) {
-    glBindTexture(GL_TEXTURE_2D, *texture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-      0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-  };
-
-  image->withData(func);
+  LoadFont();
 }
 
-void Video::InitFont() {
-  if ((fontTexture) || (base))
+void Video::LoadFont() {
+  if ((font_texture_) || (base_))
     return;
 
-  boost::shared_ptr<Image> textura = loadImage("data/fonturi/font.png");
-  makeTexture(textura, &fontTexture);
+  boost::shared_ptr<Image> image = Image::MakeImage("data/fonturi/font.png");
+  this->font_texture_ = Texture::MakeTexture(image);
 
-  float cx = 0, cy = 0;
+  this->base_ = glGenLists(256);
 
-  base = glGenLists(256);
-  glBindTexture(GL_TEXTURE_2D, fontTexture);
+  const GLuint base = base_;
 
-  for (int loop = 0; loop < 256; loop++) {
-    glNewList(base + loop, GL_COMPILE);
-    glBegin(GL_TRIANGLE_STRIP);
-    glTexCoord2f(cx / 256, cy / 256);
-    glVertex2i(0, 0);
+  std::function<void(void)> func = [base] () {
+    float cx = 0, cy = 0;
 
-    glTexCoord2f(cx / 256, (cy + 16) / 256);
-    glVertex2i(0, 16);
+    for (int loop = 0; loop < 256; loop++) {
+      glNewList(base + loop, GL_COMPILE);
+      glBegin(GL_TRIANGLE_STRIP);
+      glTexCoord2f(cx / 256, cy / 256);
+      glVertex2i(0, 0);
 
-    glTexCoord2f((cx + 16) / 256, cy / 256);
-    glVertex2i(16, 0);
+      glTexCoord2f(cx / 256, (cy + 16) / 256);
+      glVertex2i(0, 16);
 
-    glTexCoord2f((cx + 16) / 256, (cy + 16) / 256);
-    glVertex2i(16, 16);
-    glEnd();
+      glTexCoord2f((cx + 16) / 256, cy / 256);
+      glVertex2i(16, 0);
 
-    glTranslated(10, 0, 0);
-    glEndList();
+      glTexCoord2f((cx + 16) / 256, (cy + 16) / 256);
+      glVertex2i(16, 16);
+      glEnd();
 
-    cx += 16;
-    if (fabs(cx - 256) <= .1f) {
-      cx = 0;
-      cy += 16;
+      glTranslated(10, 0, 0);
+      glEndList();
+
+      cx += 16;
+      if (fabs(cx - 256) <= .1f) {
+        cx = 0;
+        cy += 16;
+      }
     }
-  }
+  };
+
+  font_texture_->Callback(func);
 }
 
-void Video::print(GLint x, GLint y, const char *text, int set) {
-  glBindTexture(GL_TEXTURE_2D, fontTexture);
+void Video::Print(GLint x, GLint y, const char *text, int set) {
+  const GLuint base = base_;
 
-  glLoadIdentity();
+  std::function<void(void)> func = [x, y, text, base] () {
+    glLoadIdentity();
 
-  glTranslated(x, y, 0);
+    glTranslated(x, y, 0);
 
-  glListBase(base - 32 + (128 * 1));
+    glListBase(base - 32 + (128 * 1));
 
-  glCallLists((GLsizei) strlen(text), GL_BYTE, text);
+    glCallLists((GLsizei) strlen(text), GL_BYTE, text);
+  };
+
+  font_texture_->Callback(func);
 }
 
-void Video::init2DScene(int width, int height) {
+void Video::Init2DScene(int width, int height) {
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
   glDisable(GL_LIGHTING);
@@ -129,7 +131,7 @@ void Video::init2DScene(int width, int height) {
   glLoadIdentity();
 }
 
-void Video::init3DScene(int width, int height) {
+void Video::Init3DScene(int width, int height) {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glEnable(GL_LIGHTING);
@@ -144,7 +146,7 @@ void Video::init3DScene(int width, int height) {
 
   glLoadIdentity();
 
-  glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, zpos),
+  glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
     glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
   glLoadMatrixf(glm::value_ptr(cam));
 
@@ -168,19 +170,19 @@ void Video::init3DScene(int width, int height) {
   glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 }
 
-glm::vec3 Video::getNormal(const glm::vec3 v0, const glm::vec3 v1,
+glm::vec3 Video::GetNormal(const glm::vec3 v0, const glm::vec3 v1,
                            const glm::vec3 v2) {
   return glm::normalize(glm::cross(v2 - v0, v1 - v0));
 }
 
-void Video::drawTexture(int x, int y, int w, int h, GLuint texture,
-    GLfloat yamount) {
+void Video::DrawTexture(int x, int y, int w, int h,
+    boost::shared_ptr<Texture> const &texture, GLfloat yamount) {
   glm::i32vec2 v0(x, y);
   glm::i32vec2 v1(x, y + h);
   glm::i32vec2 v2(x + w, y);
   glm::i32vec2 v3(x + w, y + h);
 
-  glBindTexture(GL_TEXTURE_2D, texture);
+  texture->Bind();
 
   glBegin(GL_TRIANGLE_STRIP);
   glTexCoord2f(0.0f, yamount);
@@ -195,21 +197,4 @@ void Video::drawTexture(int x, int y, int w, int h, GLuint texture,
   glTexCoord2f(1.0f, 1.0f);
   glVertex2iv(glm::value_ptr(v3));
   glEnd();
-}
-
-Video::~Video() {
-  ilShutDown();
-
-  if (base)
-    glDeleteLists(base, 256);
-  if (fontTexture)
-    glDeleteTextures(1, &fontTexture);
-}
-
-void Video::plusZpos() {
-  this->zpos -= 0.1f;
-}
-
-void Video::minusZpos() {
-  this->zpos += 0.1f;
 }

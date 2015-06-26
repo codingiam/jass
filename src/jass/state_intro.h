@@ -10,10 +10,12 @@
 
 #include "jass/jass.h"
 
+class Texture;
+
 class StateIntro : public State {
  public:
   StateIntro(void);
-  virtual ~StateIntro(void);
+  ~StateIntro(void);
 
   void Execute(const Uint32 dt, const Uint8 *keystate) override;
   void Render(Video *const video) override;
@@ -24,25 +26,25 @@ class StateIntro : public State {
   void Stop(void) override;
 
  private:
-  GLuint bgSpace;
-  GLuint bgIntro;
-  GLuint bgAction;
+  boost::shared_ptr<Texture> bg_space_;
+  boost::shared_ptr<Texture> bg_intro_;
+  boost::shared_ptr<Texture> bg_action_;
 
-  Uint32 ticksTitle;
-  Uint32 ticksAction;
-  Uint32 ticksIntroText;
+  Uint32 ticks_title_;
+  Uint32 ticks_action_;
+  Uint32 ticks_intro_text_;
 
-  Uint32 speedTitle;
-  Uint32 speedAction;
-  Uint32 speedIntroText;
+  Uint32 speed_title_;
+  Uint32 speed_action_;
+  Uint32 speed_intro_text_;
 
-  float alphaTitle;
-  float blueAction;
-  float positionText;
+  float alpha_title_;
+  float blue_action_;
+  float position_text_;
 
-  Uint32 showTo;
+  Uint32 show_to_;
 
-  Uint32 sizeIntroText;
+  Uint32 size_intro_text_;
 };
 
 #endif  // JASS_STATE_INTRO_H_

@@ -38,9 +38,9 @@ void Application::Initialize() {
 }
 
 void Application::ShutDown() {
-  this->states_manager_ = boost::shared_ptr<StatesManager>();
+  states_manager_.reset();
 
-  this->window_ = boost::shared_ptr<Window>();
+  window_.reset();
 
   if (sdl_initialized_) {
     this->sdl_initialized_ = false;
@@ -49,25 +49,25 @@ void Application::ShutDown() {
 }
 
 void Application::InitializeWindow() {
-  this->window_ = boost::shared_ptr<Window>(new Window);
+  this->window_ = boost::shared_ptr<Window>(new Window());
   window_->Initialize();
 }
 
 void Application::InitializeVideo() {
-  Video *video = Video::GetVideo();
-  video->InitFont();
+  this->video_ = boost::shared_ptr<Video>(new Video());
+  video_->Initialize();
 }
 
 void Application::InitialiseStates() {
-  this->states_manager_ = boost::shared_ptr<StatesManager>(new StatesManager);
-  states_manager_->Initialize();
+  this->states_manager_ = boost::shared_ptr<StatesManager>(new StatesManager());
+  states_manager_->Initialize(this->video_.get());
 }
 
 void Application::Run() {
   Uint32 dt = TARGET_DT;
   Uint32 begin_ms = SDL_GetTicks();
 
-  while (State::state() != NULL) {
+  while (State::GetState() != NULL) {
     Tick(dt);
 
     const Uint32 end_ms = SDL_GetTicks();
@@ -85,9 +85,9 @@ void Application::Run() {
 void Application::Tick(const Uint32 dt) {
     const Uint8 *keys_state = SDL_GetKeyboardState(NULL);
 
-    State::state()->Execute(dt, keys_state);
+    State::GetState()->Execute(dt, keys_state);
 
-    State::state()->Render(Video::GetVideo());
+    State::GetState()->Render(video_.get());
 
     window_->SwapBuffers();
 
@@ -95,7 +95,7 @@ void Application::Tick(const Uint32 dt) {
 
     while (SDL_PollEvent(&sdl_event)) {
       if (sdl_event.type == SDL_QUIT) {
-        State::set_state(NULL);
+        State::SetState(NULL);
       }
     }
 

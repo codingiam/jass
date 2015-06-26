@@ -10,22 +10,24 @@
 
 #define PATH_LENGTH 100
 
+class Texture;
+
 class Material : boost::noncopyable {
  public:
   Material();
   ~Material();
 
-  void loadMaterial(const char* filename, const char* path = "./");
-  const char* getName() { return name_; }
-  void useMaterial();
+  void LoadMaterial(const char* filename, const char* path);
+  const char* GetName() { return name_; }
+  void UseMaterial();
 
-  GLuint matTexture_;
+  boost::shared_ptr<Texture> mat_texture_;
 
  private:
   enum  { MAT_AMBIENT = 1, MAT_DIFFUSE = 2, MAT_SPECULAR = 4, MAT_SHINESS = 8,
     MAT_TEXTURE = 16 };
 
-  void processCmdMat(char* cmd, char* params);
+  void ProcessCmdMat(char *cmd, char *params);
 
   char path_[PATH_LENGTH];
   const char* filename_;
@@ -33,7 +35,7 @@ class Material : boost::noncopyable {
 
   GLushort format_;
 
-  GLfloat matAmbient_[3], matDiffuse_[3], matSpecular_[3], matShiness_;
+  GLfloat mat_ambient_[3], mat_diffuse_[3], mat_specular_[3], mat_shiness_;
 };
 
 #endif  // JASS_MATERIAL_H_

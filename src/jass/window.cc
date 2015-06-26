@@ -7,18 +7,31 @@
 #include <string>
 
 Window::Window() {
-  this->subsystem_initialized = false;
-  this->sdl_window = nullptr;
-  this->gl_context = nullptr;
+  this->subsystem_initialized_ = false;
+  this->sdl_window_ = nullptr;
+  this->gl_context_ = nullptr;
 }
 
 Window::~Window() {
-  ShutDown();
+  if (gl_context_) {
+    SDL_GL_DeleteContext(gl_context_);
+    this->gl_context_ = nullptr;
+  }
+
+  if (sdl_window_) {
+    SDL_DestroyWindow(sdl_window_);
+    this->sdl_window_ = nullptr;
+  }
+
+  if (subsystem_initialized_) {
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+    this->subsystem_initialized_ = false;
+  }
 }
 
 void Window::Initialize() {
-  this->subsystem_initialized = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
-  if (!subsystem_initialized) {
+  this->subsystem_initialized_ = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
+  if (!subsystem_initialized_) {
     boost::format message =
       boost::format("Could not initialise SDL subsystem: %s") % SDL_GetError();
     throw std::runtime_error(message.str());
@@ -46,16 +59,16 @@ void Window::Initialize() {
     video_flags |= SDL_WINDOW_FULLSCREEN;
   }
 
-  this->sdl_window = SDL_CreateWindow("J.A.S.S - Project",
+  this->sdl_window_ = SDL_CreateWindow("J.A.S.S - Project",
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
     kWidth, kHeight,
     video_flags);
-  if (!sdl_window) {
+  if (!sdl_window_) {
     throw std::runtime_error("Could not create window");
   }
 
-  this->gl_context = SDL_GL_CreateContext(sdl_window);
-  if (!gl_context) {
+  this->gl_context_ = SDL_GL_CreateContext(sdl_window_);
+  if (!gl_context_) {
     throw std::runtime_error("Could not create OpenGL context");
   }
 
@@ -105,23 +118,6 @@ void Window::Initialize() {
   std::cout << "OpenGL initialized." << std::endl;
 }
 
-void Window::ShutDown() {
-  if (gl_context) {
-    SDL_GL_DeleteContext(gl_context);
-    this->gl_context = nullptr;
-  }
-
-  if (sdl_window) {
-    SDL_DestroyWindow(sdl_window);
-    this->sdl_window = nullptr;
-  }
-
-  if (subsystem_initialized) {
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
-    this->subsystem_initialized = false;
-  }
-}
-
 void Window::SwapBuffers() {
-  SDL_GL_SwapWindow(sdl_window);
+  SDL_GL_SwapWindow(sdl_window_);
 }

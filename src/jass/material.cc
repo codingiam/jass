@@ -8,19 +8,21 @@
 
 #include "jass/video.h"
 
+#include "jass/image.h"
+#include "jass/texture.h"
+
 Material::Material() {
-  *name_ = 0;
-  *path_ = 0;
-  filename_ = NULL;
-  format_ = 0;
-  matTexture_ = 0;
+  *this->name_ = 0;
+  *this->path_ = 0;
+  this->filename_ = NULL;
+  this->format_ = 0;
 }
 
 Material::~Material() {
-  if (matTexture_) glDeleteTextures(1, &matTexture_);
+  mat_texture_.reset();
 }
 
-void Material::loadMaterial(const char *filename, const char *path) {
+void Material::LoadMaterial(const char *filename, const char *path) {
   char buffer[100];
 
   snprintf(buffer, sizeof(buffer), "%s%s\0", path, filename);
@@ -45,13 +47,13 @@ void Material::loadMaterial(const char *filename, const char *path) {
 
     cmd[params - buffer] = 0; params++;
 
-    if (*cmd) processCmdMat(cmd, params);
+    if (*cmd) ProcessCmdMat(cmd, params);
   }
 
   fclose(fp);
 }
 
-void Material::processCmdMat(char *cmd, char *params) {
+void Material::ProcessCmdMat(char *cmd, char *params) {
   if (strcmp(cmd, "newmtl") == 0) {
     snprintf(name_, sizeof(name_), "%s", params);
 
@@ -59,16 +61,16 @@ void Material::processCmdMat(char *cmd, char *params) {
   }
 
   if (strcmp(cmd, "Ka") == 0) {
-    sscanf(params, "%f %f %f", &matAmbient_[0], &matAmbient_[1],
-      &matAmbient_[2]);
+    sscanf(params, "%f %f %f", &mat_ambient_[0], &mat_ambient_[1],
+      &mat_ambient_[2]);
     format_ |= MAT_AMBIENT;
 
     return;
   }
 
   if (strcmp(cmd, "Kd") == 0) {
-    sscanf(params, "%f %f %f", &matDiffuse_[0], &matDiffuse_[1],
-      &matDiffuse_[2]);
+    sscanf(params, "%f %f %f", &mat_diffuse_[0], &mat_diffuse_[1],
+      &mat_diffuse_[2]);
     format_ |= MAT_DIFFUSE;
 
     return;
@@ -76,14 +78,14 @@ void Material::processCmdMat(char *cmd, char *params) {
 
   if (strcmp(cmd, "Ks") == 0) {
     sscanf(params, "%f %f %f",
-      &matSpecular_[0], &matSpecular_[1], &matSpecular_[2]);
+      &mat_specular_[0], &mat_specular_[1], &mat_specular_[2]);
     format_ |= MAT_SPECULAR;
 
     return;
   }
 
   if (strcmp(cmd, "Ns") == 0) {
-    sscanf(params, "%f", &matShiness_);
+    sscanf(params, "%f", &mat_shiness_);
     format_ |= MAT_SHINESS;
 
     return;
@@ -92,27 +94,24 @@ void Material::processCmdMat(char *cmd, char *params) {
   if (strcmp(cmd, "map_Kd") == 0) {
     char buffer[100];
 
-    Video* video = Video::GetVideo();
-
     snprintf(buffer, sizeof(buffer), "%s%s", path_, params);
 
-    boost::shared_ptr<Image> tmp = video->loadImage(buffer);
-    video->makeTexture(tmp, &matTexture_);
+    boost::shared_ptr<Image> image = Image::MakeImage(buffer);
+    this->mat_texture_ = Texture::MakeTexture(image);
 
     format_ |= MAT_TEXTURE;
   }
 }
 
-void Material::useMaterial() {
+void Material::UseMaterial() {
   if (format_ & MAT_TEXTURE)
-    glBindTexture(GL_TEXTURE_2D, matTexture_);
-
+    mat_texture_->Bind();
   if (format_ & MAT_AMBIENT)
-    glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbient_);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_);
   if (format_ & MAT_DIFFUSE)
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse_);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse_);
   if (format_ & MAT_SPECULAR)
-    glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular_);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular_);
   if (format_ & MAT_SHINESS)
-    glMaterialfv(GL_FRONT, GL_SHININESS, &matShiness_);
+    glMaterialfv(GL_FRONT, GL_SHININESS, &mat_shiness_);
 }

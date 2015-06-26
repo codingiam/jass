@@ -16,15 +16,14 @@ class Window : boost::noncopyable {
   ~Window(void);
 
   void Initialize(void);
-  void ShutDown(void);
 
   void SwapBuffers(void);
 
  private:
-  bool subsystem_initialized;
+  bool subsystem_initialized_;
 
-  SDL_GLContext gl_context;
-  SDL_Window *sdl_window;
+  SDL_GLContext gl_context_;
+  SDL_Window *sdl_window_;
 };
 
 #endif  // JASS_WINDOW_H_

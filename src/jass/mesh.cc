@@ -10,9 +10,9 @@
 #include <string>
 
 Mesh::Mesh() {
-  *path_ = 0;
-  filename_ = NULL;
-  mesh_ = 0;
+  *this->path_ = 0;
+  this->filename_ = NULL;
+  this->mesh_ = 0;
 }
 
 Mesh::~Mesh() {
@@ -35,7 +35,7 @@ Mesh::~Mesh() {
   if (mesh_) glDeleteLists(mesh_, 1);
 }
 
-void Mesh::loadMeshObj(const char* filename, const char *path) {
+void Mesh::LoadMeshObj(const char* filename, const char *path) {
   if (mesh_) return;
 
   FILE* fp = fopen((boost::filesystem::path(path) /= filename).
@@ -49,9 +49,9 @@ void Mesh::loadMeshObj(const char* filename, const char *path) {
 
   char *cmd, *params, *trimer;
 
-  loadMaterialObj("spaceship.mtl");
+  LoadMaterialObj("spaceship.mtl");
 
-  mesh_ = glGenLists(1);
+  this->mesh_ = glGenLists(1);
 
   glNewList(mesh_, GL_COMPILE);
 
@@ -69,7 +69,7 @@ void Mesh::loadMeshObj(const char* filename, const char *path) {
 
     cmd[params - buffer] = 0; params++;
 
-    if (*cmd) processCmdObj(cmd, params);
+    if (*cmd) ProcessCmdObj(cmd, params);
   }
 
   glEnd();
@@ -79,7 +79,7 @@ void Mesh::loadMeshObj(const char* filename, const char *path) {
   fclose(fp);
 }
 
-void Mesh::processCmdObj(char *cmd, char *params) {
+void Mesh::ProcessCmdObj(char *cmd, char *params) {
   /*
   if (strcmp(cmd, "mtllib") == 0) {
     loadMaterialObj(params);
@@ -116,7 +116,7 @@ void Mesh::processCmdObj(char *cmd, char *params) {
   }
 
   if (strcmp(cmd, "f") == 0) {
-    processFace(params);
+    ProcessFace(params);
     return;
   }
 
@@ -152,15 +152,15 @@ void Mesh::processCmdObj(char *cmd, char *params) {
 */
 }
 
-void Mesh::loadMaterialObj(const char *filename) {
+void Mesh::LoadMaterialObj(const char *filename) {
   Material* mat = new Material();
 
-  mat->loadMaterial(filename, path_);
+  mat->LoadMaterial(filename, path_);
 
   materials_.push_back(mat);
 }
 
-void Mesh::display() {
+void Mesh::Display() {
   if (!mesh_) {
     std::cout << "mesh not loaded" << std::endl;
 
@@ -169,7 +169,7 @@ void Mesh::display() {
 
   for (unsigned int i = 1; i <= materials_.size(); i++) {
     Material* mat = materials_[i - 1];
-    mat->useMaterial();
+    mat->UseMaterial();
     if (i == 1) {
       break;
     }
@@ -178,7 +178,7 @@ void Mesh::display() {
   glCallList(mesh_);
 }
 
-void Mesh::processFace(char *face) {
+void Mesh::ProcessFace(char *face) {
   unsigned int v1, t1, n1;
   unsigned int v2, t2, n2;
   unsigned int v3, t3, n3;

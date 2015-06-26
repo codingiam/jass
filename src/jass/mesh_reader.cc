@@ -11,9 +11,9 @@ MeshReader::MeshReader(const char *filename, const char* path ) {
   std::string openfile = path;
   openfile += filename;
 
-  fp = fopen(openfile.c_str(), "r");
+  this->fp_ = fopen(openfile.c_str(), "r");
 }
 
 MeshReader::~MeshReader() {
-  if (fp) fclose( fp );
+  if (fp_) fclose( fp_ );
 }

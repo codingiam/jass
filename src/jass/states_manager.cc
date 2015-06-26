@@ -16,14 +16,14 @@ StatesManager::StatesManager() {
 StatesManager::~StatesManager() {
 }
 
-void StatesManager::Initialize() {
-  this->state_intro_ = boost::shared_ptr<StateIntro>(new StateIntro);
-  this->state_play_ = boost::shared_ptr<StatePlay>(new StatePlay);
+void StatesManager::Initialize(Video *const video) {
+  this->state_intro_ = boost::shared_ptr<StateIntro>(new StateIntro());
+  this->state_play_ = boost::shared_ptr<StatePlay>(new StatePlay());
 
-  State::Register(kStateIntro, state_intro_);
-  State::Register(kStatePlay, state_play_);
+  State::Register(kStateIntro, state_intro_, video);
+  State::Register(kStatePlay, state_play_, video);
 
-  State::set_state(state_intro_.get());
+  State::SetState(state_intro_.get());
   State::Update();
 }
 

@@ -10,8 +10,6 @@
 #include <SDL_opengl.h>
 #include <IL/il.h>
 
-// #include <fmodex/fmod.h>
-
 #include <boost/noncopyable.hpp>
 #include <boost/format.hpp>
 

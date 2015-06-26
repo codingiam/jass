@@ -15,16 +15,17 @@
 class Proiectile;
 class Ship;
 class Mesh;
+class Texture;
 
 class StatePlay : public State {
  public:
   StatePlay(void);
-  virtual ~StatePlay(void);
+  ~StatePlay(void);
 
   void Execute(const Uint32 dt, const Uint8 *keystate) override;
   void Render(Video *const video) override;
 
-  void addProiectile(Proiectile* proiectil);
+  void AddProjectile(Proiectile *projectile);
 
  protected:
   void Create(void) override;
@@ -32,13 +33,16 @@ class StatePlay : public State {
   void Stop(void) override;
 
  private:
-  GLuint bgSpace;
-  GLuint bgHealthbar;
-  GLuint bgBoard;
-  std::vector<Proiectile*> proiectile;
-  Mesh* ship;
-  Ship* nava1;
-  Ship* nava2;
+  boost::shared_ptr<Texture> bg_space_;
+  boost::shared_ptr<Texture> bg_healthbar_;
+  boost::shared_ptr<Texture> bg_board_;
+
+  std::vector<Proiectile*> projectiles_;
+
+  Mesh* ship_;
+
+  Ship* nava1_;
+  Ship* nava2_;
 };
 
 #endif  // JASS_STATE_PLAY_H_

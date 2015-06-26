@@ -8,25 +8,25 @@
 
 Proiectile::Proiectile(GLfloat xpos, GLfloat ypos,
                        GLfloat angle, GLuint owner) {
-  this->xpos = xpos;
-  this->ypos = ypos;
+  this->xpos_ = xpos;
+  this->ypos_ = ypos;
 
-  this->angle = angle;
+  this->angle_ = angle;
 
-  this->owner = owner;
+  this->owner_ = owner;
 
-  sterge = false;
+  this->sterge_ = false;
 }
 
-void Proiectile::update(const Uint32 dt) {
+void Proiectile::Update(const Uint32 dt) {
   Uint32 diff = dt > 25 ? 25 : dt;
 
-  GLfloat amy = -0.5f * cos(static_cast<float>(M_PI) * angle / 180);
-  GLfloat amx = 0.5f * sin(static_cast<float>(M_PI) * angle / 180);
+  GLfloat amy = -0.5f * cos(static_cast<float>(M_PI) * angle_ / 180);
+  GLfloat amx = 0.5f * sin(static_cast<float>(M_PI) * angle_ / 180);
 
-  ypos += amy * 0.5f * (diff / 25.0f);
-  xpos += amx * 0.5f * (diff / 25.0f);
+  ypos_ += amy * 0.5f * (diff / 25.0f);
+  xpos_ += amx * 0.5f * (diff / 25.0f);
 
-  if (abs(xpos) >= 6.5f) sterge = true;
-  if (abs(ypos) >= 5.5f) sterge = true;
+  if (abs(xpos_) >= 6.5f) this->sterge_ = true;
+  if (abs(ypos_) >= 5.5f) this->sterge_ = true;
 }

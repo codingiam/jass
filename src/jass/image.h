@@ -6,6 +6,8 @@
 #define JASS_IMAGE_H_
 #pragma once
 
+#include <boost/filesystem.hpp>
+
 #include <string>
 
 #include "jass/jass.h"
@@ -15,20 +17,18 @@ class Image : boost::noncopyable {
   Image(void);
   ~Image(void);
 
-  bool loadImage(std::string const &file_name);
+  bool LoadImage(std::string const &file_name);
 
-  template<typename Func>
-  void withData(Func func) {
-    ilBindImage(texid_);
+  static boost::shared_ptr<Image>
+    MakeImage(boost::filesystem::path const &path);
 
-    func(ilGetData(),
-      ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT));
+  bool Callback(std::function<void(GLubyte *, GLuint , GLuint)> const &func);
 
-    ilBindImage(0);
-  }
+  std::string file_name() const { return file_name_; }
 
  private:
-  ILuint texid_;
+  ILuint image_;
+  std::string file_name_;
 };
 
 #endif  // JASS_IMAGE_H_
