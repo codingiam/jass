@@ -71,7 +71,7 @@ void StateIntro::Start() {
 void StateIntro::Stop() {
 }
 
-void StateIntro::Execute(const Uint32 dt, const Uint8 *keystate) {
+void StateIntro::Update(const Uint32 dt, const Uint8 *keystate) {
   ticks_title_ += dt;
   ticks_action_ += dt;
   ticks_intro_text_ += dt;

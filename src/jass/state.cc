@@ -54,7 +54,7 @@ boost::weak_ptr<State> State::Unregister(const std::string& name) {
   return state;
 }
 
-void State::Update() {
+void State::Swap() {
   if (state_ != next_) {
     if (state_)
       state_->Stop();

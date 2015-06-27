@@ -22,12 +22,12 @@ class State : boost::noncopyable {
 
   virtual void Create(void) = 0;
   virtual void Start(void) = 0;
-  virtual void Execute(const Uint32 dt, const Uint8 *keystate) = 0;
+  virtual void Update(const Uint32 dt, const Uint8 *keystate) = 0;
   virtual void Render(Video *const video) = 0;
   virtual void Stop(void) = 0;
   virtual void Destroy(void) { }
 
-  static void Update(void);
+  static void Swap(void);
 
   static void SetState(State *state);
   static State* GetState(void) { return state_; }

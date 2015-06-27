@@ -75,7 +75,7 @@ void StatePlay::Stop() {
   delete nava2_; this->nava2_ = NULL;
 }
 
-void StatePlay::Execute(const Uint32 dt, const Uint8 *keystate) {
+void StatePlay::Update(const Uint32 dt, const Uint8 *keystate) {
   for (unsigned int i = 0; i < projectiles_.size(); i++) {
     Proiectile* p = projectiles_[i];
     p->Update(dt);

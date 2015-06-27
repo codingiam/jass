@@ -85,7 +85,7 @@ void Application::Run() {
 void Application::Tick(const Uint32 dt) {
     const Uint8 *keys_state = SDL_GetKeyboardState(NULL);
 
-    State::GetState()->Execute(dt, keys_state);
+    State::GetState()->Update(dt, keys_state);
 
     State::GetState()->Render(video_.get());
 
@@ -99,5 +99,5 @@ void Application::Tick(const Uint32 dt) {
       }
     }
 
-    State::Update();
+    State::Swap();
 }

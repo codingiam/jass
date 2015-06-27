@@ -24,7 +24,7 @@ void StatesManager::Initialize(Video *const video) {
   State::Register(kStatePlay, state_play_, video);
 
   State::SetState(state_intro_.get());
-  State::Update();
+  State::Swap();
 }
 
 void StatesManager::ShutDown() {

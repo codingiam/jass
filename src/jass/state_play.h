@@ -22,7 +22,7 @@ class StatePlay : public State {
   StatePlay(void);
   ~StatePlay(void);
 
-  void Execute(const Uint32 dt, const Uint8 *keystate) override;
+  void Update(const Uint32 dt, const Uint8 *keystate) override;
   void Render(Video *const video) override;
 
   void AddProjectile(Proiectile *projectile);

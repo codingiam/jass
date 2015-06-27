@@ -17,7 +17,7 @@ class StateIntro : public State {
   StateIntro(void);
   ~StateIntro(void);
 
-  void Execute(const Uint32 dt, const Uint8 *keystate) override;
+  void Update(const Uint32 dt, const Uint8 *keystate) override;
   void Render(Video *const video) override;
 
  protected:
