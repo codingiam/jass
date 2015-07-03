@@ -10,7 +10,7 @@
 
 class Window : boost::noncopyable {
  public:
-  enum { kWidth = 800, kHeight = 600, kBpp = 16, kFull = 0 };
+  enum { kWidth = 800, kHeight = 600, kBpp = 16, kFull = false };
 
   Window(void);
   ~Window(void);

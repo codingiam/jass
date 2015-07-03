@@ -84,7 +84,7 @@ bool Texture::Bind(void) {
   }
 
   glBindTexture(GL_TEXTURE_2D, texture_);
-  if (glGetError != GL_NO_ERROR) {
+  if (glGetError() != GL_NO_ERROR) {
     return false;
   }
 

@@ -55,7 +55,7 @@ void Window::Initialize() {
 
   Uint32 video_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;  // SDL_HWSURFACE
 
-  if (kFull) {
+  if (kFull == (true)) {
     video_flags |= SDL_WINDOW_FULLSCREEN;
   }
 
@@ -69,7 +69,9 @@ void Window::Initialize() {
 
   this->gl_context_ = SDL_GL_CreateContext(sdl_window_);
   if (!gl_context_) {
-    throw std::runtime_error("Could not create OpenGL context");
+    boost::format message =
+      boost::format("Could not create OpenGL context: %s") % SDL_GetError();
+    throw std::runtime_error(message.str());
   }
 
   SDL_GL_SetSwapInterval(0);  // vsync

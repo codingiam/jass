@@ -25,7 +25,7 @@ Material::~Material() {
 void Material::LoadMaterial(const char *filename, const char *path) {
   char buffer[100];
 
-  snprintf(buffer, sizeof(buffer), "%s%s\0", path, filename);
+  snprintf(buffer, sizeof(buffer), "%s%s", path, filename);
 
   FILE* fp = fopen(buffer, "r");
   if (!fp) return;

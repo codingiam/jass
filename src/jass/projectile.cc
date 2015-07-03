@@ -27,6 +27,6 @@ void Proiectile::Update(const Uint32 dt) {
   ypos_ += amy * 0.5f * (diff / 25.0f);
   xpos_ += amx * 0.5f * (diff / 25.0f);
 
-  if (abs(xpos_) >= 6.5f) this->sterge_ = true;
-  if (abs(ypos_) >= 5.5f) this->sterge_ = true;
+  if (std::abs(xpos_) >= 6.5f) this->sterge_ = true;
+  if (std::abs(ypos_) >= 5.5f) this->sterge_ = true;
 }

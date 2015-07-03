@@ -12,13 +12,13 @@
 #include "jass/texture.h"
 
 static const char * introText[] = {
-  "  Acest joc este proiectul nostru pentru cursul de grafica.\0",
-  "Sper ca va v-a face placere sa-l jucati si bineintles sa ne\0",
-  "dati o nota pe masura efortului.\0",
-  "  Scopul jocului este sa scapati cu nava intacta din batalie.\0",
-  " \0",
-  "  Si acuma urmeaza tastele:\0",
-  " \0"
+  "  Acest joc este proiectul nostru pentru cursul de grafica.",
+  "Sper ca va v-a face placere sa-l jucati si bineintles sa ne",
+  "dati o nota pe masura efortului.",
+  "  Scopul jocului este sa scapati cu nava intacta din batalie.",
+  " ",
+  "  Si acuma urmeaza tastele:",
+  " "
 };
 
 StateIntro::StateIntro() {
@@ -113,7 +113,7 @@ void StateIntro::Render(Video *const video) {
   char buffer[100 + 1];
 
   for (int i = 0; show_to_ > 0; i++) {
-    marime = strlen(introText[i]);  // introText[i].length();
+    marime = (Uint32) strlen(introText[i]);  // introText[i].length();
     if (marime > show_to_) marime = show_to_;
     if (marime > 100) marime = 100;
     // size_t copied = introText[i].copy(buffer, marime);
