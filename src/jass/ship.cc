@@ -4,7 +4,6 @@
 
 #include "jass/ship.h"
 
-#include <boost/pointer_cast.hpp>
 #include <cmath>
 
 #include "jass/application.h"
@@ -74,8 +73,8 @@ void Ship::Update(const Uint32 dt, const Uint8 *keystate) {
 
   if ((ticks_ - last_time_SHO_) > 100) {
     if ((keystate[keys_[K_SHOOT]]) && (energy_ >= 0.15f)) {
-      boost::shared_ptr<StatePlay> play =
-        boost::static_pointer_cast<StatePlay>(State::Find(kStatePlay).lock());
+      std::shared_ptr<StatePlay> play =
+        std::static_pointer_cast<StatePlay>(State::Find(kStatePlay).lock());
 
       GLfloat amy = - cos(3.141516f * angle_ / 180);
       GLfloat amx = sin(3.141516f * angle_ / 180);
@@ -118,6 +117,8 @@ void Ship::SetKeys(Uint32 keys[]) {
   memcpy(this->keys_, keys, sizeof(Uint32) * 6);
 }
 
+namespace {
+
 int pnpoly(int npol, float *xp, float *yp, float x, float y) {
     int i, j, c = 0;
     for (i = 0, j = npol-1; i < npol; j = i++) {
@@ -127,6 +128,8 @@ int pnpoly(int npol, float *xp, float *yp, float x, float y) {
         c = !c;
     }
     return c;
+}
+
 }
 
 bool Ship::Collide(GLfloat x, GLfloat y) {

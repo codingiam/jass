@@ -14,7 +14,7 @@
 
 class Video;
 
-class Mesh : boost::noncopyable {
+class Mesh : private boost::noncopyable {
  public:
   Mesh();
   ~Mesh();

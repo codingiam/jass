@@ -17,7 +17,7 @@ Texture::~Texture() {
   }
 }
 
-bool Texture::LoadTexture(boost::shared_ptr<Image> const &image) {
+bool Texture::LoadTexture(std::shared_ptr<Image> const &image) {
   if (texture_) {
     return false;
   }
@@ -47,10 +47,10 @@ bool Texture::LoadTexture(boost::shared_ptr<Image> const &image) {
   return image->Callback(func);
 }
 
-boost::shared_ptr<Texture> Texture::MakeTexture(
-    boost::shared_ptr<Image> const &image) {
-  boost::shared_ptr<Texture> texture =
-    boost::shared_ptr<Texture>(new Texture());
+std::shared_ptr<Texture> Texture::MakeTexture(
+    std::shared_ptr<Image> const &image) {
+  std::shared_ptr<Texture> texture =
+    std::shared_ptr<Texture>(new Texture());
 
   if (!texture->LoadTexture(image)) {
     boost::format message =

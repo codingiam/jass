@@ -12,14 +12,14 @@
 
 #include "jass/jass.h"
 
-class Image : boost::noncopyable {
+class Image : private boost::noncopyable {
  public:
   Image(void);
   ~Image(void);
 
   bool LoadImage(std::string const &file_name);
 
-  static boost::shared_ptr<Image>
+  static std::shared_ptr<Image>
     MakeImage(boost::filesystem::path const &path);
 
   bool Callback(std::function<void(GLubyte *, GLuint , GLuint)> const &func);

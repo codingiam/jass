@@ -96,7 +96,7 @@ void Material::ProcessCmdMat(char *cmd, char *params) {
 
     snprintf(buffer, sizeof(buffer), "%s%s", path_, params);
 
-    boost::shared_ptr<Image> image = Image::MakeImage(buffer);
+    std::shared_ptr<Image> image = Image::MakeImage(buffer);
     this->mat_texture_ = Texture::MakeTexture(image);
 
     format_ |= MAT_TEXTURE;

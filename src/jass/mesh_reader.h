@@ -8,7 +8,7 @@
 
 #include "jass/jass.h"
 
-class MeshReader : boost::noncopyable {
+class MeshReader : private boost::noncopyable {
  public:
   MeshReader(const char *filename, const char *path);
   ~MeshReader();

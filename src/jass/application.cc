@@ -9,10 +9,12 @@
 #include "jass/window.h"
 #include "jass/states_manager.h"
 
-const Uint32 TARGET_FPS = 60;
-const Uint32 MAX_DT = 1000;  // ms
+namespace {
+  const Uint32 TARGET_FPS = 60;
+  const Uint32 MAX_DT = 1000;  // ms
 
-const Uint32 TARGET_DT = MAX_DT / TARGET_FPS;
+  const Uint32 TARGET_DT = MAX_DT / TARGET_FPS;
+}
 
 Application::Application() {
   std::cout << "Application being constructed ..." << std::endl;
@@ -49,17 +51,17 @@ void Application::ShutDown() {
 }
 
 void Application::InitializeWindow() {
-  this->window_ = boost::shared_ptr<Window>(new Window());
+  this->window_ = std::shared_ptr<Window>(new Window());
   window_->Initialize();
 }
 
 void Application::InitializeVideo() {
-  this->video_ = boost::shared_ptr<Video>(new Video());
+  this->video_ = std::shared_ptr<Video>(new Video());
   video_->Initialize();
 }
 
 void Application::InitialiseStates() {
-  this->states_manager_ = boost::shared_ptr<StatesManager>(new StatesManager());
+  this->states_manager_ = std::shared_ptr<StatesManager>(new StatesManager());
   states_manager_->Initialize(this->video_.get());
 }
 

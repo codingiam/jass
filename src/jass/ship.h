@@ -8,7 +8,7 @@
 
 #include "jass/jass.h"
 
-class Ship : boost::noncopyable {
+class Ship : private boost::noncopyable {
  public:
   Ship(GLfloat xpos, GLfloat ypos, Uint32 id, GLfloat angle);
 

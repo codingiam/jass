@@ -17,8 +17,8 @@ StatesManager::~StatesManager() {
 }
 
 void StatesManager::Initialize(Video *const video) {
-  this->state_intro_ = boost::shared_ptr<StateIntro>(new StateIntro());
-  this->state_play_ = boost::shared_ptr<StatePlay>(new StatePlay());
+  this->state_intro_ = std::shared_ptr<StateIntro>(new StateIntro());
+  this->state_play_ = std::shared_ptr<StatePlay>(new StatePlay());
 
   State::Register(kStateIntro, state_intro_, video);
   State::Register(kStatePlay, state_play_, video);

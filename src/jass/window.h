@@ -8,7 +8,7 @@
 
 #include "jass/jass.h"
 
-class Window : boost::noncopyable {
+class Window : private boost::noncopyable {
  public:
   enum { kWidth = 800, kHeight = 600, kBpp = 16, kFull = false };
 

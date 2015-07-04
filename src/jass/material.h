@@ -12,7 +12,7 @@
 
 class Texture;
 
-class Material : boost::noncopyable {
+class Material : private boost::noncopyable {
  public:
   Material();
   ~Material();
@@ -21,7 +21,7 @@ class Material : boost::noncopyable {
   const char* GetName() { return name_; }
   void UseMaterial();
 
-  boost::shared_ptr<Texture> mat_texture_;
+  std::shared_ptr<Texture> mat_texture_;
 
  private:
   enum  { MAT_AMBIENT = 1, MAT_DIFFUSE = 2, MAT_SPECULAR = 4, MAT_SHINESS = 8,

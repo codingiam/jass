@@ -13,7 +13,7 @@
 class Image;
 class Texture;
 
-class Video : boost::noncopyable {
+class Video : private boost::noncopyable {
  public:
   Video(void);
   ~Video(void);
@@ -28,7 +28,7 @@ class Video : boost::noncopyable {
   void Print(GLint x, GLint y, const char* text, int set = 1);
 
   void DrawTexture(int x, int y, int w, int h,
-    boost::shared_ptr<Texture> const &texture, GLfloat yamount = 0.0f);
+    std::shared_ptr<Texture> const &texture, GLfloat yamount = 0.0f);
 
   glm::vec3 GetNormal(const glm::vec3 v0, const glm::vec3 v1,
     const glm::vec3 v2);
@@ -36,7 +36,7 @@ class Video : boost::noncopyable {
  private:
   bool il_initialized_;
 
-  boost::shared_ptr<Texture> font_texture_;
+  std::shared_ptr<Texture> font_texture_;
   GLuint base_;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN

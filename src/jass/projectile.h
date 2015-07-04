@@ -8,7 +8,7 @@
 
 #include "jass/jass.h"
 
-class Proiectile : boost::noncopyable {
+class Proiectile : private boost::noncopyable {
  public:
   Proiectile(GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner);
 

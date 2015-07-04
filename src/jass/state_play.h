@@ -33,9 +33,9 @@ class StatePlay : public State {
   void Stop(void) override;
 
  private:
-  boost::shared_ptr<Texture> bg_space_;
-  boost::shared_ptr<Texture> bg_healthbar_;
-  boost::shared_ptr<Texture> bg_board_;
+  std::shared_ptr<Texture> bg_space_;
+  std::shared_ptr<Texture> bg_healthbar_;
+  std::shared_ptr<Texture> bg_board_;
 
   std::vector<Proiectile*> projectiles_;
 

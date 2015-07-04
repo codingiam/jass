@@ -17,16 +17,20 @@
 #include "jass/image.h"
 #include "jass/texture.h"
 
-static void perspectiveGL(GLdouble fovY, GLdouble aspect,
+namespace {
+
+void perspectiveGL(GLdouble fovY, GLdouble aspect,
                           GLdouble zNear, GLdouble zFar) {
   glm::mat4 persp = glm::perspective(fovY, aspect, zNear, zFar);
   glLoadMatrixf(glm::value_ptr(persp));
 }
 
-static void ortho2D(GLdouble left, GLdouble right,
+void ortho2D(GLdouble left, GLdouble right,
                     GLdouble bottom, GLdouble top) {
   glm::mat4 ortho = glm::ortho(left, right, bottom, top);
   glLoadMatrixf(glm::value_ptr(ortho));
+}
+
 }
 
 Video::Video() {
@@ -60,7 +64,7 @@ void Video::LoadFont() {
   if ((font_texture_) || (base_))
     return;
 
-  boost::shared_ptr<Image> image = Image::MakeImage("data/fonturi/font.png");
+  std::shared_ptr<Image> image = Image::MakeImage("data/fonturi/font.png");
   this->font_texture_ = Texture::MakeTexture(image);
 
   this->base_ = glGenLists(256);
@@ -176,13 +180,15 @@ glm::vec3 Video::GetNormal(const glm::vec3 v0, const glm::vec3 v1,
 }
 
 void Video::DrawTexture(int x, int y, int w, int h,
-    boost::shared_ptr<Texture> const &texture, GLfloat yamount) {
+    std::shared_ptr<Texture> const &texture, GLfloat yamount) {
   glm::i32vec2 v0(x, y);
   glm::i32vec2 v1(x, y + h);
   glm::i32vec2 v2(x + w, y);
   glm::i32vec2 v3(x + w, y + h);
 
   texture->Bind();
+
+  glLoadIdentity();
 
   glBegin(GL_TRIANGLE_STRIP);
   glTexCoord2f(0.0f, yamount);

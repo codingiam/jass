@@ -10,7 +10,12 @@
 
 #include "jass/jass.h"
 
-class Texture;
+namespace GameObjects {
+  class SpaceBackgroundGameObject;
+  class IntroTitleGameObject;
+  class IntroTextGameObject;
+  class IntroMenuGameObject;
+}
 
 class StateIntro : public State {
  public:
@@ -26,25 +31,10 @@ class StateIntro : public State {
   void Stop(void) override;
 
  private:
-  boost::shared_ptr<Texture> bg_space_;
-  boost::shared_ptr<Texture> bg_intro_;
-  boost::shared_ptr<Texture> bg_action_;
-
-  Uint32 ticks_title_;
-  Uint32 ticks_action_;
-  Uint32 ticks_intro_text_;
-
-  Uint32 speed_title_;
-  Uint32 speed_action_;
-  Uint32 speed_intro_text_;
-
-  float alpha_title_;
-  float blue_action_;
-  float position_text_;
-
-  Uint32 show_to_;
-
-  Uint32 size_intro_text_;
+  std::shared_ptr<GameObjects::SpaceBackgroundGameObject> bg_space_;
+  std::shared_ptr<GameObjects::IntroTitleGameObject> bg_intro_; 
+  std::shared_ptr<GameObjects::IntroMenuGameObject> bg_action_;
+  std::shared_ptr<GameObjects::IntroTextGameObject> bg_intro_text_;
 };
 
 #endif  // JASS_STATE_INTRO_H_

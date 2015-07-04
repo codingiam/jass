@@ -8,15 +8,15 @@
 
 class Image;
 
-class Texture : boost::noncopyable {
+class Texture : private boost::noncopyable {
  public:
   Texture(void);
   ~Texture(void);
 
-  bool LoadTexture(boost::shared_ptr<Image> const &image);
+  bool LoadTexture(std::shared_ptr<Image> const &image);
 
-  static boost::shared_ptr<Texture> MakeTexture(
-    boost::shared_ptr<Image> const &image);
+  static std::shared_ptr<Texture> MakeTexture(
+    std::shared_ptr<Image> const &image);
 
   bool Callback(std::function<void(void)> const &func);
 

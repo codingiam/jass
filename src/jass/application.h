@@ -6,15 +6,13 @@
 #define JASS_APPLICATION_H_
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-
 #include "jass/jass.h"
 
 class Window;
 class StatesManager;
 class Video;
 
-class Application : boost::noncopyable  {
+class Application : private boost::noncopyable  {
  public:
   Application(void);
   ~Application(void);
@@ -34,9 +32,9 @@ class Application : boost::noncopyable  {
 
   bool sdl_initialized_;
 
-  boost::shared_ptr<Window> window_;
-  boost::shared_ptr<StatesManager> states_manager_;
-  boost::shared_ptr<Video> video_;
+  std::shared_ptr<Window> window_;
+  std::shared_ptr<StatesManager> states_manager_;
+  std::shared_ptr<Video> video_;
 };
 
 #endif  // JASS_APPLICATION_H_

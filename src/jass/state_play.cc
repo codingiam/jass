@@ -47,7 +47,7 @@ StatePlay::~StatePlay() {
 void StatePlay::Create() {
   ship_->LoadMeshObj("spaceship.obj", "data/obiecte/");
 
-  boost::shared_ptr<Image> image = Image::MakeImage("data/texturi/spacebg.png");
+  std::shared_ptr<Image> image = Image::MakeImage("data/texturi/spacebg.png");
   this->bg_space_ = Texture::MakeTexture(image);
 
   image = Image::MakeImage("data/texturi/healthbar.png");
