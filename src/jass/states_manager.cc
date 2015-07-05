@@ -17,8 +17,8 @@ StatesManager::~StatesManager() {
 }
 
 void StatesManager::Initialize(Video *const video) {
-  this->state_intro_ = std::shared_ptr<StateIntro>(new StateIntro());
-  this->state_play_ = std::shared_ptr<StatePlay>(new StatePlay());
+  this->state_intro_ = std::make_shared<StateIntro>();
+  this->state_play_ = std::make_shared<StatePlay>();
 
   State::Register(kStateIntro, state_intro_, video);
   State::Register(kStatePlay, state_play_, video);

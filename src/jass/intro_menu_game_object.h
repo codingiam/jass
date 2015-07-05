@@ -2,15 +2,11 @@
 
 #include "jass/game_object.h"
 
-#include "jass/renderable_game_object.h"
-#include "jass/updatable_game_object.h"
-
 class Texture;
 
 namespace GameObjects {
 
-  class IntroMenuGameObject :
-    public UpdatableGameObject<RenderableGameObject<GameObject> > {
+  class IntroMenuGameObject : public GameObject {
    public:
     IntroMenuGameObject(void);
     ~IntroMenuGameObject(void);

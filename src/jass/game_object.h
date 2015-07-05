@@ -6,16 +6,26 @@
 
 #include "jass/jass.h"
 
+class Video;
+
 namespace GameObjects {
   class GameObject : private boost::noncopyable {
    public:
     GameObject(void);
+    GameObject(std::shared_ptr<GameObject> const &parent);
+    
     virtual ~GameObject(void);
 
-    virtual void Create(void) = 0;
-    virtual void Start(void) = 0;
+    virtual void Create(void) { }
+    virtual void Start(void) { }
 
-    virtual bool Updatable(void);
-    virtual bool Renderable(void);
+    virtual void Update(const Uint32 dt) { }
+    virtual void Render(Video *const video) { }
+
+    // virtual bool Updatable(void) { return false; }
+    // virtual bool Renderable(void)  { return false; }
+
+   protected:
+    std::weak_ptr<GameObject> const parent_;
   };
 }

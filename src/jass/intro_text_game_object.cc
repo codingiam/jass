@@ -5,8 +5,10 @@
 #include "jass/image.h"
 #include "jass/texture.h"
 
+#include <array>
+
 namespace {
-  const char * introText[] = {
+  const std::array<char *, 7> introText = {
     "  Acest joc este proiectul nostru pentru cursul de grafica.",
     "Sper ca va v-a face placere sa-l jucati si bineintles sa ne",
     "dati o nota pe masura efortului.",

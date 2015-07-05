@@ -50,7 +50,7 @@ bool Texture::LoadTexture(std::shared_ptr<Image> const &image) {
 std::shared_ptr<Texture> Texture::MakeTexture(
     std::shared_ptr<Image> const &image) {
   std::shared_ptr<Texture> texture =
-    std::shared_ptr<Texture>(new Texture());
+    std::make_shared<Texture>();
 
   if (!texture->LoadTexture(image)) {
     boost::format message =

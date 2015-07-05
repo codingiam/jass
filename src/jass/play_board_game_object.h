@@ -6,16 +6,14 @@
 
 #include "jass/game_object.h"
 
-#include "jass/renderable_game_object.h"
-
 class Texture;
 
 namespace GameObjects {
 
-  class SpaceBackgroundGameObject : public RenderableGameObject<GameObject> {
+  class PlayBoardGameObject : public GameObject {
    public:
-    SpaceBackgroundGameObject(void);
-    ~SpaceBackgroundGameObject(void);
+    PlayBoardGameObject(void);
+    ~PlayBoardGameObject(void);
 
     void Create(void) override;
     void Start(void) override {}
@@ -23,7 +21,7 @@ namespace GameObjects {
     void Render(Video *const video) override;
 
    private:
-    std::shared_ptr<Texture> bg_space_;
+     std::shared_ptr<Texture> bg_board_;
   };
 
 }

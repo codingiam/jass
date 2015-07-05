@@ -8,14 +8,9 @@ namespace GameObjects {
   GameObject::GameObject() {
   }
 
+  GameObject::GameObject(std::shared_ptr<GameObject> const &parent) : parent_(parent) {
+  }
+
   GameObject::~GameObject() {
-  }
-
-  bool GameObject::Updatable(void) {
-    return false;
-  }
-
-  bool GameObject::Renderable(void) {
-    return false;
   }
 }

@@ -51,17 +51,17 @@ void Application::ShutDown() {
 }
 
 void Application::InitializeWindow() {
-  this->window_ = std::shared_ptr<Window>(new Window());
+  this->window_ = std::make_shared<Window>();
   window_->Initialize();
 }
 
 void Application::InitializeVideo() {
-  this->video_ = std::shared_ptr<Video>(new Video());
+  this->video_ = std::make_shared<Video>();
   video_->Initialize();
 }
 
 void Application::InitialiseStates() {
-  this->states_manager_ = std::shared_ptr<StatesManager>(new StatesManager());
+  this->states_manager_ = std::make_shared<StatesManager>();
   states_manager_->Initialize(this->video_.get());
 }
 

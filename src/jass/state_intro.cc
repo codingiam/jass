@@ -11,7 +11,7 @@
 #include "jass/image.h"
 #include "jass/texture.h"
 
-#include "jass/space_background_game_object.h"
+#include "jass/intro_background_game_object.h"
 #include "jass/intro_title_game_object.h"
 #include "jass/intro_text_game_object.h"
 #include "jass/intro_menu_game_object.h"
@@ -27,21 +27,17 @@ StateIntro::~StateIntro() {
 }
 
 void StateIntro::Create() {
-  this->bg_space_ = std::shared_ptr<GameObjects::SpaceBackgroundGameObject>(new GameObjects::SpaceBackgroundGameObject());
+  this->bg_space_ = std::make_shared<GameObjects::IntroBackgroundGameObject>();
   this->bg_space_->Create();
 
-  this->bg_intro_ = std::shared_ptr<GameObjects::IntroTitleGameObject>(new GameObjects::IntroTitleGameObject());
+  this->bg_intro_ = std::make_shared<GameObjects::IntroTitleGameObject>();
   this->bg_intro_->Create();
 
-  this->bg_intro_text_ = std::shared_ptr<GameObjects::IntroTextGameObject>(new GameObjects::IntroTextGameObject());
+  this->bg_intro_text_ = std::make_shared<GameObjects::IntroTextGameObject>();
   this->bg_intro_text_->Create();
 
-  this->bg_action_ = std::shared_ptr<GameObjects::IntroMenuGameObject>(new GameObjects::IntroMenuGameObject());
+  this->bg_action_ = std::make_shared<GameObjects::IntroMenuGameObject>();
   this->bg_action_->Create();
-
-  if (!(bg_space_) || !(bg_intro_) || !(bg_action_)) {
-    throw std::runtime_error("Could not create textures for 'stateintro'");
-  }
 }
 
 void StateIntro::Start() {

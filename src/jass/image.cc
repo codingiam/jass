@@ -45,7 +45,7 @@ bool Image::LoadImage(std::string const &file_name) {
 }
 
 std::shared_ptr<Image> Image::MakeImage(boost::filesystem::path const &path) {
-  std::shared_ptr<Image> image = std::shared_ptr<Image>(new Image());
+  std::shared_ptr<Image> image = std::make_shared<Image>();
 
   if (!image->LoadImage(path.string())) {
     boost::format message =
