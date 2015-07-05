@@ -4,6 +4,7 @@
 
 class Video;
 class Texture;
+class Program;
 
 namespace Drawables {
 
@@ -18,6 +19,8 @@ namespace Drawables {
     void Render(Video *const video, const GLint x, const GLint y);
 
    private:
+     std::shared_ptr<Program> program_;
+
      std::shared_ptr<Texture> texture_;
      
      std::string path_;

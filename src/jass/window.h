@@ -22,6 +22,8 @@ class Window : private boost::noncopyable {
  private:
   bool subsystem_initialized_;
 
+  bool glew__initialized_;
+
   SDL_GLContext gl_context_;
   SDL_Window *sdl_window_;
 };

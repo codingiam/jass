@@ -55,7 +55,7 @@ namespace GameObjects {
   }
 
   void IntroTextGameObject::Render(Video *const video) {
-    GL_CHECK(glColor3f(1.0f, 1.0f, 1.0f));
+    // GL_CHECK(glColor3f(1.0f, 1.0f, 1.0f));
 
     Uint32 marime = 0;
     char buffer[100 + 1];

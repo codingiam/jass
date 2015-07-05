@@ -16,9 +16,7 @@ Mesh::Mesh() {
 }
 
 Mesh::~Mesh() {
-  for (unsigned int i = 1; i <= materials_.size(); i++) {
-    delete materials_[i - 1];
-  }
+  materials_.clear();
 
   for (unsigned int i = 1; i <= verticies_.size(); i++) {
     delete[] verticies_[i - 1];
@@ -32,7 +30,7 @@ Mesh::~Mesh() {
     delete[] normals_[i - 1];
   }
 
-  if (mesh_) GL_CHECK(glDeleteLists(mesh_, 1));
+  if (mesh_) { GL_CHECK(glDeleteLists(mesh_, 1)); }
 }
 
 void Mesh::LoadMeshObj(const char* filename, const char *path) {
@@ -47,10 +45,10 @@ void Mesh::LoadMeshObj(const char* filename, const char *path) {
 
   this->filename_ = filename;
 
-  char *cmd, *params, *trimer;
+//  char *cmd, *params, *trimer;
 
   LoadMaterialObj("spaceship.mtl");
-
+  /*
   GL_CHECK(this->mesh_ = glGenLists(1));
 
   GL_CHECK(glNewList(mesh_, GL_COMPILE));
@@ -75,6 +73,7 @@ void Mesh::LoadMeshObj(const char* filename, const char *path) {
   GL_CHECK(glEnd());
 
   GL_CHECK(glEndList());
+  */
 
   fclose(fp);
 }
@@ -153,7 +152,7 @@ void Mesh::ProcessCmdObj(char *cmd, char *params) {
 }
 
 void Mesh::LoadMaterialObj(const char *filename) {
-  Material* mat = new Material();
+  auto mat = std::make_shared<Material>();
 
   mat->LoadMaterial(filename, path_);
 
@@ -168,8 +167,7 @@ void Mesh::Display() {
   }
 
   for (unsigned int i = 1; i <= materials_.size(); i++) {
-    Material* mat = materials_[i - 1];
-    mat->UseMaterial();
+    materials_[i - 1]->UseMaterial();
     if (i == 1) {
       break;
     }

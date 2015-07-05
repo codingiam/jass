@@ -30,7 +30,8 @@ class Mesh : private boost::noncopyable {
   char path_[PATH_LENGTH];
   const char* filename_;
 
-  std::vector<Material*> materials_;
+  std::vector<std::shared_ptr<Material> > materials_;
+  
   std::vector<GLfloat*> verticies_;
   std::vector<GLdouble*> tcoords_;
   std::vector<GLfloat*> normals_;

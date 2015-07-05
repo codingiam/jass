@@ -6,6 +6,8 @@
 #define JASS_JASS_H_
 #pragma once
 
+#include <GL/glew.h>
+
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <IL/il.h>

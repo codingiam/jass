@@ -10,9 +10,13 @@ Window::Window() {
   this->subsystem_initialized_ = false;
   this->sdl_window_ = nullptr;
   this->gl_context_ = nullptr;
+  this->glew__initialized_ = false;
 }
 
 Window::~Window() {
+  // GLuint VertexArrayID = 1;
+  // glDeleteVertexArrays(1, &VertexArrayID);
+
   if (gl_context_) {
     SDL_GL_DeleteContext(gl_context_);
     this->gl_context_ = nullptr;
@@ -40,9 +44,9 @@ void Window::Initialize() {
   SDL_ShowCursor(SDL_DISABLE);
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-    SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);  // SDL_GL_CONTEXT_PROFILE_CORE
+    SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
      SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
 
@@ -74,8 +78,20 @@ void Window::Initialize() {
     throw std::runtime_error(message.str());
   }
 
-  SDL_GL_SetSwapInterval(0);  // vsync
+  {
+    glewExperimental = GL_TRUE; 
+    GLenum err = glewInit();
+    this->glew__initialized_ = err == GLEW_OK;
+    if (!glew__initialized_) {
+      boost::format message =
+        boost::format("Could not initialise GLEW subsystem: %s") % glewGetErrorString(err);
+      throw std::runtime_error(message.str());
+    }
+    glGetError(); // ignore
+  }
 
+  SDL_GL_SetSwapInterval(0);  // vsync
+ 
   std::cout << "SDL initialised succesfully. " <<
     "Video information follows: " << std::endl;
 
@@ -84,28 +100,33 @@ void Window::Initialize() {
   GL_CHECK(std::cout << " Vendor     : " << glGetString(GL_VENDOR) << std::endl);
   GL_CHECK(std::cout << " Renderer   : " << glGetString(GL_RENDERER) << std::endl);
   GL_CHECK(std::cout << " Version    : " << glGetString(GL_VERSION) << std::endl);
-  GL_CHECK(std::cout << " Extensions : " << glGetString(GL_EXTENSIONS) << std::endl);
+  // GL_CHECK(std::cout << " Extensions : " << glGetString(GL_EXTENSIONS) << std::endl);
 
-  int value;
+  //GLuint VertexArrayID;
 
-  SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &value);
-  std::cout << " Red component " << value << "b" << std::endl;
+  //glGenVertexArrays(1, &VertexArrayID);GL_PRINT_ERROR();
+  //glBindVertexArray(VertexArrayID);GL_PRINT_ERROR();
 
-  SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &value);
-  std::cout << " Green component " << value << "b" << std::endl;
+  // int value;
 
-  SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &value);
-  std::cout << " Blue component " << value << "b" << std::endl;
+  // SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &value);
+  // std::cout << " Red component " << value << "b" << std::endl;
+
+  // SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &value);
+  // std::cout << " Green component " << value << "b" << std::endl;
+
+  // SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &value);
+  // std::cout << " Blue component " << value << "b" << std::endl;
 
   GL_CHECK(glShadeModel(GL_SMOOTH));  // GL_FLAT
 
-  GL_CHECK(glClearColor(0.0, 0.0, 0.0, 0.0));
+  GL_CHECK(glClearColor(0.0, 5.0, 0.0, 0.0));
 
   GL_CHECK(glClearDepth(1.0f));
   GL_CHECK(glEnable(GL_DEPTH_TEST));
   GL_CHECK(glDepthFunc(GL_LEQUAL));
 
-  GL_CHECK(glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)); \
+  // GL_CHECK(glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)); \
   // GL_PERSPECTIVE_CORRECTION_HINT ||  GL_LINE_SMOOTH_HINT
 
   // GL_CHECK(glPolygonMode(GL_BACK, GL_LINE));
@@ -113,7 +134,7 @@ void Window::Initialize() {
   GL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
   GL_CHECK(glEnable(GL_BLEND));
 
-  GL_CHECK(glEnable(GL_TEXTURE_2D));
+  // GL_CHECK(glEnable(GL_TEXTURE_2D));
 
   GL_CHECK(glViewport(0, 0, kWidth, kHeight));
 

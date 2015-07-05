@@ -66,14 +66,14 @@ bool Texture::Callback(std::function<void(void)> const &func) {
     return false;
   }
 
-  glBindTexture(GL_TEXTURE_2D, texture_);
-  if (glGetError() != GL_NO_ERROR) {
-    return false;
-  }
+//  glBindTexture(GL_TEXTURE_2D, texture_);GL_PRINT_ERROR();
+//  if (glGetError() != GL_NO_ERROR) {
+//    return false;
+//  }
 
   func();
 
-  GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
+//  GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
 
   return true;
 }

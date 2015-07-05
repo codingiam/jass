@@ -67,7 +67,7 @@ void Video::LoadFont() {
   std::shared_ptr<Image> image = Image::MakeImage("data/fonturi/font.png");
   this->font_texture_ = Texture::MakeTexture(image);
 
-  GL_CHECK(this->base_ = glGenLists(256));
+  // GL_CHECK(this->base_ = glGenLists(256));
 
   const GLuint base = base_;
 
@@ -75,6 +75,7 @@ void Video::LoadFont() {
     float cx = 0, cy = 0;
 
     for (int loop = 0; loop < 256; loop++) {
+      /*
       GL_CHECK(glNewList(base + loop, GL_COMPILE));
       
       glBegin(GL_TRIANGLE_STRIP);
@@ -95,7 +96,7 @@ void Video::LoadFont() {
 
       GL_CHECK(glTranslated(10, 0, 0));
       GL_CHECK(glEndList());
-
+      */
       cx += 16;
       if (fabs(cx - 256) <= .1f) {
         cx = 0;
@@ -111,6 +112,7 @@ void Video::Print(GLint x, GLint y, const char *text, int set) {
   const GLuint base = base_;
 
   std::function<void(void)> func = [x, y, text, base] () {
+    /*
     GL_CHECK(glLoadIdentity());
 
     GL_CHECK(glTranslated(x, y, 0));
@@ -118,6 +120,7 @@ void Video::Print(GLint x, GLint y, const char *text, int set) {
     GL_CHECK(glListBase(base - 32 + (128 * 1)));
 
     GL_CHECK(glCallLists((GLsizei) strlen(text), GL_BYTE, text));
+    */
   };
 
   font_texture_->Callback(func);
@@ -126,16 +129,16 @@ void Video::Print(GLint x, GLint y, const char *text, int set) {
 void Video::Init2DScene(int width, int height) {
   GL_CHECK(glDisable(GL_DEPTH_TEST));
   GL_CHECK(glDisable(GL_CULL_FACE));
-  GL_CHECK(glDisable(GL_LIGHTING));
-  GL_CHECK(glDisable(GL_COLOR_MATERIAL));
+  // GL_CHECK(glDisable(GL_LIGHTING));
+  // GL_CHECK(glDisable(GL_COLOR_MATERIAL));
 
-  GL_CHECK(glMatrixMode(GL_PROJECTION));
+  // GL_CHECK(glMatrixMode(GL_PROJECTION));
 
-  ortho2D(0.0f, width, height, 0.0f);
+  // ortho2D(0.0f, width, height, 0.0f);
 
-  GL_CHECK(glMatrixMode(GL_MODELVIEW));
+  // GL_CHECK(glMatrixMode(GL_MODELVIEW));
 
-  GL_CHECK(glLoadIdentity());
+  // GL_CHECK(glLoadIdentity());
 }
 
 void Video::Init3DScene(int width, int height) {
@@ -191,6 +194,7 @@ void Video::DrawTexture(int x, int y, int w, int h,
 
   texture->Bind();
 
+  /*
   GL_CHECK(glLoadIdentity());
 
   glBegin(GL_TRIANGLE_STRIP);
@@ -208,4 +212,5 @@ void Video::DrawTexture(int x, int y, int w, int h,
   glVertex2iv(glm::value_ptr(v3));
   
   GL_CHECK(glEnd());
+  */
 }

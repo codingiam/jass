@@ -33,7 +33,7 @@ namespace GameObjects {
   }
 
   void IntroMenuGameObject::Render(Video *const video) {
-    GL_CHECK(glColor4f(1.0f, 1.0f - blue_action_, blue_action_, 1.0f));
+    // GL_CHECK(glColor4f(1.0f, 1.0f - blue_action_, blue_action_, 1.0f));
     video->DrawTexture(262, 440, 276, 64, bg_action_);
   }
 
