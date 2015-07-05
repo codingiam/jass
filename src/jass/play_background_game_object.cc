@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/intro_background_game_object.h"
+#include "jass/play_background_game_object.h"
 
 #include "jass/window.h"
 
@@ -12,19 +12,19 @@
 
 namespace GameObjects {
 
-  IntroBackgroundGameObject::IntroBackgroundGameObject() {
+  PlayBackgroundGameObject::PlayBackgroundGameObject() {
   }
 
-  IntroBackgroundGameObject::~IntroBackgroundGameObject() {
+  PlayBackgroundGameObject::~PlayBackgroundGameObject() {
     bg_space_.reset();
   }
 
-  void IntroBackgroundGameObject::Create() {
-    std::shared_ptr<Image> image = Image::MakeImage("data/texturi/introbg.png");
+  void PlayBackgroundGameObject::Create() {
+    std::shared_ptr<Image> image = Image::MakeImage("data/texturi/spacebg.png");
     this->bg_space_ = Texture::MakeTexture(image);
   }
 
-  void IntroBackgroundGameObject::Render(Video *const video) {
+  void PlayBackgroundGameObject::Render(Video *const video) {
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     video->DrawTexture(0, 0, Window::kWidth, Window::kHeight, bg_space_);
   }

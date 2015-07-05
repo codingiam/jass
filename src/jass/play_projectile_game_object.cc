@@ -18,6 +18,9 @@ namespace GameObjects {
       this->owner_ = owner;
   }
 
+  PlayProjectileGameObject::~PlayProjectileGameObject() {
+  }
+
   void PlayProjectileGameObject::Update(const Uint32 dt) {
     Uint32 diff = dt > 25 ? 25 : dt;
 

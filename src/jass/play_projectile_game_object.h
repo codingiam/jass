@@ -15,6 +15,7 @@ namespace GameObjects {
   class PlayProjectileGameObject : public GameObject {
   public:
     PlayProjectileGameObject(GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner);
+    ~PlayProjectileGameObject(void);
 
     void Update(const Uint32 dt);
     void Render(Video *const video);
