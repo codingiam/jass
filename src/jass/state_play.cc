@@ -4,9 +4,9 @@
 
 #include "jass/state_play.h"
 
-#include <cstdio>
 #include <vector>
 #include <array>
+#include <cmath>
 
 #include "jass/video.h"
 #include "jass/application.h"
