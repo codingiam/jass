@@ -56,7 +56,7 @@ std::shared_ptr<Image> Image::MakeImage(boost::filesystem::path const &path) {
   return image;
 }
 
-bool Image::Callback(
+bool Image::Bind(
     std::function<void(GLubyte *, GLuint , GLuint)> const &func) {
   if (image_ == 0) {
     return false;

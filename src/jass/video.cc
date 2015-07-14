@@ -105,7 +105,7 @@ void Video::LoadFont() {
     }
   };
 
-  font_texture_->Callback(func);
+  font_texture_->Bind(func);
 }
 
 void Video::Print(GLint x, GLint y, const char *text, int set) {
@@ -123,7 +123,7 @@ void Video::Print(GLint x, GLint y, const char *text, int set) {
     */
   };
 
-  font_texture_->Callback(func);
+  font_texture_->Bind(func);
 }
 
 void Video::Init2DScene(int width, int height) {

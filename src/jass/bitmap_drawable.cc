@@ -9,6 +9,8 @@
 #include "jass/vertex_shader.h"
 #include "jass/fragment_shader.h"
 #include "jass/program.h"
+#include "jass/vertex_array_object.h"
+#include "jass/buffer_object.h"
 
 namespace Drawables {
 
@@ -49,42 +51,50 @@ namespace Drawables {
                 0.5f, 0.5f, 0.0f,
                 -0.5f, 0.5f, 0.0f }; 
 
-    GLuint VertexArrayID;
+    VertexArrayObject vao;
 
-    GL_CHECK(glGenVertexArrays(1, &VertexArrayID));
-    GL_CHECK(glBindVertexArray(VertexArrayID));
+    vao.Create();
 
-    GLuint vertexbuffer;
+    auto program = program_;
 
-    GL_CHECK(glGenBuffers(1, &vertexbuffer));
-    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer));
- 
-    GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
-    
-    // GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer));
-    GL_CHECK(glVertexAttribPointer(
-            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-            3,                  // size
-            GL_FLOAT,           // type
-            GL_FALSE,           // normalized?
-            0,                  // stride
-            0                   // array buffer offset
-    ));
-    // xxxx
-    
-    GL_CHECK(glUseProgram(program_->program_id_));
+    std::function<void(void)> func = [program] () {
+      BufferObject vbo;
 
-    GL_CHECK(glEnableVertexAttribArray(0));
-    
-    GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));
-    
-    GL_CHECK(glDisableVertexAttribArray(0));
-    
-    // xxxx
-    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
-    GL_CHECK(glDeleteBuffers(1, &vertexbuffer));
+      vbo.Create();
 
-    GL_CHECK(glBindVertexArray(0));
-    GL_CHECK(glDeleteVertexArrays(1, &VertexArrayID));
+      std::function<void(void)> func = [] () {
+        GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
+      };
+
+      vbo.Bind(func);
+
+      func = [program] () {
+        GLint loc;
+        
+	    GL_CHECK(loc = glGetAttribLocation(program->program_id_, "vp_modelspace"));
+
+        GL_CHECK(glVertexAttribPointer(
+                loc,
+                3,                  // size
+                GL_FLOAT,           // type
+                GL_FALSE,           // normalized?
+                0,                  // stride
+                0                   // array buffer offset
+        ));
+        // xxxx
+        
+        GL_CHECK(glUseProgram(program->program_id_));
+
+        GL_CHECK(glEnableVertexAttribArray(0));
+        
+        GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));
+        
+        GL_CHECK(glDisableVertexAttribArray(0));
+      };
+
+      vbo.Bind(func);
+    };
+
+    vao.Bind(func);
   }
 }

@@ -22,7 +22,7 @@ class Image : private boost::noncopyable {
   static std::shared_ptr<Image>
     MakeImage(boost::filesystem::path const &path);
 
-  bool Callback(std::function<void(GLubyte *, GLuint , GLuint)> const &func);
+  bool Bind(std::function<void(GLubyte *, GLuint , GLuint)> const &func);
 
   std::string file_name() const { return file_name_; }
 

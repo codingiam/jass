@@ -44,7 +44,7 @@ bool Texture::LoadTexture(std::shared_ptr<Image> const &image) {
     GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
   };
 
-  return image->Callback(func);
+  return image->Bind(func);
 }
 
 std::shared_ptr<Texture> Texture::MakeTexture(
@@ -61,7 +61,7 @@ std::shared_ptr<Texture> Texture::MakeTexture(
   return texture;
 }
 
-bool Texture::Callback(std::function<void(void)> const &func) {
+bool Texture::Bind(std::function<void(void)> const &func) {
   if (texture_ == 0) {
     return false;
   }

@@ -15,16 +15,14 @@ void FragmentShader::Create() {
   GL_CHECK(this->shader_id_ = glCreateShader(GL_FRAGMENT_SHADER));
 
   std::string FragmentShaderCode =
-    " \n\
-      #version 330 core\n\
-\n\
-      out vec4 color;\n\
-\n\
-      void main()\n\
-      {\n\
-	      color = vec4(1,0,0,1);\n\
-      }\n\
-    ";
+    "#version 330 core"
+    "\n"
+    "out vec4 color;"
+    ""
+    "void main()"
+    "{"
+	"  color = vec4(1,0,0,1);"
+    "}";
 
   char const * FragmentSourcePointer = FragmentShaderCode.c_str();
   GL_CHECK(glShaderSource(shader_id_, 1, &FragmentSourcePointer , NULL));
