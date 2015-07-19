@@ -107,11 +107,11 @@ void Material::UseMaterial() {
   if (format_ & MAT_TEXTURE)
     mat_texture_->Bind();
   if (format_ & MAT_AMBIENT)
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_);
+    GL_CHECK(glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_));
   if (format_ & MAT_DIFFUSE)
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse_);
+    GL_CHECK(glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse_));
   if (format_ & MAT_SPECULAR)
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular_);
+    GL_CHECK(glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular_));
   if (format_ & MAT_SHINESS)
-    glMaterialfv(GL_FRONT, GL_SHININESS, &mat_shiness_);
+    GL_CHECK(glMaterialfv(GL_FRONT, GL_SHININESS, &mat_shiness_));
 }

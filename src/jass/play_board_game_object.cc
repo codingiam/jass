@@ -25,7 +25,7 @@ namespace GameObjects {
   }
 
   void PlayBoardGameObject::Render(Video *const video) {
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, 1.0f));
     video->DrawTexture(10, 530, 780, 64, bg_board_);
   }
 

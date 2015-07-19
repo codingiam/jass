@@ -62,7 +62,7 @@ void StateIntro::Update(const Uint32 dt, const Uint8 *keystate) {
 }
 
 void StateIntro::Render(Video *const video) {
-  glClear(GL_COLOR_BUFFER_BIT);
+  GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
 
   video->Init2DScene(Window::kWidth, Window::kHeight);
 

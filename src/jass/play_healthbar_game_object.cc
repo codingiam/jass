@@ -33,7 +33,7 @@ namespace GameObjects {
   }
 
   void PlayHealthbarGameObject::Render(Video *const video) {
-    glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+    GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, 0.5f));
     video->DrawTexture(x_, y_, w_, h_, bg_healthbar_, 1.0f - life_);
   }
 

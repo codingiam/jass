@@ -32,14 +32,14 @@ namespace GameObjects {
   }
 
   void PlayProjectileGameObject::Render(Video *const video) {
-    glLoadIdentity();
+    GL_CHECK(glLoadIdentity());
 
-    glTranslatef(0.0f, 0.0f, -10.f);
+    GL_CHECK(glTranslatef(0.0f, 0.0f, -10.f));
 
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_LIGHTING);
+    GL_CHECK(glDisable(GL_TEXTURE_2D));
+    GL_CHECK(glDisable(GL_LIGHTING));
 
-    glPointSize(5.0f);
+    GL_CHECK(glPointSize(5.0f));
 
     glBegin(GL_POINTS);
 
@@ -48,12 +48,13 @@ namespace GameObjects {
     } else {
       glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
     }
+    
     glVertex3f(xpos_, ypos_, 0);
 
-    glEnd();
+    GL_CHECK(glEnd());
 
-    glEnable(GL_LIGHTING);
-    glEnable(GL_TEXTURE_2D);
+    GL_CHECK(glEnable(GL_LIGHTING));
+    GL_CHECK(glEnable(GL_TEXTURE_2D));
   }
 
 }

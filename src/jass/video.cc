@@ -22,13 +22,13 @@ namespace {
 void perspectiveGL(GLdouble fovY, GLdouble aspect,
                           GLdouble zNear, GLdouble zFar) {
   glm::mat4 persp = glm::perspective(fovY, aspect, zNear, zFar);
-  glLoadMatrixf(glm::value_ptr(persp));
+  GL_CHECK(glLoadMatrixf(glm::value_ptr(persp)));
 }
 
 void ortho2D(GLdouble left, GLdouble right,
                     GLdouble bottom, GLdouble top) {
   glm::mat4 ortho = glm::ortho(left, right, bottom, top);
-  glLoadMatrixf(glm::value_ptr(ortho));
+  GL_CHECK(glLoadMatrixf(glm::value_ptr(ortho)));
 }
 
 }
@@ -46,7 +46,7 @@ Video::~Video() {
   }
 
   if (base_) {
-    glDeleteLists(base_, 256);
+    GL_CHECK(glDeleteLists(base_, 256));
     this->base_ = 0;
   }
 
@@ -67,7 +67,7 @@ void Video::LoadFont() {
   std::shared_ptr<Image> image = Image::MakeImage("data/fonturi/font.png");
   this->font_texture_ = Texture::MakeTexture(image);
 
-  this->base_ = glGenLists(256);
+  GL_CHECK(this->base_ = glGenLists(256));
 
   const GLuint base = base_;
 
@@ -75,8 +75,10 @@ void Video::LoadFont() {
     float cx = 0, cy = 0;
 
     for (int loop = 0; loop < 256; loop++) {
-      glNewList(base + loop, GL_COMPILE);
+      GL_CHECK(glNewList(base + loop, GL_COMPILE));
+      
       glBegin(GL_TRIANGLE_STRIP);
+
       glTexCoord2f(cx / 256, cy / 256);
       glVertex2i(0, 0);
 
@@ -88,10 +90,11 @@ void Video::LoadFont() {
 
       glTexCoord2f((cx + 16) / 256, (cy + 16) / 256);
       glVertex2i(16, 16);
-      glEnd();
+      
+      GL_CHECK(glEnd());
 
-      glTranslated(10, 0, 0);
-      glEndList();
+      GL_CHECK(glTranslated(10, 0, 0));
+      GL_CHECK(glEndList());
 
       cx += 16;
       if (fabs(cx - 256) <= .1f) {
@@ -108,70 +111,70 @@ void Video::Print(GLint x, GLint y, const char *text, int set) {
   const GLuint base = base_;
 
   std::function<void(void)> func = [x, y, text, base] () {
-    glLoadIdentity();
+    GL_CHECK(glLoadIdentity());
 
-    glTranslated(x, y, 0);
+    GL_CHECK(glTranslated(x, y, 0));
 
-    glListBase(base - 32 + (128 * 1));
+    GL_CHECK(glListBase(base - 32 + (128 * 1)));
 
-    glCallLists((GLsizei) strlen(text), GL_BYTE, text);
+    GL_CHECK(glCallLists((GLsizei) strlen(text), GL_BYTE, text));
   };
 
   font_texture_->Callback(func);
 }
 
 void Video::Init2DScene(int width, int height) {
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
-  glDisable(GL_LIGHTING);
-  glDisable(GL_COLOR_MATERIAL);
+  GL_CHECK(glDisable(GL_DEPTH_TEST));
+  GL_CHECK(glDisable(GL_CULL_FACE));
+  GL_CHECK(glDisable(GL_LIGHTING));
+  GL_CHECK(glDisable(GL_COLOR_MATERIAL));
 
-  glMatrixMode(GL_PROJECTION);
+  GL_CHECK(glMatrixMode(GL_PROJECTION));
 
   ortho2D(0.0f, width, height, 0.0f);
 
-  glMatrixMode(GL_MODELVIEW);
+  GL_CHECK(glMatrixMode(GL_MODELVIEW));
 
-  glLoadIdentity();
+  GL_CHECK(glLoadIdentity());
 }
 
 void Video::Init3DScene(int width, int height) {
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glEnable(GL_LIGHTING);
+  GL_CHECK(glEnable(GL_DEPTH_TEST));
+  GL_CHECK(glEnable(GL_CULL_FACE));
+  GL_CHECK(glEnable(GL_LIGHTING));
 
-  glClear(GL_DEPTH_BUFFER_BIT);
+  GL_CHECK(glClear(GL_DEPTH_BUFFER_BIT));
 
-  glMatrixMode(GL_PROJECTION);
+  GL_CHECK(glMatrixMode(GL_PROJECTION));
 
   perspectiveGL(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 100.0f);
 
-  glMatrixMode(GL_MODELVIEW);
+  GL_CHECK(glMatrixMode(GL_MODELVIEW));
 
-  glLoadIdentity();
+  GL_CHECK(glLoadIdentity());
 
   glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
     glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-  glLoadMatrixf(glm::value_ptr(cam));
+  GL_CHECK(glLoadMatrixf(glm::value_ptr(cam)));
 
   GLfloat lmodel_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
+  GL_CHECK(glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient));
 
   GLfloat light_ambient[] = { 0.5f, 0.0f, 0.5f, 0.0f };
   GLfloat light_diffuse[] = { 0.5f, 0.0f, 0.5f, 0.0f };
 
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  GL_CHECK(glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient));
+  GL_CHECK(glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse));
 
   GLfloat light_position[] = { 0.f, 0.0f, 100.0f, 0.0f };
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  GL_CHECK(glLightfv(GL_LIGHT0, GL_POSITION, light_position));
 
-  glClearColor(0.2f, 0.0f, 0.2f, 0.0);
+  GL_CHECK(glClearColor(0.2f, 0.0f, 0.2f, 0.0));
 
-  glEnable(GL_LIGHT0);
+  GL_CHECK(glEnable(GL_LIGHT0));
 
-  glEnable(GL_COLOR_MATERIAL);
-  glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+  GL_CHECK(glEnable(GL_COLOR_MATERIAL));
+  GL_CHECK(glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE));
 }
 
 glm::vec3 Video::GetNormal(const glm::vec3 v0, const glm::vec3 v1,
@@ -188,9 +191,10 @@ void Video::DrawTexture(int x, int y, int w, int h,
 
   texture->Bind();
 
-  glLoadIdentity();
+  GL_CHECK(glLoadIdentity());
 
   glBegin(GL_TRIANGLE_STRIP);
+  
   glTexCoord2f(0.0f, yamount);
   glVertex2iv(glm::value_ptr(v0));
 
@@ -202,5 +206,6 @@ void Video::DrawTexture(int x, int y, int w, int h,
 
   glTexCoord2f(1.0f, 1.0f);
   glVertex2iv(glm::value_ptr(v3));
-  glEnd();
+  
+  GL_CHECK(glEnd());
 }

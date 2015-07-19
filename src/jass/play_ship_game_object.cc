@@ -138,17 +138,17 @@ namespace GameObjects {
   }
 
   void PlayShipGameObject::Render(Video *const video) {
-    glPushMatrix();
+    GL_CHECK(glPushMatrix());
 
-    glTranslatef(xpos_, ypos_, -10.0f);
-    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    glRotatef(angle_, 0.0f, 1.0f, 0.0f);
-    glScalef(0.035f, 0.035f, 0.035f);
-    glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+    GL_CHECK(glTranslatef(xpos_, ypos_, -10.0f));
+    GL_CHECK(glRotatef(90.0f, 1.0f, 0.0f, 0.0f));
+    GL_CHECK(glRotatef(angle_, 0.0f, 1.0f, 0.0f));
+    GL_CHECK(glScalef(0.035f, 0.035f, 0.035f));
+    GL_CHECK(glColor4f(1.0f, 0.0f, 0.0f, 1.0f));
     
     ship_->Display();
 
-    glPopMatrix();
+    GL_CHECK(glPopMatrix());
   }
 
   bool PlayShipGameObject::Collide(const GLfloat x, const GLfloat y) {

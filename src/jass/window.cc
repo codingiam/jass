@@ -81,10 +81,10 @@ void Window::Initialize() {
 
   // std::cout << " Screen BPP : " <<
   //   SDL_GetVideoSurface()->format->BitsPerPixel << std::endl;
-  std::cout << " Vendor     : " << glGetString(GL_VENDOR) << std::endl;
-  std::cout << " Renderer   : " << glGetString(GL_RENDERER) << std::endl;
-  std::cout << " Version    : " << glGetString(GL_VERSION) << std::endl;
-  std::cout << " Extensions : " << glGetString(GL_EXTENSIONS) << std::endl;
+  GL_CHECK(std::cout << " Vendor     : " << glGetString(GL_VENDOR) << std::endl);
+  GL_CHECK(std::cout << " Renderer   : " << glGetString(GL_RENDERER) << std::endl);
+  GL_CHECK(std::cout << " Version    : " << glGetString(GL_VERSION) << std::endl);
+  GL_CHECK(std::cout << " Extensions : " << glGetString(GL_EXTENSIONS) << std::endl);
 
   int value;
 
@@ -97,25 +97,25 @@ void Window::Initialize() {
   SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &value);
   std::cout << " Blue component " << value << "b" << std::endl;
 
-  glShadeModel(GL_SMOOTH);  // GL_FLAT
+  GL_CHECK(glShadeModel(GL_SMOOTH));  // GL_FLAT
 
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+  GL_CHECK(glClearColor(0.0, 0.0, 0.0, 0.0));
 
-  glClearDepth(1.0f);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
+  GL_CHECK(glClearDepth(1.0f));
+  GL_CHECK(glEnable(GL_DEPTH_TEST));
+  GL_CHECK(glDepthFunc(GL_LEQUAL));
 
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); \
+  GL_CHECK(glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)); \
   // GL_PERSPECTIVE_CORRECTION_HINT ||  GL_LINE_SMOOTH_HINT
 
-  // glPolygonMode(GL_BACK, GL_LINE);
+  // GL_CHECK(glPolygonMode(GL_BACK, GL_LINE));
 
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);
+  GL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+  GL_CHECK(glEnable(GL_BLEND));
 
-  glEnable(GL_TEXTURE_2D);
+  GL_CHECK(glEnable(GL_TEXTURE_2D));
 
-  glViewport(0, 0, kWidth, kHeight);
+  GL_CHECK(glViewport(0, 0, kWidth, kHeight));
 
   std::cout << "OpenGL initialized." << std::endl;
 }

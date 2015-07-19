@@ -32,7 +32,7 @@ Mesh::~Mesh() {
     delete[] normals_[i - 1];
   }
 
-  if (mesh_) glDeleteLists(mesh_, 1);
+  if (mesh_) GL_CHECK(glDeleteLists(mesh_, 1));
 }
 
 void Mesh::LoadMeshObj(const char* filename, const char *path) {
@@ -51,9 +51,9 @@ void Mesh::LoadMeshObj(const char* filename, const char *path) {
 
   LoadMaterialObj("spaceship.mtl");
 
-  this->mesh_ = glGenLists(1);
+  GL_CHECK(this->mesh_ = glGenLists(1));
 
-  glNewList(mesh_, GL_COMPILE);
+  GL_CHECK(glNewList(mesh_, GL_COMPILE));
 
   glBegin(GL_TRIANGLES);
 
@@ -72,9 +72,9 @@ void Mesh::LoadMeshObj(const char* filename, const char *path) {
     if (*cmd) ProcessCmdObj(cmd, params);
   }
 
-  glEnd();
+  GL_CHECK(glEnd());
 
-  glEndList();
+  GL_CHECK(glEndList());
 
   fclose(fp);
 }
@@ -175,7 +175,7 @@ void Mesh::Display() {
     }
   }
 
-  glCallList(mesh_);
+  GL_CHECK(glCallList(mesh_));
 }
 
 void Mesh::ProcessFace(char *face) {
@@ -187,16 +187,16 @@ void Mesh::ProcessFace(char *face) {
       &v1, &t1, &n1,
       &v2, &t2, &n2,
       &v3, &t3, &n3) != EOF) {
-    glNormal3fv(normals_[--n1]);
-    glTexCoord2dv(tcoords_[--t1]);
-    glVertex3fv(verticies_[--v1]);
+    GL_CHECK(glNormal3fv(normals_[--n1]));
+    GL_CHECK(glTexCoord2dv(tcoords_[--t1]));
+    GL_CHECK(glVertex3fv(verticies_[--v1]));
 
-    glNormal3fv(normals_[--n2]);
-    glTexCoord2dv(tcoords_[--t2]);
-    glVertex3fv(verticies_[--v2]);
+    GL_CHECK(glNormal3fv(normals_[--n2]));
+    GL_CHECK(glTexCoord2dv(tcoords_[--t2]));
+    GL_CHECK(glVertex3fv(verticies_[--v2]));
 
-    glNormal3fv(normals_[--n3]);
-    glTexCoord2dv(tcoords_[--t3]);
-    glVertex3fv(verticies_[--v3]);
+    GL_CHECK(glNormal3fv(normals_[--n3]));
+    GL_CHECK(glTexCoord2dv(tcoords_[--t3]));
+    GL_CHECK(glVertex3fv(verticies_[--v3]));
   }
 }

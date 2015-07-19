@@ -42,6 +42,8 @@ void Application::Initialize() {
 void Application::ShutDown() {
   states_manager_.reset();
 
+  video_.reset();
+
   window_.reset();
 
   if (sdl_initialized_) {

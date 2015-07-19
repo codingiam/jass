@@ -25,7 +25,7 @@ namespace GameObjects {
   }
 
   void PlayBackgroundGameObject::Render(Video *const video) {
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, 1.0f));
     video->DrawTexture(0, 0, Window::kWidth, Window::kHeight, bg_space_);
   }
 

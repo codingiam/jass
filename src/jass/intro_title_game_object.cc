@@ -34,7 +34,7 @@ namespace GameObjects {
   }
 
   void IntroTitleGameObject::Render(Video *const video) {
-    glColor4f(1.0f, 1.0f, 1.0f, alpha_title_);
+    GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, alpha_title_));
     video->DrawTexture(272, 8, 256, 64, bg_intro_);
   }
 

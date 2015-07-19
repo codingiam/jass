@@ -6,11 +6,8 @@
 
 #include "jass/application.h"
 
-#define STATUS_OK 0
-#define STATUS_ERROR 1
-
 int main(int argc, char *argv[]) {
-  int result = STATUS_ERROR;
+  int result = EXIT_FAILURE;
 
   try {
     Application application;
@@ -19,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     application.Run();
 
-    result = STATUS_OK;
+    result = EXIT_SUCCESS;
   } catch (const std::runtime_error &e) {
     std::cout << "Runtime exception caught: " << e.what() << std::endl;
   } catch (const std::exception &e) {

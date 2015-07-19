@@ -21,7 +21,7 @@ namespace Drawables {
   }
 
   void BitampDrawable::Render(Video *const video, const GLint x, const GLint y) {
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, 1.0f));
     video->DrawTexture(x, y, Window::kWidth, Window::kHeight, texture_);
   }
 }
