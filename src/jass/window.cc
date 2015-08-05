@@ -118,7 +118,7 @@ void Window::Initialize() {
   // SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &value);
   // std::cout << " Blue component " << value << "b" << std::endl;
 
-  GL_CHECK(glShadeModel(GL_SMOOTH));  // GL_FLAT
+  // GL_CHECK(glShadeModel(GL_SMOOTH));  // GL_FLAT
 
   GL_CHECK(glClearColor(0.0, 5.0, 0.0, 0.0));
 
