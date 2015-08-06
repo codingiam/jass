@@ -18,9 +18,15 @@ void VertexShader::Create() {
     "#version 330 core"
     "\n"
     "layout(location = 0) in vec3 vp_modelspace;"
+    "layout(location = 1) in vec2 texcoord;"
+    ""
+    "out vec2 Texcoord;"
+    ""
+    "uniform mat4 trans;"
     ""
     "void main() {"
-    "  gl_Position = vec4(vp_modelspace, 1.0);"
+    "  Texcoord = texcoord;"
+    "  gl_Position = trans * vec4(vp_modelspace, 1.0);"
     "}";
 
   char const *source_str = source.c_str();

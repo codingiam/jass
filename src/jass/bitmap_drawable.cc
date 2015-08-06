@@ -12,6 +12,10 @@
 #include "jass/vertex_array_object.h"
 #include "jass/buffer_object.h"
 
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace Drawables {
 
   BitampDrawable::BitampDrawable(std::string const &path) : path_(path) {
@@ -36,20 +40,27 @@ namespace Drawables {
     program_->Create(vertex_shader, fragment_shader);
   }
 
-  void BitampDrawable::Render(Video *const video, const GLint x, const GLint y) {
+  void BitampDrawable::Render(Video *const video) {
     // GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, 1.0f));
     // video->DrawTexture(x, y, Window::kWidth, Window::kHeight, texture_);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    static const GLfloat g_vertex_buffer_data[] = {
-                // Left bottom triangle
-                -0.5f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                // Right top triangle
-                0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                -0.5f, 0.5f, 0.0f }; 
+    const GLfloat g_vertex_buffer_data[] = {
+      // Left bottom triangle
+        0.0f, 512.0f, 0.0f, 0.0f, 1.0f,
+        0.0f,   0.0f, 0.0f, 0.0f, 0.0f,
+      512.0f,   0.0f, 0.0f, 1.0f, 0.0f,
+      // Right top triangle
+      512.0f,   0.0f, 0.0f, 1.0f, 0.0f,
+      512.0f, 512.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 512.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    auto model = glm::translate(glm::mat4(), position());
+    auto view = glm::mat4();
+    auto projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f);
+
+    auto mvp = projection * view * model;
 
     VertexArrayObject vao;
 
@@ -57,39 +68,59 @@ namespace Drawables {
 
     auto program = program_;
 
-    std::function<void(void)> func = [program] () {
+    // glActiveTexture(GL_TEXTURE0);
+    texture_->Bind();
+    // glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
+
+    std::function<void(void)> func = [program, g_vertex_buffer_data, mvp] () {
       BufferObject vbo;
 
       vbo.Create();
 
-      std::function<void(void)> func = [] () {
+      std::function<void(void)> func = [g_vertex_buffer_data] () {
         GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
       };
 
       vbo.Bind(func);
 
-      func = [program] () {
-        GLint loc;
+      func = [program, mvp] () {
+        GLint loc_vert, loc_tex;
         
-	    GL_CHECK(loc = glGetAttribLocation(program->program_id_, "vp_modelspace"));
+	    GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vp_modelspace"));
 
         GL_CHECK(glVertexAttribPointer(
-                loc,
+                loc_vert,
                 3,                  // size
                 GL_FLOAT,           // type
                 GL_FALSE,           // normalized?
-                0,                  // stride
+                5 * sizeof(float),  // stride
                 0                   // array buffer offset
+        ));
+
+        GL_CHECK(loc_tex = glGetAttribLocation(program->program_id_, "texcoord"));
+
+        GL_CHECK(glVertexAttribPointer(
+                 loc_tex,
+                 2,                  // size
+                 GL_FLOAT,           // type
+                 GL_FALSE,           // normalized?
+                 5 * sizeof(float),  // stride
+                 (void *)(3 * sizeof(float))  // array buffer offset
         ));
         // xxxx
         
         GL_CHECK(glUseProgram(program->program_id_));
 
-        GL_CHECK(glEnableVertexAttribArray(0));
-        
+        GL_CHECK(glEnableVertexAttribArray(loc_vert));
+        GL_CHECK(glEnableVertexAttribArray(loc_tex));
+
+        GLint loc_trans = glGetUniformLocation(program->program_id_, "trans");
+        glUniformMatrix4fv(loc_trans, 1, GL_FALSE, glm::value_ptr(mvp));
+
         GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));
-        
-        GL_CHECK(glDisableVertexAttribArray(0));
+
+        GL_CHECK(glEnableVertexAttribArray(loc_tex));
+        GL_CHECK(glDisableVertexAttribArray(loc_vert));
       };
 
       vbo.Bind(func);

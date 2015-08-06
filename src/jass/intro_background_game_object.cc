@@ -21,7 +21,8 @@ namespace GameObjects {
   }
 
   void IntroBackgroundGameObject::Render(Video *const video) {
-    bg_space_->Render(video, 0, 0);
+    bg_space_->position(glm::vec3(0, 0, 0));
+    bg_space_->Render(video);
   }
 
 }

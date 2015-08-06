@@ -17,11 +17,15 @@ void FragmentShader::Create() {
   std::string FragmentShaderCode =
     "#version 330 core"
     "\n"
+    "in vec2 Texcoord;"
+    ""
     "out vec4 color;"
+    ""
+    "uniform sampler2D tex;"
     ""
     "void main()"
     "{"
-	"  color = vec4(1,0,0,1);"
+	"  color = texture(tex, Texcoord) * vec4(1.0, 1.0, 1.0, 1.0);"
     "}";
 
   char const * FragmentSourcePointer = FragmentShaderCode.c_str();
