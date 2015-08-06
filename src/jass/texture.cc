@@ -67,6 +67,8 @@ bool Texture::Bind(std::function<void(void)> const &func) {
     return false;
   }
 
+  glActiveTexture(GL_TEXTURE0);
+
 //  glBindTexture(GL_TEXTURE_2D, texture_);GL_PRINT_ERROR();
 //  if (glGetError() != GL_NO_ERROR) {
 //    return false;

@@ -90,7 +90,7 @@ void Window::Initialize() {
     glGetError(); // ignore
   }
 
-  SDL_GL_SetSwapInterval(0);  // vsync
+  // SDL_GL_SetSwapInterval(0);  // vsync
  
   std::cout << "SDL initialised succesfully. " <<
     "Video information follows: " << std::endl;

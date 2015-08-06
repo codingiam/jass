@@ -19,6 +19,8 @@
 namespace Drawables {
 
   BitampDrawable::BitampDrawable(std::string const &path) : path_(path) {
+    this->width_ = 0;
+    this->height_ = 0;
   }
 
   BitampDrawable::~BitampDrawable() {
@@ -28,6 +30,8 @@ namespace Drawables {
 
   void BitampDrawable::Create(void) {
     std::shared_ptr<Image> image = Image::MakeImage(path_);
+    this->width_ = image->width();
+    this->height_ = image->height();
     this->texture_ = Texture::MakeTexture(image);
 
     auto vertex_shader = std::make_shared<VertexShader>();
@@ -43,20 +47,8 @@ namespace Drawables {
   void BitampDrawable::Render(Video *const video) {
     // GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, 1.0f));
     // video->DrawTexture(x, y, Window::kWidth, Window::kHeight, texture_);
-    glClear(GL_COLOR_BUFFER_BIT);
 
-    const GLfloat g_vertex_buffer_data[] = {
-      // Left bottom triangle
-        0.0f, 512.0f, 0.0f, 0.0f, 1.0f,
-        0.0f,   0.0f, 0.0f, 0.0f, 0.0f,
-      512.0f,   0.0f, 0.0f, 1.0f, 0.0f,
-      // Right top triangle
-      512.0f,   0.0f, 0.0f, 1.0f, 0.0f,
-      512.0f, 512.0f, 0.0f, 1.0f, 1.0f,
-        0.0f, 512.0f, 0.0f, 0.0f, 1.0f
-    };
-
-    auto model = glm::translate(glm::mat4(), position());
+    auto model = glm::scale(glm::translate(glm::mat4(), position()), this->scale());
     auto view = glm::mat4();
     auto projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f);
 
@@ -67,17 +59,31 @@ namespace Drawables {
     vao.Create();
 
     auto program = program_;
+    auto texture = texture_;
 
-    // glActiveTexture(GL_TEXTURE0);
-    texture_->Bind();
-    // glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
+    std::function<void(void)> func = [program, mvp, texture] () {
+      glUseProgram(program->program_id_);
 
-    std::function<void(void)> func = [program, g_vertex_buffer_data, mvp] () {
+      texture->Bind();
+      // glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
+
+      glClear(GL_COLOR_BUFFER_BIT);     
+
       BufferObject vbo;
 
       vbo.Create();
 
-      std::function<void(void)> func = [g_vertex_buffer_data] () {
+      std::function<void(void)> func = [] () {
+        const GLfloat g_vertex_buffer_data[] = {
+          // Left bottom triangle
+            0.0f, 512.0f, 0.0f, 0.0f, 1.0f,
+            0.0f,   0.0f, 0.0f, 0.0f, 0.0f,
+          512.0f,   0.0f, 0.0f, 1.0f, 0.0f,
+          // Right top triangle
+          512.0f,   0.0f, 0.0f, 1.0f, 0.0f,
+          512.0f, 512.0f, 0.0f, 1.0f, 1.0f,
+            0.0f, 512.0f, 0.0f, 0.0f, 1.0f
+        };
         GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
       };
 
@@ -124,6 +130,8 @@ namespace Drawables {
       };
 
       vbo.Bind(func);
+
+      glUseProgram(0);
     };
 
     vao.Bind(func);

@@ -26,9 +26,14 @@ class Image : private boost::noncopyable {
 
   std::string file_name() const { return file_name_; }
 
+  ILint width(void) { return width_; }
+  ILint height(void) { return height_; }
+
  private:
   ILuint image_;
   std::string file_name_;
+  ILint width_;
+  ILint height_;
 };
 
 #endif  // JASS_IMAGE_H_

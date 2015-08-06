@@ -24,8 +24,17 @@ namespace Drawables {
       return position_;
     }
 
+    void scale(const glm::vec3 &scale) {
+      this->scale_ = scale;
+    }
+
+    glm::vec3 scale(void) {
+      return scale_;
+    }
+
   private:
     glm::vec3 position_;
+    glm::vec3 scale_;
   };
 
 }
