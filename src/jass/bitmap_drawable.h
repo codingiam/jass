@@ -2,6 +2,8 @@
 
 #include "jass/drawable.h"
 
+#include <glm/vec4.hpp>
+
 class Video;
 class Texture;
 class Program;
@@ -16,18 +18,24 @@ namespace Drawables {
     void Create(void) override;
     void Render(Video *const video) override;
 
-    ILint width(void) { return width_; }
-    ILint height(void) { return height_; }
+    GLfloat width(void) { return width_; }
+    GLfloat height(void) { return height_; }
+
+    void color(const glm::vec4 &color) {
+      this->color_ = color;
+    }
 
    private:
-     std::shared_ptr<Program> program_;
+    std::shared_ptr<Program> program_;
 
-     std::shared_ptr<Texture> texture_;
+    std::shared_ptr<Texture> texture_;
      
-     std::string path_;
+    std::string path_;
 
-     ILint width_;
-     ILint height_;
+    GLfloat width_;
+    GLfloat height_;
+
+    glm::vec4 color_;
   };
 
 }

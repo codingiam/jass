@@ -2,7 +2,9 @@
 
 #include "jass/game_object.h"
 
-class Texture;
+namespace Drawables {
+  class BitampDrawable;
+}
 
 namespace GameObjects {
 
@@ -18,7 +20,7 @@ namespace GameObjects {
     void Render(Video *const video) override;
 
    private:
-    std::shared_ptr<Texture> bg_action_;
+    std::shared_ptr<Drawables::BitampDrawable> bg_action_;
 
     Uint32 ticks_action_;
 

@@ -1,9 +1,6 @@
 #include "intro_title_game_object.h"
 
-#include "jass/video.h"
-
-#include "jass/image.h"
-#include "jass/texture.h"
+#include "jass/bitmap_drawable.h"
 
 namespace GameObjects {
 
@@ -23,8 +20,8 @@ namespace GameObjects {
   }
 
   void IntroTitleGameObject::Create() {
-    std::shared_ptr<Image> image = Image::MakeImage("data/texturi/title.png");
-    this->bg_intro_ = Texture::MakeTexture(image);
+    this->bg_intro_ = std::make_shared<Drawables::BitampDrawable>("data/texturi/title.png");
+    this->bg_intro_->Create();
   }
 
   void IntroTitleGameObject::Update(const Uint32 dt) {
@@ -34,8 +31,9 @@ namespace GameObjects {
   }
 
   void IntroTitleGameObject::Render(Video *const video) {
-    // GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, alpha_title_));
-    video->DrawTexture(272, 8, 256, 64, bg_intro_);
+    bg_intro_->position(glm::vec3(272, 8, 0));
+    bg_intro_->color(glm::vec4(1.0f, 1.0f, 1.0f, alpha_title_));
+    bg_intro_->Render(video);
   }
 
 }

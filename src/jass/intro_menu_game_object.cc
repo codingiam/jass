@@ -1,9 +1,6 @@
 #include "intro_menu_game_object.h"
 
-#include "jass/video.h"
-
-#include "jass/image.h"
-#include "jass/texture.h"
+#include "jass/bitmap_drawable.h"
 
 namespace GameObjects {
 
@@ -20,8 +17,8 @@ namespace GameObjects {
   }
 
   void IntroMenuGameObject::Create() {
-    std::shared_ptr<Image> image = Image::MakeImage("data/texturi/action.png");
-    this->bg_action_ = Texture::MakeTexture(image);
+    this->bg_action_ = std::make_shared<Drawables::BitampDrawable>("data/texturi/action.png");
+    this->bg_action_->Create();
   }
 
   void IntroMenuGameObject::Update(const Uint32 dt) {
@@ -33,8 +30,9 @@ namespace GameObjects {
   }
 
   void IntroMenuGameObject::Render(Video *const video) {
-    // GL_CHECK(glColor4f(1.0f, 1.0f - blue_action_, blue_action_, 1.0f));
-    video->DrawTexture(262, 440, 276, 64, bg_action_);
+    bg_action_->position(glm::vec3(262, 440, 0));
+    bg_action_->color(glm::vec4(1.0f, 1.0f - blue_action_, blue_action_, 1.0f));
+    bg_action_->Render(video);
   }
 
 }

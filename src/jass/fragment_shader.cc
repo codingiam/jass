@@ -22,10 +22,11 @@ void FragmentShader::Create() {
     "out vec4 color;"
     ""
     "uniform sampler2D tex;"
+    "uniform vec4 theColor;"
     ""
     "void main()"
     "{"
-	"  color = texture(tex, Texcoord) * vec4(1.0, 1.0, 1.0, 1.0);"
+	"  color = texture(tex, Texcoord) * theColor;"
     "}";
 
   char const * FragmentSourcePointer = FragmentShaderCode.c_str();
