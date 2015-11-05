@@ -2,7 +2,9 @@
 
 #include "jass/game_object.h"
 
-class Texture;
+namespace Drawables {
+  class FontDrawable;
+}
 
 namespace GameObjects {
 
@@ -18,6 +20,8 @@ namespace GameObjects {
     void Render(Video *const video) override;
 
    private:
+    std::shared_ptr<Drawables::FontDrawable> font_;
+
     Uint32 ticks_intro_text_;
     Uint32 speed_intro_text_;
 

@@ -5,6 +5,8 @@
 #include "jass/image.h"
 #include "jass/texture.h"
 
+#include "jass/font_drawable.h"
+
 #include <array>
 
 namespace {
@@ -41,6 +43,8 @@ namespace GameObjects {
   }
 
   void IntroTextGameObject::Create() {
+    this->font_ = std::make_shared<Drawables::FontDrawable>("data/fonturi/font.png");
+    this->font_->Create();
   }
 
   void IntroTextGameObject::Update(const Uint32 dt) {
@@ -68,7 +72,9 @@ namespace GameObjects {
       strncpy(buffer, introText[i], marime);
       buffer[marime] = '\0';
       show_to_ -= marime;
-      video->Print(90, 105 + 20 * i, buffer);
+      font_->position(glm::vec3(90, 105 + 20 * i, 0));
+      font_->text(buffer);
+      font_->Render(video);
     }
   }
 

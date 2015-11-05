@@ -25,18 +25,18 @@ void perspectiveGL(GLdouble fovY, GLdouble aspect,
   GL_CHECK(glLoadMatrixf(glm::value_ptr(persp)));
 }
 
-void ortho2D(GLdouble left, GLdouble right,
-                    GLdouble bottom, GLdouble top) {
-  glm::mat4 ortho = glm::ortho(left, right, bottom, top);
-  GL_CHECK(glLoadMatrixf(glm::value_ptr(ortho)));
-}
+//void ortho2D(GLdouble left, GLdouble right,
+//                    GLdouble bottom, GLdouble top) {
+//  glm::mat4 ortho = glm::ortho(left, right, bottom, top);
+//  GL_CHECK(glLoadMatrixf(glm::value_ptr(ortho)));
+//}
 
 }
 
 Video::Video() {
   this->il_initialized_ = false;
   this->font_texture_ = 0;
-  this->base_ = 0;
+//  this->base_ = 0;
 }
 
 Video::~Video() {
@@ -45,10 +45,10 @@ Video::~Video() {
     this->il_initialized_ = false;
   }
 
-  if (base_) {
-    GL_CHECK(glDeleteLists(base_, 256));
-    this->base_ = 0;
-  }
+//  if (base_) {
+//    GL_CHECK(glDeleteLists(base_, 256));
+//    this->base_ = 0;
+//  }
 
   font_texture_.reset();
 }
@@ -61,13 +61,13 @@ void Video::Initialize() {
 }
 
 void Video::LoadFont() {
-  if ((font_texture_) || (base_))
+  if (font_texture_)
     return;
 
   std::shared_ptr<Image> image = Image::MakeImage("data/fonturi/font.png");
   this->font_texture_ = Texture::MakeTexture(image);
-
-  // GL_CHECK(this->base_ = glGenLists(256));
+/*
+  GL_CHECK(this->base_ = glGenLists(256));
 
   const GLuint base = base_;
 
@@ -75,7 +75,7 @@ void Video::LoadFont() {
     float cx = 0, cy = 0;
 
     for (int loop = 0; loop < 256; loop++) {
-      /*
+
       GL_CHECK(glNewList(base + loop, GL_COMPILE));
       
       glBegin(GL_TRIANGLE_STRIP);
@@ -96,22 +96,38 @@ void Video::LoadFont() {
 
       GL_CHECK(glTranslated(10, 0, 0));
       GL_CHECK(glEndList());
-      */
+
       cx += 16;
       if (fabs(cx - 256) <= .1f) {
         cx = 0;
         cy += 16;
       }
     }
-  };
+};
 
   font_texture_->Bind(func);
+ */
 }
 
 void Video::Print(GLint x, GLint y, const char *text, int set) {
-  const GLuint base = base_;
+  std::function<void(void)> func = [x, y, text] () {
+    const char *p;
+    float x2 = x, y2 = y, w = 16, h = 16;
 
-  std::function<void(void)> func = [x, y, text, base] () {
+    for(p = text; *p; p++) {
+      GLfloat box[4][4] = {
+        {x2,     -y2    , 0, 0},
+        {x2 + w, -y2    , 1, 0},
+        {x2,     -y2 - h, 0, 1},
+        {x2 + w, -y2 - h, 1, 1},
+      };
+
+      GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof box, box, GL_DYNAMIC_DRAW));
+      GL_CHECK(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
+
+      x2 += 16;
+    }
+
     /*
     GL_CHECK(glLoadIdentity());
 

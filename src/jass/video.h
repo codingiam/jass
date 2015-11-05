@@ -37,7 +37,7 @@ class Video : private boost::noncopyable {
   bool il_initialized_;
 
   std::shared_ptr<Texture> font_texture_;
-  GLuint base_;
+  // GLuint base_;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
   enum { rmask = 0xff000000, gmask = 0x00ff0000,
