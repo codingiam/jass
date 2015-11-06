@@ -20,6 +20,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <array>
+
 namespace Drawables {
 
   FontDrawable::FontDrawable(std::string const &path) : path_(path) {
@@ -72,25 +74,38 @@ namespace Drawables {
       std::function<void(void)> func = [text] () {
         const char *p = nullptr;
 
-        float x2 = 0, y2 = 0, w = 160, h = 160;
+        float x2 = 0, y2 = 0;
+
+        typedef std::array<std::array<GLfloat, 5>, 6> tBox;
+
+        std::vector<tBox> vertices;
 
         for(p = text.c_str(); *p; p++) {
-          GLfloat box[4][5] = {
-            {x2,      y2    , 0.0f,  0, 0},
-            {x2 + w,  y2    , 0.0f,  1, 0},
-            {x2,      y2 + h, 0.0f,  0, 1},
-            {x2 + w,  y2 + h, 0.0f,  1, 1},
-          };
+          int tx, ty;
 
-          GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof box, box, GL_DYNAMIC_DRAW));
+          tx = ((*p - 32) % 16) * 16;
+          ty = ((*p - 32) / 16) * 16;
+
+          tBox box = {{
+            { x2,       y2,      0.0f, tx / 256.0f,        ty / 256.0f },
+            { x2 + 15,  y2,      0.0f, (tx + 15) / 256.0f, ty / 256.0f },
+            { x2,       y2 + 15, 0.0f, tx / 256.0f,        (ty + 15) / 256.0f },
+            { x2,       y2 + 15, 0.0f, tx / 256.0f,        (ty + 15) / 256.0f },
+            { x2 + 15,  y2,      0.0f, (tx + 15) / 256.0f, ty / 256.0f },
+            { x2 + 15,  y2 + 15, 0.0f, (tx + 15) / 256.0f, (ty + 15) / 256.0f },
+          }};
+
+          vertices.push_back(box);
 
           x2 += 16;
         }
+
+        GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof (tBox), &vertices[0], GL_DYNAMIC_DRAW));
       };
 
       vbo.Bind(func);
 
-      func = [program, mvp] () {
+      func = [program, mvp, text] () {
         GLint loc_vert, loc_tex;
 
         GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vp_modelspace"));
@@ -128,7 +143,7 @@ namespace Drawables {
         float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
         glUniform4fv(loc_color, 1, color);
 
-        GL_CHECK(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
+        GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6 * text.length()));
         
         GL_CHECK(glEnableVertexAttribArray(loc_tex));
         GL_CHECK(glDisableVertexAttribArray(loc_vert));

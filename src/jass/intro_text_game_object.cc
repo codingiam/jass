@@ -10,11 +10,14 @@
 #include <array>
 
 namespace {
-  const std::array<const char *, 7> introText = {
-    "  Acest joc este proiectul nostru pentru cursul de grafica.",
-    "Sper ca va v-a face placere sa-l jucati si bineintles sa ne",
-    "dati o nota pe masura efortului.",
-    "  Scopul jocului este sa scapati cu nava intacta din batalie.",
+  const std::array<const char *, 10> introText = {
+    "  Acest joc este proiectul nostru pentru",
+    "cursul de grafica.",
+    "  Sper ca va v-a face placere sa-l jucati si",
+    "bineintles sa ne dati o nota pe masura",
+    "efortului.",
+    "  Scopul jocului este sa scapati cu nava",
+    "intacta din batalie.",
     " ",
     "  Si acuma urmeaza tastele:",
     " "
@@ -30,7 +33,7 @@ namespace GameObjects {
 
     this->size_intro_text_ = 0;
 
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 10; i++) {
       this->size_intro_text_ += strlen(introText[i]);  // introText[i].length();
     }
   }
@@ -72,7 +75,8 @@ namespace GameObjects {
       strncpy(buffer, introText[i], marime);
       buffer[marime] = '\0';
       show_to_ -= marime;
-      font_->position(glm::vec3(90, 105 + 20 * i, 0));
+      font_->position(glm::vec3(40, 105 + 20 * i, 0));
+      font_->scale(glm::vec3(800.0 / 800.0, 600.0 / 600.0, 1.0));
       font_->text(buffer);
       font_->Render(video);
     }
