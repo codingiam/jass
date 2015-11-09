@@ -1,7 +1,9 @@
 /jass.xcodeproj/
-/jass*
+/exe/jass
 *.dll
 /Debug/*
 /stdout.txt
 /packages.config
 /packages/
+/.idea/
+/build/
