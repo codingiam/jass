@@ -41,7 +41,9 @@ void Material::LoadMaterial(const char *filename, const char *path) {
     *buffer = 0; fgets(buffer, 100, fp);
     cmd = params = trimer = buffer;
 
-    while (*trimer >= 32) trimer++; *trimer = 0;
+    while (*trimer >= 32) trimer++;
+
+    *trimer = 0;
 
     while ((*params) && (*params != ' ')) params++;
 

@@ -9,8 +9,11 @@
 #include "jass/jass.h"
 
 class Window;
-class StatesManager;
 class Video;
+
+namespace States {
+  class StatesManager;
+}
 
 class Application : private boost::noncopyable  {
  public:
@@ -33,7 +36,7 @@ class Application : private boost::noncopyable  {
   bool sdl_initialized_;
 
   std::shared_ptr<Window> window_;
-  std::shared_ptr<StatesManager> states_manager_;
+  std::shared_ptr<States::StatesManager> states_manager_;
   std::shared_ptr<Video> video_;
 };
 

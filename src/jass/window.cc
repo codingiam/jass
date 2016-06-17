@@ -10,7 +10,7 @@ Window::Window() {
   this->subsystem_initialized_ = false;
   this->sdl_window_ = nullptr;
   this->gl_context_ = nullptr;
-  this->glew__initialized_ = false;
+  this->glew_initialized_ = false;
 }
 
 Window::~Window() {
@@ -43,7 +43,7 @@ void Window::Initialize() {
 
   SDL_ShowCursor(SDL_DISABLE);
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
     SDL_GL_CONTEXT_PROFILE_CORE);
@@ -81,8 +81,8 @@ void Window::Initialize() {
   {
     glewExperimental = GL_TRUE; 
     GLenum err = glewInit();
-    this->glew__initialized_ = err == GLEW_OK;
-    if (!glew__initialized_) {
+    this->glew_initialized_ = err == GLEW_OK;
+    if (!glew_initialized_) {
       boost::format message =
         boost::format("Could not initialise GLEW subsystem: %s") % glewGetErrorString(err);
       throw std::runtime_error(message.str());
@@ -120,13 +120,15 @@ void Window::Initialize() {
 
   // GL_CHECK(glShadeModel(GL_SMOOTH));  // GL_FLAT
 
+  EnableOpenGLErrorCallback();
+
   GL_CHECK(glClearColor(0.0, 5.0, 0.0, 0.0));
 
   GL_CHECK(glClearDepth(1.0f));
   GL_CHECK(glEnable(GL_DEPTH_TEST));
   GL_CHECK(glDepthFunc(GL_LEQUAL));
 
-  // GL_CHECK(glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)); \
+  // GL_CHECK(glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST));
   // GL_PERSPECTIVE_CORRECTION_HINT ||  GL_LINE_SMOOTH_HINT
 
   // GL_CHECK(glPolygonMode(GL_BACK, GL_LINE));

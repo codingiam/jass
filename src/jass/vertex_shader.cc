@@ -15,7 +15,7 @@ void VertexShader::Create() {
   GL_CHECK(this->shader_id_ = glCreateShader(GL_VERTEX_SHADER));
 
   std::string source =
-    "#version 330 core"
+    "#version 430 core"
     "\n"
     "layout(location = 0) in vec3 vp_modelspace;"
     "layout(location = 1) in vec2 texcoord;"

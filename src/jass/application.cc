@@ -5,9 +5,9 @@
 #include "jass/application.h"
 
 #include "jass/video.h"
-#include "jass/state.h"
+#include "jass/states/state.h"
 #include "jass/window.h"
-#include "jass/states_manager.h"
+#include "jass/states/states_manager.h"
 
 namespace {
   const Uint32 TARGET_FPS = 60;
@@ -63,7 +63,7 @@ void Application::InitializeVideo() {
 }
 
 void Application::InitialiseStates() {
-  this->states_manager_ = std::make_shared<StatesManager>();
+  this->states_manager_ = std::make_shared<States::StatesManager>();
   states_manager_->Initialize(this->video_.get());
 }
 
@@ -71,7 +71,7 @@ void Application::Run() {
   Uint32 dt = TARGET_DT;
   Uint32 begin_ms = SDL_GetTicks();
 
-  while (State::GetState() != NULL) {
+  while (States::State::GetState() != NULL) {
     Tick(dt);
 
     const Uint32 end_ms = SDL_GetTicks();
@@ -89,9 +89,9 @@ void Application::Run() {
 void Application::Tick(const Uint32 dt) {
     const Uint8 *keys_state = SDL_GetKeyboardState(NULL);
 
-    State::GetState()->Update(dt, keys_state);
+    States::State::GetState()->Update(dt, keys_state);
 
-    State::GetState()->Render(video_.get());
+    States::State::GetState()->Render(video_.get());
 
     window_->SwapBuffers();
 
@@ -99,9 +99,9 @@ void Application::Tick(const Uint32 dt) {
 
     while (SDL_PollEvent(&sdl_event)) {
       if (sdl_event.type == SDL_QUIT) {
-        State::SetState(NULL);
+        States::State::SetState(NULL);
       }
     }
 
-    State::Swap();
+    States::State::Swap();
 }

@@ -15,7 +15,7 @@ void FragmentShader::Create() {
   GL_CHECK(this->shader_id_ = glCreateShader(GL_FRAGMENT_SHADER));
 
   std::string FragmentShaderCode =
-    "#version 330 core"
+    "#version 430 core"
     "\n"
     "in vec2 Texcoord;"
     ""
@@ -26,7 +26,7 @@ void FragmentShader::Create() {
     ""
     "void main()"
     "{"
-	"  color = texture(tex, Texcoord) * theColor;"
+	  "  color = texture(tex, Texcoord) * theColor;"
     "}";
 
   char const * FragmentSourcePointer = FragmentShaderCode.c_str();
