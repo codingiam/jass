@@ -1,9 +1,9 @@
+// Copyright (c) 2015, Doru Catalin Budai. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+
 #include "jass/game_objects/play_healthbar_game_object.h"
 
-#include "jass/video.h"
-
-#include "jass/image.h"
-#include "jass/texture.h"
+#include "jass/drawables/bitmap_drawable.h"
 
 #include "jass/game_objects/play_ship_game_object.h"
 
@@ -19,8 +19,8 @@ namespace GameObjects {
   }
 
   void PlayHealthbarGameObject::Create() {
-    std::shared_ptr<Image> image = Image::MakeImage("data/texturi/healthbar.png");
-    this->bg_healthbar_ = Texture::MakeTexture(image);
+    this->bg_healthbar_ = std::make_shared<Drawables::BitampDrawable>("data/texturi/healthbar.png");
+    this->bg_healthbar_->Create();
   }
 
   void PlayHealthbarGameObject::Start() {
@@ -31,8 +31,10 @@ namespace GameObjects {
   }
 
   void PlayHealthbarGameObject::Render(Video *const video) {
-    GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, 0.5f));
-    video->DrawTexture(x_, y_, w_, h_, bg_healthbar_, 1.0f - life_);
+    bg_healthbar_->color(glm::vec4(1.0f, life_, life_, 0.5f));
+    bg_healthbar_->position(glm::vec3(x_, y_, 0));
+    bg_healthbar_->scale(glm::vec3(w_ / bg_healthbar_->width(), h_ / bg_healthbar_->height(), 1.0));
+    bg_healthbar_->Render(video);
   }
 
-}
+}  // namespace GameObjects

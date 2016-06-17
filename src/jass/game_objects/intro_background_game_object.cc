@@ -26,4 +26,4 @@ namespace GameObjects {
     bg_space_->Render(video);
   }
 
-}
+}  // namespace GameObjects

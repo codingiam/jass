@@ -6,22 +6,24 @@
 
 #include "jass/game_objects/game_object.h"
 
-class Texture;
+namespace Drawables {
+  class BitampDrawable;
+}
 
 namespace GameObjects {
 
-  class PlayBoardGameObject : public GameObject {
-   public:
-    PlayBoardGameObject(void);
-    ~PlayBoardGameObject(void);
+class PlayBoardGameObject : public GameObject {
+ public:
+  PlayBoardGameObject(void);
+  ~PlayBoardGameObject(void);
 
-    void Create(void) override;
-    void Start(void) override {}
+  void Create(void) override;
+  void Start(void) override {}
 
-    void Render(Video *const video) override;
+  void Render(Video *const video) override;
 
-   private:
-     std::shared_ptr<Texture> bg_board_;
-  };
+ private:
+   std::shared_ptr<Drawables::BitampDrawable> bg_board_;
+};
 
-}
+}  // namespace GameObjects

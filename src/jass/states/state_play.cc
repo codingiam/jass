@@ -124,8 +124,8 @@ void StatePlay::Render(Video *const video) {
 
   blue_ship_healthbar_->Render(video);
   red_ship_healthbar_->Render(video);
-  
+
   bg_board_->Render(video);
 }
 
-}
+}  // namespace States

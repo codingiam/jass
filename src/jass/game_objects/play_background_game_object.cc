@@ -4,11 +4,7 @@
 
 #include "jass/game_objects/play_background_game_object.h"
 
-#include "jass/window.h"
-
-#include "jass/video.h"
-#include "jass/image.h"
-#include "jass/texture.h"
+#include "jass/drawables/bitmap_drawable.h"
 
 namespace GameObjects {
 
@@ -20,13 +16,14 @@ namespace GameObjects {
   }
 
   void PlayBackgroundGameObject::Create() {
-    std::shared_ptr<Image> image = Image::MakeImage("data/texturi/spacebg.png");
-    this->bg_space_ = Texture::MakeTexture(image);
+    this->bg_space_ = std::make_shared<Drawables::BitampDrawable>("data/texturi/spacebg.png");
+    this->bg_space_->Create();
   }
 
   void PlayBackgroundGameObject::Render(Video *const video) {
-    GL_CHECK(glColor4f(1.0f, 1.0f, 1.0f, 1.0f));
-    video->DrawTexture(0, 0, Window::kWidth, Window::kHeight, bg_space_);
+    bg_space_->position(glm::vec3(0, 0, 0));
+    bg_space_->scale(glm::vec3(800.0 / bg_space_->width(), 600.0 / bg_space_->height(), 1.0));
+    bg_space_->Render(video);
   }
 
-}
+}  // namespace GameObjects

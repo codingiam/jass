@@ -6,6 +6,7 @@
 
 #include <GL/glew.h>
 
+#include <execinfo.h>
 #include <SDL_opengl.h>
 
 #include <cstdlib>
@@ -40,10 +41,26 @@ void EnableOpenGLErrorCallback() {
     0, &unusedIds, true));
 }
 
+void Backtrace() {
+  void *array[10];
+  size_t size;
+  char **strings;
+  size_t i;
+
+  size = backtrace(array, 10);
+  strings = backtrace_symbols(array, size);
+
+  for (i = 0; i < size; i++)
+     fprintf(stderr, "%s\n", strings[i]);
+
+  free(strings);
+}
+
 void CheckOpenGLError(const char *stmt, const char *fname, int line) {
   GLenum err = glGetError();
   if (err != GL_NO_ERROR) {
-    printf("OpenGL error %08x, at %s:%i - for %s\n", err, fname, line, stmt);
+    fprintf(stderr, "OpenGL error %08x, at %s:%i - for %s\n", err, fname, line, stmt);
+    Backtrace();
     abort();
   }
 }
