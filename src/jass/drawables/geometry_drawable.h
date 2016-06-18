@@ -1,42 +1,37 @@
-// Copyright (c) 2015, Doru Catalin Budai. All rights reserved.
+// Copyright (c) 2016, Doru Catalin Budai. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef font_drawable_h
-#define font_drawable_h
+#pragma once
+
+#include <glm/vec4.hpp>
 
 #include <string>
+#include <vector>
 
 #include "jass/drawables/drawable.h"
+#include "jass/tiny_obj_loader.h"
 
 class Video;
-class Texture;
 class Program;
 
 namespace Drawables {
 
-class FontDrawable : public Drawable {
+class GeometryDrawable : public Drawable {
  public:
-  FontDrawable(std::string const &path);
-  virtual ~FontDrawable(void);
+  GeometryDrawable(std::string const &path);
+  virtual ~GeometryDrawable(void);
 
   void Create(void) override;
   void Render(Video *const video) override;
 
-  void text(const std::string &text) {
-    this->text_ = text;
-  }
-
  private:
   std::shared_ptr<Program> program_;
 
-  std::shared_ptr<Texture> texture_;
+  std::vector<tinyobj::shape_t> shapes_;
+  std::vector<tinyobj::material_t> materials_;
 
   std::string path_;
-
-  std::string text_;
 };
 
 }  // namespace Drawables
-
-#endif /* font_drawable_h */

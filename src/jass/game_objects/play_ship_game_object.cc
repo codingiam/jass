@@ -1,8 +1,12 @@
+// Copyright (c) 2016, Doru Catalin Budai. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #include "jass/game_objects/play_ship_game_object.h"
 
 #include "jass/video.h"
 
-#include "jass/mesh.h"
+#include "jass/drawables/geometry_drawable.h"
 
 #include "jass/states/states_manager.h"
 #include "jass/states/state_play.h"
@@ -18,7 +22,7 @@ namespace {
     }
     return c;
   }
-}
+}  // namespace
 
 namespace GameObjects {
 
@@ -31,8 +35,8 @@ namespace GameObjects {
   }
 
   void PlayShipGameObject::Create() {
-    this->ship_ = std::make_shared<Mesh>();
-    ship_->LoadMeshObj("spaceship.obj", "data/obiecte/");
+    this->ship_ = std::make_shared<Drawables::GeometryDrawable>("data/obiecte/spaceship.obj");
+    this->ship_->Create();
   }
 
   void PlayShipGameObject::Start() {
@@ -136,17 +140,13 @@ namespace GameObjects {
   }
 
   void PlayShipGameObject::Render(Video *const video) {
-    GL_CHECK(glPushMatrix());
+    ship_->position(glm::vec3(xpos_, ypos_, -10.0f));
+    // GL_CHECK(glRotatef(90.0f, 1.0f, 0.0f, 0.0f));
+    // GL_CHECK(glRotatef(angle_, 0.0f, 1.0f, 0.0f));
+    ship_->scale(glm::vec3(0.035f, 0.035f, 0.035f));
+    ship_->color(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-    GL_CHECK(glTranslatef(xpos_, ypos_, -10.0f));
-    GL_CHECK(glRotatef(90.0f, 1.0f, 0.0f, 0.0f));
-    GL_CHECK(glRotatef(angle_, 0.0f, 1.0f, 0.0f));
-    GL_CHECK(glScalef(0.035f, 0.035f, 0.035f));
-    GL_CHECK(glColor4f(1.0f, 0.0f, 0.0f, 1.0f));
-    
-    ship_->Display();
-
-    GL_CHECK(glPopMatrix());
+    ship_->Render(video);
   }
 
   bool PlayShipGameObject::Collide(const GLfloat x, const GLfloat y) {

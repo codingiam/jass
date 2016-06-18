@@ -113,13 +113,13 @@ void StatePlay::Render(Video *const video) {
 
   video->Init3DScene(Window::kWidth, Window::kHeight);
 
-  red_ship_->Render(video);
+  red_ship_->Render(video);/*
   blue_ship_->Render(video);
 
   for (auto it = projectiles_.begin(); it != projectiles_.end(); ++it) {
     (*it)->Render(video);
   }
-
+*/
   video->Init2DScene(Window::kWidth, Window::kHeight);
 
   blue_ship_healthbar_->Render(video);

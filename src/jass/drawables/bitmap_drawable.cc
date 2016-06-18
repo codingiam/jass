@@ -1,4 +1,12 @@
+// Copyright (c) 2015, Doru Catalin Budai. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #include "jass/drawables/bitmap_drawable.h"
+
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "jass/image.h"
 #include "jass/texture.h"
@@ -12,16 +20,11 @@
 #include "jass/vertex_array_object.h"
 #include "jass/buffer_object.h"
 
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 namespace Drawables {
 
   BitampDrawable::BitampDrawable(std::string const &path) : path_(path) {
     this->width_ = 0;
     this->height_ = 0;
-    this->color_ = glm::vec4(1.0);
   }
 
   BitampDrawable::~BitampDrawable() {
@@ -58,7 +61,7 @@ namespace Drawables {
 
     auto program = program_;
     auto texture = texture_;
-    auto color = color_;
+    auto color = this->color();
 
     const GLfloat g_vertex_buffer_data[] = {
       // Left bottom triangle
@@ -91,7 +94,7 @@ namespace Drawables {
 
       func = [program, mvp, color] () {
         GLint loc_vert, loc_tex;
-        
+
 	    GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vp_modelspace"));
 
         GL_CHECK(glVertexAttribPointer(
@@ -114,7 +117,7 @@ namespace Drawables {
                  (void *)(3 * sizeof(float))  // array buffer offset
         ));
         // xxxx
-        
+
         GL_CHECK(glUseProgram(program->program_id_));
 
         GL_CHECK(glEnableVertexAttribArray(loc_vert));
@@ -139,4 +142,4 @@ namespace Drawables {
 
     vao.Bind(func);
   }
-}
+}  // namespace Drawables

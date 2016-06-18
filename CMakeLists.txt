@@ -15,7 +15,7 @@ FIND_PACKAGE(GLEW REQUIRED)
 
 PROJECT(jass)
 
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wno-unused-parameter -O0 -pedantic -D_DEBUG")
+SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wno-unused-parameter -O0 -Wpedantic -D_DEBUG")
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY
     ${CMAKE_SOURCE_DIR}/exe)

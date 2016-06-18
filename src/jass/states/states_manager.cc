@@ -25,7 +25,7 @@ void StatesManager::Initialize(Video *const video) {
   State::Register(kStateIntro, state_intro_, video);
   State::Register(kStatePlay, state_play_, video);
 
-  State::SetState(state_intro_.get());
+  State::SetState(state_play_.get());
   State::Swap();
 }
 
@@ -34,4 +34,4 @@ void StatesManager::ShutDown() {
   State::Unregister(kStateIntro);
 }
 
-}
+}  // namespace States

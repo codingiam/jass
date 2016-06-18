@@ -19,19 +19,19 @@
 
 namespace {
 
-void perspectiveGL(GLdouble fovY, GLdouble aspect,
-                          GLdouble zNear, GLdouble zFar) {
-  glm::mat4 persp = glm::perspective(fovY, aspect, zNear, zFar);
-  GL_CHECK(glLoadMatrixf(glm::value_ptr(persp)));
-}
+// void perspectiveGL(GLdouble fovY, GLdouble aspect,
+//                           GLdouble zNear, GLdouble zFar) {
+//   glm::mat4 persp = glm::perspective(fovY, aspect, zNear, zFar);
+//   GL_CHECK(glLoadMatrixf(glm::value_ptr(persp)));
+// }
 
-//void ortho2D(GLdouble left, GLdouble right,
-//                    GLdouble bottom, GLdouble top) {
-//  glm::mat4 ortho = glm::ortho(left, right, bottom, top);
-//  GL_CHECK(glLoadMatrixf(glm::value_ptr(ortho)));
-//}
+// void ortho2D(GLdouble left, GLdouble right,
+//                     GLdouble bottom, GLdouble top) {
+//   glm::mat4 ortho = glm::ortho(left, right, bottom, top);
+//   GL_CHECK(glLoadMatrixf(glm::value_ptr(ortho)));
+// }
 
-}
+}  // namespace
 
 Video::Video() {
   this->il_initialized_ = false;
@@ -160,40 +160,40 @@ void Video::Init2DScene(int width, int height) {
 void Video::Init3DScene(int width, int height) {
   GL_CHECK(glEnable(GL_DEPTH_TEST));
   GL_CHECK(glEnable(GL_CULL_FACE));
-  GL_CHECK(glEnable(GL_LIGHTING));
+  // GL_CHECK(glEnable(GL_LIGHTING));
 
   GL_CHECK(glClear(GL_DEPTH_BUFFER_BIT));
 
-  GL_CHECK(glMatrixMode(GL_PROJECTION));
+  // GL_CHECK(glMatrixMode(GL_PROJECTION));
 
-  perspectiveGL(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 100.0f);
+  // perspectiveGL(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 100.0f);
 
-  GL_CHECK(glMatrixMode(GL_MODELVIEW));
+  // GL_CHECK(glMatrixMode(GL_MODELVIEW));
 
-  GL_CHECK(glLoadIdentity());
+  // GL_CHECK(glLoadIdentity());
 
-  glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
-    glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-  GL_CHECK(glLoadMatrixf(glm::value_ptr(cam)));
+  // glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
+  //   glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+  // GL_CHECK(glLoadMatrixf(glm::value_ptr(cam)));
 
-  GLfloat lmodel_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-  GL_CHECK(glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient));
+  // GLfloat lmodel_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+  // GL_CHECK(glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient));
 
-  GLfloat light_ambient[] = { 0.5f, 0.0f, 0.5f, 0.0f };
-  GLfloat light_diffuse[] = { 0.5f, 0.0f, 0.5f, 0.0f };
+  // GLfloat light_ambient[] = { 0.5f, 0.0f, 0.5f, 0.0f };
+  // GL_CHECK(glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient));
 
-  GL_CHECK(glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient));
-  GL_CHECK(glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse));
+  // GLfloat light_diffuse[] = { 0.5f, 0.0f, 0.5f, 0.0f };
+  // GL_CHECK(glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse));
 
-  GLfloat light_position[] = { 0.f, 0.0f, 100.0f, 0.0f };
-  GL_CHECK(glLightfv(GL_LIGHT0, GL_POSITION, light_position));
+  // GLfloat light_position[] = { 0.f, 0.0f, 100.0f, 0.0f };
+  // GL_CHECK(glLightfv(GL_LIGHT0, GL_POSITION, light_position));
 
   GL_CHECK(glClearColor(0.2f, 0.0f, 0.2f, 0.0));
 
-  GL_CHECK(glEnable(GL_LIGHT0));
+  // GL_CHECK(glEnable(GL_LIGHT0));
 
-  GL_CHECK(glEnable(GL_COLOR_MATERIAL));
-  GL_CHECK(glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE));
+  // GL_CHECK(glEnable(GL_COLOR_MATERIAL));
+  // GL_CHECK(glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE));
 }
 
 glm::vec3 Video::GetNormal(const glm::vec3 v0, const glm::vec3 v1,

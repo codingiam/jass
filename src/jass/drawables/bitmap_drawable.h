@@ -1,8 +1,12 @@
+// Copyright (c) 2015, Doru Catalin Budai. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #pragma once
 
-#include "jass/drawables/drawable.h"
+#include <string>
 
-#include <glm/vec4.hpp>
+#include "jass/drawables/drawable.h"
 
 class Video;
 class Texture;
@@ -10,32 +14,26 @@ class Program;
 
 namespace Drawables {
 
-  class BitampDrawable : public Drawable {
-   public:
-    BitampDrawable(std::string const &path);
-    virtual ~BitampDrawable(void);
+class BitampDrawable : public Drawable {
+ public:
+  BitampDrawable(std::string const &path);
+  virtual ~BitampDrawable(void);
 
-    void Create(void) override;
-    void Render(Video *const video) override;
+  void Create(void) override;
+  void Render(Video *const video) override;
 
-    GLfloat width(void) { return width_; }
-    GLfloat height(void) { return height_; }
+  GLfloat width(void) { return width_; }
+  GLfloat height(void) { return height_; }
 
-    void color(const glm::vec4 &color) {
-      this->color_ = color;
-    }
+ private:
+  std::shared_ptr<Program> program_;
 
-   private:
-    std::shared_ptr<Program> program_;
+  std::shared_ptr<Texture> texture_;
 
-    std::shared_ptr<Texture> texture_;
-     
-    std::string path_;
+  std::string path_;
 
-    GLfloat width_;
-    GLfloat height_;
+  GLfloat width_;
+  GLfloat height_;
+};
 
-    glm::vec4 color_;
-  };
-
-}
+}  // namespace Drawables

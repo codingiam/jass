@@ -4,6 +4,13 @@
 
 #include "jass/drawables/font_drawable.h"
 
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <array>
+#include <vector>;
+
 #include "jass/image.h"
 #include "jass/texture.h"
 
@@ -15,12 +22,6 @@
 #include "jass/program.h"
 #include "jass/vertex_array_object.h"
 #include "jass/buffer_object.h"
-
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <array>
 
 namespace Drawables {
 
@@ -62,7 +63,6 @@ namespace Drawables {
     auto text = text_;
 
     std::function<void(void)> func = [program, mvp, texture, text] () {
-
       glUseProgram(program->program_id_);
 
       texture->Bind();
@@ -144,16 +144,16 @@ namespace Drawables {
         glUniform4fv(loc_color, 1, color);
 
         GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6 * text.length()));
-        
+
         GL_CHECK(glEnableVertexAttribArray(loc_tex));
         GL_CHECK(glDisableVertexAttribArray(loc_vert));
       };
-      
+
       vbo.Bind(func);
-      
+
       glUseProgram(0);
     };
-    
+
     vao.Bind(func);
   }
-}
+}  // namespace Drawables
