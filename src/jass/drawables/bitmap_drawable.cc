@@ -14,9 +14,9 @@
 #include "jass/video.h"
 #include "jass/window.h"
 
-#include "jass/vertex_shader.h"
-#include "jass/fragment_shader.h"
-#include "jass/program.h"
+#include "jass/shaders/vertex_shader.h"
+#include "jass/shaders/fragment_shader.h"
+#include "jass/shaders/program.h"
 #include "jass/vertex_array_object.h"
 #include "jass/buffer_object.h"
 
@@ -34,17 +34,17 @@ namespace Drawables {
 
   void BitampDrawable::Create(void) {
     std::shared_ptr<Image> image = Image::MakeImage(path_);
+    this->texture_ = Texture::MakeTexture(image);
     this->width_ = image->width();
     this->height_ = image->height();
-    this->texture_ = Texture::MakeTexture(image);
 
-    auto vertex_shader = std::make_shared<VertexShader>();
+    auto vertex_shader = std::make_shared<Shaders::VertexShader>();
     vertex_shader->Create();
 
-    auto fragment_shader = std::make_shared<FragmentShader>();
+    auto fragment_shader = std::make_shared<Shaders::FragmentShader>();
     fragment_shader->Create();
 
-    this->program_ = std::make_shared<Program>();
+    this->program_ = std::make_shared<Shaders::Program>();
     program_->Create(vertex_shader, fragment_shader);
   }
 
@@ -79,8 +79,6 @@ namespace Drawables {
 
       texture->Bind();
       // glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
-
-      // glClear(GL_COLOR_BUFFER_BIT);
 
       BufferObject vbo;
 

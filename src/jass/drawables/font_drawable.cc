@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <array>
-#include <vector>;
+#include <vector>
 
 #include "jass/image.h"
 #include "jass/texture.h"
@@ -17,9 +17,9 @@
 #include "jass/video.h"
 #include "jass/window.h"
 
-#include "jass/vertex_shader.h"
-#include "jass/fragment_shader.h"
-#include "jass/program.h"
+#include "jass/shaders/vertex_shader.h"
+#include "jass/shaders/fragment_shader.h"
+#include "jass/shaders/program.h"
 #include "jass/vertex_array_object.h"
 #include "jass/buffer_object.h"
 
@@ -37,13 +37,13 @@ namespace Drawables {
     std::shared_ptr<Image> image = Image::MakeImage(path_);
     this->texture_ = Texture::MakeTexture(image);
 
-    auto vertex_shader = std::make_shared<VertexShader>();
+    auto vertex_shader = std::make_shared<Shaders::VertexShader>();
     vertex_shader->Create();
 
-    auto fragment_shader = std::make_shared<FragmentShader>();
+    auto fragment_shader = std::make_shared<Shaders::FragmentShader>();
     fragment_shader->Create();
 
-    this->program_ = std::make_shared<Program>();
+    this->program_ = std::make_shared<Shaders::Program>();
     program_->Create(vertex_shader, fragment_shader);
   }
 

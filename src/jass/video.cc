@@ -188,7 +188,7 @@ void Video::Init3DScene(int width, int height) {
   // GLfloat light_position[] = { 0.f, 0.0f, 100.0f, 0.0f };
   // GL_CHECK(glLightfv(GL_LIGHT0, GL_POSITION, light_position));
 
-  GL_CHECK(glClearColor(0.2f, 0.0f, 0.2f, 0.0));
+  // GL_CHECK(glClearColor(0.2f, 0.0f, 0.2f, 0.0));
 
   // GL_CHECK(glEnable(GL_LIGHT0));
 

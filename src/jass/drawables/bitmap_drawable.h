@@ -10,7 +10,10 @@
 
 class Video;
 class Texture;
-class Program;
+
+namespace Shaders {
+  class Program;
+}
 
 namespace Drawables {
 
@@ -26,7 +29,7 @@ class BitampDrawable : public Drawable {
   GLfloat height(void) { return height_; }
 
  private:
-  std::shared_ptr<Program> program_;
+  std::shared_ptr<Shaders::Program> program_;
 
   std::shared_ptr<Texture> texture_;
 

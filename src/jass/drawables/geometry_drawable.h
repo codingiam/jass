@@ -13,7 +13,10 @@
 #include "jass/tiny_obj_loader.h"
 
 class Video;
-class Program;
+
+namespace Shaders {
+  class Program;
+}
 
 namespace Drawables {
 
@@ -26,7 +29,7 @@ class GeometryDrawable : public Drawable {
   void Render(Video *const video) override;
 
  private:
-  std::shared_ptr<Program> program_;
+  std::shared_ptr<Shaders::Program> program_;
 
   std::vector<tinyobj::shape_t> shapes_;
   std::vector<tinyobj::material_t> materials_;

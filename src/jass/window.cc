@@ -122,7 +122,7 @@ void Window::Initialize() {
 
   EnableOpenGLErrorCallback();
 
-  GL_CHECK(glClearColor(0.0, 5.0, 0.0, 0.0));
+  GL_CHECK(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 
   GL_CHECK(glClearDepth(1.0f));
   GL_CHECK(glEnable(GL_DEPTH_TEST));

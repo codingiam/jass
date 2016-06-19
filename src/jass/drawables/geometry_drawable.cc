@@ -5,7 +5,7 @@
 #include "jass/drawables/geometry_drawable.h"
 
 #include "jass/video.h"
-#include "jass/program.h"
+#include "jass/shaders/program.h"
 
 namespace Drawables {
 

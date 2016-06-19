@@ -107,6 +107,7 @@ void StatePlay::AddProjectile(const GLfloat xpos, const GLfloat ypos, const GLfl
 
 void StatePlay::Render(Video *const video) {
   GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
+
   video->Init2DScene(Window::kWidth, Window::kHeight);
 
   bg_space_->Render(video);

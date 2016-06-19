@@ -11,7 +11,10 @@
 
 class Video;
 class Texture;
-class Program;
+
+namespace Shaders {
+  class Program;
+}
 
 namespace Drawables {
 
@@ -28,7 +31,7 @@ class FontDrawable : public Drawable {
   }
 
  private:
-  std::shared_ptr<Program> program_;
+  std::shared_ptr<Shaders::Program> program_;
 
   std::shared_ptr<Texture> texture_;
 
