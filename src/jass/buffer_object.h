@@ -13,13 +13,14 @@
 
 class BufferObject : private boost::noncopyable {
 public:
-  BufferObject(void);
+  BufferObject(const GLenum target);
   ~BufferObject(void);
 
   void Create(void);
 
-  bool Bind(std::function<void()> const &func);
+  bool Bind(std::function<void(GLenum)> const &func);
 private:
+  GLenum target_;
   GLuint vbo_id_;
 };
 

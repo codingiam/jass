@@ -32,7 +32,7 @@ namespace GameObjects {
 
   void PlayHealthbarGameObject::Render(Video *const video) {
     bg_healthbar_->color(glm::vec4(1.0f, life_, life_, 0.5f));
-    bg_healthbar_->position(glm::vec3(x_, y_, 0));
+    bg_healthbar_->translation(glm::vec3(x_, y_, 0));
     bg_healthbar_->scale(glm::vec3(w_ / bg_healthbar_->width(), h_ / bg_healthbar_->height(), 1.0));
     bg_healthbar_->Render(video);
   }

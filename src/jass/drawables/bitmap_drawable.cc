@@ -4,9 +4,8 @@
 
 #include "jass/drawables/bitmap_drawable.h"
 
-#include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 #include "jass/image.h"
 #include "jass/texture.h"
@@ -49,7 +48,7 @@ namespace Drawables {
   }
 
   void BitampDrawable::Render(Video *const video) {
-    auto model = glm::scale(glm::translate(glm::mat4(), position()), this->scale());
+    auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) * glm::scale(scale());
     auto view = glm::mat4();
     auto projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f);
 
@@ -80,20 +79,20 @@ namespace Drawables {
       texture->Bind();
       // glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
 
-      BufferObject vbo;
+      BufferObject vbo(GL_ARRAY_BUFFER);
 
       vbo.Create();
 
-      std::function<void(void)> func = [g_vertex_buffer_data] () {
-        GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
+      std::function<void(GLenum)> func = [g_vertex_buffer_data] (GLenum target) {
+        GL_CHECK(glBufferData(target, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
       };
 
       vbo.Bind(func);
 
-      func = [program, mvp, color] () {
+      func = [program, mvp, color] (GLenum target) {
         GLint loc_vert, loc_tex;
 
-	    GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vp_modelspace"));
+	      GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vp_modelspace"));
 
         GL_CHECK(glVertexAttribPointer(
                 loc_vert,
@@ -129,7 +128,7 @@ namespace Drawables {
 
         GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));
 
-        GL_CHECK(glEnableVertexAttribArray(loc_tex));
+        GL_CHECK(glDisableVertexAttribArray(loc_tex));
         GL_CHECK(glDisableVertexAttribArray(loc_vert));
       };
 

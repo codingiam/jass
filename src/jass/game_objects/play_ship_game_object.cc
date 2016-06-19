@@ -140,9 +140,8 @@ namespace GameObjects {
   }
 
   void PlayShipGameObject::Render(Video *const video) {
-    ship_->position(glm::vec3(xpos_, ypos_, -10.0f));
-    // GL_CHECK(glRotatef(90.0f, 1.0f, 0.0f, 0.0f));
-    // GL_CHECK(glRotatef(angle_, 0.0f, 1.0f, 0.0f));
+    ship_->translation(glm::vec3(xpos_, ypos_, -10.0f));
+    ship_->rotation(glm::rotate(glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::radians(angle_), glm::vec3(0.0f, 1.0f, 0.0f)));
     ship_->scale(glm::vec3(0.035f, 0.035f, 0.035f));
     ship_->color(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 

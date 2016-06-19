@@ -4,9 +4,8 @@
 
 #include "jass/drawables/font_drawable.h"
 
-#include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 #include <array>
 #include <vector>
@@ -48,7 +47,7 @@ namespace Drawables {
   }
 
   void FontDrawable::Render(Video *const video) {
-    auto model = glm::scale(glm::translate(glm::mat4(), position()), this->scale());
+    auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) * glm::scale(scale());
     auto view = glm::mat4();
     auto projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f);
 
@@ -67,11 +66,11 @@ namespace Drawables {
 
       texture->Bind();
 
-      BufferObject vbo;
+      BufferObject vbo(GL_ARRAY_BUFFER);
 
       vbo.Create();
 
-      std::function<void(void)> func = [text] () {
+      std::function<void(GLenum)> func = [text] (GLenum target) {
         const char *p = nullptr;
 
         float x2 = 0, y2 = 0;
@@ -100,12 +99,12 @@ namespace Drawables {
           x2 += 16;
         }
 
-        GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof (tBox), &vertices[0], GL_DYNAMIC_DRAW));
+        GL_CHECK(glBufferData(target, vertices.size() * sizeof (tBox), &vertices[0], GL_DYNAMIC_DRAW));
       };
 
       vbo.Bind(func);
 
-      func = [program, mvp, text] () {
+      func = [program, mvp, text] (GLenum target) {
         GLint loc_vert, loc_tex;
 
         GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vp_modelspace"));
@@ -145,7 +144,7 @@ namespace Drawables {
 
         GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6 * text.length()));
 
-        GL_CHECK(glEnableVertexAttribArray(loc_tex));
+        GL_CHECK(glDisableVertexAttribArray(loc_tex));
         GL_CHECK(glDisableVertexAttribArray(loc_vert));
       };
 

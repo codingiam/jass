@@ -73,7 +73,7 @@ void StatePlay::Stop() {
 
 void StatePlay::Update(const Uint32 dt, const Uint8 *keystate) {
   for (auto it = projectiles_.begin(); it != projectiles_.end(); ) {
-    auto p = *it;   
+    auto p = *it;
 
     p->Update(dt);
 
@@ -114,9 +114,9 @@ void StatePlay::Render(Video *const video) {
 
   video->Init3DScene(Window::kWidth, Window::kHeight);
 
-  red_ship_->Render(video);/*
+  red_ship_->Render(video);
   blue_ship_->Render(video);
-
+/*
   for (auto it = projectiles_.begin(); it != projectiles_.end(); ++it) {
     (*it)->Render(video);
   }

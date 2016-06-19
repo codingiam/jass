@@ -8,7 +8,8 @@
 
 #include "buffer_object.h"
 
-BufferObject::BufferObject() {
+BufferObject::BufferObject(const GLenum target) {
+  this->target_ = target;
   this->vbo_id_ = 0;
 }
 
@@ -21,19 +22,19 @@ BufferObject::~BufferObject() {
 
 void BufferObject::Create() {
   GL_CHECK(glGenBuffers(1, &vbo_id_));
-  // glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STATIC_DRAW);
+  // glBufferData(target_, size, NULL, GL_STATIC_DRAW);
 }
 
-bool BufferObject::Bind(std::function<void()> const &func) {
+bool BufferObject::Bind(std::function<void(GLenum)> const &func) {
   if (!vbo_id_) {
     return false;
   }
 
-  GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, vbo_id_));
+  GL_CHECK(glBindBuffer(target_, vbo_id_));
 
-  func();
+  func(target_);
 
-  GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
+  GL_CHECK(glBindBuffer(target_, 0));
 
   return true;
 }

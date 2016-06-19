@@ -75,7 +75,7 @@ namespace GameObjects {
       strncpy(buffer, introText[i], marime);
       buffer[marime] = '\0';
       show_to_ -= marime;
-      font_->position(glm::vec3(40, 105 + 20 * i, 0));
+      font_->translation(glm::vec3(40, 105 + 20 * i, 0));
       font_->scale(glm::vec3(800.0 / 800.0, 600.0 / 600.0, 1.0));
       font_->text(buffer);
       font_->Render(video);

@@ -21,7 +21,7 @@ namespace GameObjects {
   }
 
   void PlayBoardGameObject::Render(Video *const video) {
-    bg_board_->position(glm::vec3(10, 530, 0));
+    bg_board_->translation(glm::vec3(10, 530, 0));
     bg_board_->scale(glm::vec3(780.0 / bg_board_->width(), 64.0 / bg_board_->height(), 1.0));
     bg_board_->Render(video);
   }

@@ -6,6 +6,7 @@
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "jass/jass.h"
 
@@ -21,12 +22,12 @@ class Drawable : private boost::noncopyable {
   virtual void Create(void) = 0;
   virtual void Render(Video *const video) = 0;
 
-  void position(const glm::vec3 &position) {
-    this->position_ = position;
+  void translation(const glm::vec3 &translation) {
+    this->translation_ = translation;
   }
 
-  glm::vec3 position(void) {
-    return position_;
+  glm::vec3 translation(void) {
+    return translation_;
   }
 
   void scale(const glm::vec3 &scale) {
@@ -35,6 +36,14 @@ class Drawable : private boost::noncopyable {
 
   glm::vec3 scale(void) {
     return scale_;
+  }
+
+  void rotation(const glm::quat &rotation) {
+    this->rotation_ = rotation;
+  }
+
+  glm::quat rotation(void) {
+    return rotation_;
   }
 
   void color(const glm::vec4 &color) {
@@ -46,8 +55,10 @@ class Drawable : private boost::noncopyable {
   }
 
  private:
-  glm::vec3 position_;
+  glm::vec3 translation_;
+  glm::quat rotation_;
   glm::vec3 scale_;
+
   glm::vec4 color_;
 };
 

@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <glm/vec4.hpp>
-
 #include <string>
 #include <vector>
 

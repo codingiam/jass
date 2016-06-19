@@ -31,7 +31,7 @@ namespace GameObjects {
   }
 
   void IntroTitleGameObject::Render(Video *const video) {
-    bg_intro_->position(glm::vec3(272, 8, 0));
+    bg_intro_->translation(glm::vec3(272, 8, 0));
     bg_intro_->color(glm::vec4(1.0f, 1.0f, 1.0f, alpha_title_));
     bg_intro_->Render(video);
   }

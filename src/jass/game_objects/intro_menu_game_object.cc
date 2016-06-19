@@ -30,7 +30,7 @@ namespace GameObjects {
   }
 
   void IntroMenuGameObject::Render(Video *const video) {
-    bg_action_->position(glm::vec3(262, 440, 0));
+    bg_action_->translation(glm::vec3(262, 440, 0));
     bg_action_->color(glm::vec4(1.0f, 1.0f - blue_action_, blue_action_, 1.0f));
     bg_action_->Render(video);
   }
