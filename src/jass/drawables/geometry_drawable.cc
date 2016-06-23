@@ -58,44 +58,72 @@ namespace Drawables {
 
     vao.Create();
 
-    auto program = program_;
+    auto program = this->program_;
   //   auto texture = texture_;
     auto color = this->color();
 
     auto positions = this->shapes_[0].mesh.positions;
+    auto normals = this->shapes_[0].mesh.normals;
+    auto texcoords = this->shapes_[0].mesh.texcoords;
+
     auto indices = this->shapes_[0].mesh.indices;
 
-  //   const GLfloat g_vertex_buffer_data[] = {
-  //     // Left bottom triangle
-  //       0.0f, height_, 0.0f, 0.0f, 1.0f,
-  //       0.0f,    0.0f, 0.0f, 0.0f, 0.0f,
-  //     width_,    0.0f, 0.0f, 1.0f, 0.0f,
-  //     // Right top triangle
-  //     width_,    0.0f, 0.0f, 1.0f, 0.0f,
-  //     width_, height_, 0.0f, 1.0f, 1.0f,
-  //       0.0f, height_, 0.0f, 0.0f, 1.0f
-  //   };
+    std::cout << positions.size() << std::endl;
+    std::cout << normals.size() << std::endl;
+    std::cout << texcoords.size() << std::endl;
 
-    std::function<void(void)> vao_func = [program, mvp, /*texture, g_vertex_buffer_data,*/positions, indices, color] () {
-      glUseProgram(program->program_id_);
+    std::cout << indices.size() << std::endl;
+    std::cout << "xxx" << std::endl;
+
+    std::function<void(void)> vao_func = [program, model, mvp, /*texture*/positions, normals, indices, color] () {
+      GL_CHECK(glUseProgram(program->program_id_));
+
+      std::cout << "a0=" << glGetAttribLocation(program->program_id_, "vpModelspace") << std::endl;
+      std::cout << "a1=" << glGetAttribLocation(program->program_id_, "vUV") << std::endl;
+      std::cout << "a2=" << glGetAttribLocation(program->program_id_, "van_modelspace") << std::endl;
 
   //     texture->Bind();
   //     // glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
+
+      BufferObject nvbo(GL_ARRAY_BUFFER);
+
+      nvbo.Create();
+
+      std::function<void(GLenum)> nvbo_func = [program, normals] (GLenum target) {
+        GL_CHECK(glBufferData(target, normals.size() * sizeof(decltype(normals)::value_type), normals.data(), GL_STATIC_DRAW));
+
+        GLint loc_vn;
+
+	      GL_CHECK(loc_vn = glGetAttribLocation(program->program_id_, "vnModelspace"));
+
+        loc_vn = 2;
+
+        GL_CHECK(glVertexAttribPointer(
+                loc_vn,
+                3,                  // size
+                GL_FLOAT,           // type
+                GL_FALSE,           // normalized?
+                3 * sizeof(float),  // stride
+                0                   // array buffer offset
+        ));
+
+        GL_CHECK(glEnableVertexAttribArray(loc_vn));
+      };
+
+      nvbo.Bind(nvbo_func);
 
       BufferObject pvbo(GL_ARRAY_BUFFER);
 
       pvbo.Create();
 
-      std::function<void(GLenum)> pvbo_func = [positions] (GLenum target) {
+      std::function<void(GLenum)> pvbo_func = [program, model, mvp, positions, color] (GLenum target) {
         GL_CHECK(glBufferData(target, positions.size() * sizeof(decltype(positions)::value_type), positions.data(), GL_STATIC_DRAW));
-      };
 
-      pvbo.Bind(pvbo_func);
-
-      pvbo_func = [program, mvp, color] (GLenum target) {
         GLint loc_vert/*, loc_tex*/;
 
-	      GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vp_modelspace"));
+	      GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vpModelspace"));
+
+        loc_vert = 0;
 
         GL_CHECK(glVertexAttribPointer(
                 loc_vert,
@@ -106,7 +134,7 @@ namespace Drawables {
                 0                   // array buffer offset
         ));
 
-  //       GL_CHECK(loc_tex = glGetAttribLocation(program->program_id_, "texcoord"));
+  //       GL_CHECK(loc_tex = glGetAttribLocation(program->program_id_, "vUV"));
 
   //       GL_CHECK(glVertexAttribPointer(
   //                loc_tex,
@@ -118,15 +146,18 @@ namespace Drawables {
   //       ));
   //       // xxxx
 
-        GL_CHECK(glUseProgram(program->program_id_));
+        // GL_CHECK(glUseProgram(program->program_id_));
 
         GL_CHECK(glEnableVertexAttribArray(loc_vert));
   //       GL_CHECK(glEnableVertexAttribArray(loc_tex));
 
-        GLint loc_trans = glGetUniformLocation(program->program_id_, "trans");
-        glUniformMatrix4fv(loc_trans, 1, GL_FALSE, glm::value_ptr(mvp));
+        GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
+        glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
-        GLint loc_color = glGetUniformLocation(program->program_id_, "theColor");
+        GLint loc_model = glGetUniformLocation(program->program_id_, "model");
+        glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(model));
+
+        GLint loc_color = glGetUniformLocation(program->program_id_, "objectColor");
         glUniform4fv(loc_color, 1, glm::value_ptr(color));
 
   //       GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));

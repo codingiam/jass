@@ -61,8 +61,8 @@ namespace Drawables {
     auto texture = texture_;
     auto text = text_;
 
-    std::function<void(void)> func = [program, mvp, texture, text] () {
-      glUseProgram(program->program_id_);
+    std::function<void(void)> func = [program, model, mvp, texture, text] () {
+      GL_CHECK(glUseProgram(program->program_id_));
 
       texture->Bind();
 
@@ -104,10 +104,10 @@ namespace Drawables {
 
       vbo.Bind(func);
 
-      func = [program, mvp, text] (GLenum target) {
+      func = [program, model, mvp, text] (GLenum target) {
         GLint loc_vert, loc_tex;
 
-        GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vp_modelspace"));
+        GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vpModelspace"));
 
         GL_CHECK(glVertexAttribPointer(
                                        loc_vert,
@@ -118,7 +118,7 @@ namespace Drawables {
                                        0                   // array buffer offset
                                        ));
 
-        GL_CHECK(loc_tex = glGetAttribLocation(program->program_id_, "texcoord"));
+        GL_CHECK(loc_tex = glGetAttribLocation(program->program_id_, "vUV"));
 
         GL_CHECK(glVertexAttribPointer(
                                        loc_tex,
@@ -130,15 +130,18 @@ namespace Drawables {
                                        ));
         // xxxx
 
-        GL_CHECK(glUseProgram(program->program_id_));
+        // GL_CHECK(glUseProgram(program->program_id_));
 
         GL_CHECK(glEnableVertexAttribArray(loc_vert));
         GL_CHECK(glEnableVertexAttribArray(loc_tex));
 
-        GLint loc_trans = glGetUniformLocation(program->program_id_, "trans");
-        glUniformMatrix4fv(loc_trans, 1, GL_FALSE, glm::value_ptr(mvp));
+        GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
+        glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
-        GLint loc_color = glGetUniformLocation(program->program_id_, "theColor");
+        GLint loc_model = glGetUniformLocation(program->program_id_, "model");
+        glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(model));
+
+        GLint loc_color = glGetUniformLocation(program->program_id_, "objectColor");
         float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
         glUniform4fv(loc_color, 1, color);
 

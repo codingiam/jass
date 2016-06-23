@@ -143,7 +143,12 @@ namespace GameObjects {
     ship_->translation(glm::vec3(xpos_, ypos_, -10.0f));
     ship_->rotation(glm::rotate(glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::radians(angle_), glm::vec3(0.0f, 1.0f, 0.0f)));
     ship_->scale(glm::vec3(0.035f, 0.035f, 0.035f));
-    ship_->color(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+    if (id_ == 1) {
+      ship_->color(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    } else {
+      ship_->color(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+    }
 
     ship_->Render(video);
   }
