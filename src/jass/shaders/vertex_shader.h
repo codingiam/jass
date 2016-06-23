@@ -10,7 +10,7 @@ namespace Shaders {
 
 class VertexShader : public Shader {
  public:
-  VertexShader(void);
+  VertexShader(std::string const &path);
   ~VertexShader(void);
 
   void Create(void) override;

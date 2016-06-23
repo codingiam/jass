@@ -8,7 +8,7 @@
 
 namespace Shaders {
 
-VertexShader::VertexShader() : Shader("data/shaders/default.vert") {
+VertexShader::VertexShader(std::string const &path) : Shader(path) {
 }
 
 VertexShader::~VertexShader() {

@@ -36,10 +36,10 @@ namespace Drawables {
     std::shared_ptr<Image> image = Image::MakeImage(path_);
     this->texture_ = Texture::MakeTexture(image);
 
-    auto vertex_shader = std::make_shared<Shaders::VertexShader>();
+    auto vertex_shader = std::make_shared<Shaders::VertexShader>("data/shaders/2default.vert");
     vertex_shader->Create();
 
-    auto fragment_shader = std::make_shared<Shaders::FragmentShader>();
+    auto fragment_shader = std::make_shared<Shaders::FragmentShader>("data/shaders/2default.frag");
     fragment_shader->Create();
 
     this->program_ = std::make_shared<Shaders::Program>();
@@ -60,8 +60,9 @@ namespace Drawables {
     auto program = program_;
     auto texture = texture_;
     auto text = text_;
+    auto color = this->color();
 
-    std::function<void(void)> func = [program, model, mvp, texture, text] () {
+    std::function<void(void)> func = [program, model, mvp, texture, text, color] () {
       GL_CHECK(glUseProgram(program->program_id_));
 
       texture->Bind();
@@ -104,7 +105,7 @@ namespace Drawables {
 
       vbo.Bind(func);
 
-      func = [program, model, mvp, text] (GLenum target) {
+      func = [program, model, mvp, text, color] (GLenum target) {
         GLint loc_vert, loc_tex;
 
         GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vpModelspace"));
@@ -128,7 +129,6 @@ namespace Drawables {
                                        5 * sizeof(float),  // stride
                                        (void *)(3 * sizeof(float))  // array buffer offset
                                        ));
-        // xxxx
 
         // GL_CHECK(glUseProgram(program->program_id_));
 
@@ -138,12 +138,8 @@ namespace Drawables {
         GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
         glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
-        GLint loc_model = glGetUniformLocation(program->program_id_, "model");
-        glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(model));
-
         GLint loc_color = glGetUniformLocation(program->program_id_, "objectColor");
-        float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        glUniform4fv(loc_color, 1, color);
+        glUniform4fv(loc_color, 1, glm::value_ptr(color));
 
         GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6 * text.length()));
 

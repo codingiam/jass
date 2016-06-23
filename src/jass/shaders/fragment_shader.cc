@@ -8,7 +8,7 @@
 
 namespace Shaders {
 
-FragmentShader::FragmentShader() : Shader("data/shaders/default.frag") {
+FragmentShader::FragmentShader(std::string const &path) : Shader(path) {
 }
 
 FragmentShader::~FragmentShader() {

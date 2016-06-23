@@ -11,8 +11,6 @@ out vec3 FragPos;
 uniform mat4 mvp;
 uniform mat4 model;
 
-uniform vec3 lightPos;
-
 void main() {
   gl_Position = mvp * vec4(vpModelspace, 1.0f);
   FragPos = vec3(model * vec4(vpModelspace, 1.0f));

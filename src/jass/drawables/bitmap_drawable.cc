@@ -37,10 +37,10 @@ namespace Drawables {
     this->width_ = image->width();
     this->height_ = image->height();
 
-    auto vertex_shader = std::make_shared<Shaders::VertexShader>();
+    auto vertex_shader = std::make_shared<Shaders::VertexShader>("data/shaders/2default.vert");
     vertex_shader->Create();
 
-    auto fragment_shader = std::make_shared<Shaders::FragmentShader>();
+    auto fragment_shader = std::make_shared<Shaders::FragmentShader>("data/shaders/2default.frag");
     fragment_shader->Create();
 
     this->program_ = std::make_shared<Shaders::Program>();
@@ -113,7 +113,6 @@ namespace Drawables {
                  5 * sizeof(float),  // stride
                  (void *)(3 * sizeof(float))  // array buffer offset
         ));
-        // xxxx
 
         // GL_CHECK(glUseProgram(program->program_id_));
 
@@ -122,9 +121,6 @@ namespace Drawables {
 
         GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
         glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
-
-        GLint loc_model = glGetUniformLocation(program->program_id_, "model");
-        glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(model));
 
         GLint loc_color = glGetUniformLocation(program->program_id_, "objectColor");
         glUniform4fv(loc_color, 1, glm::value_ptr(color));
