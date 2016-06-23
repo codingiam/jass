@@ -64,7 +64,7 @@ void Video::LoadFont() {
   if (font_texture_)
     return;
 
-  std::shared_ptr<Image> image = Image::MakeImage("data/fonturi/font.png");
+  std::shared_ptr<Image> image = Image::MakeImage("data/fonts/font.png");
   this->font_texture_ = Texture::MakeTexture(image);
 /*
   GL_CHECK(this->base_ = glGenLists(256));

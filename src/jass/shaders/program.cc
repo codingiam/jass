@@ -41,7 +41,10 @@ void Program::Create(std::shared_ptr<VertexShader> const &vertex_shader,
     std::vector<char> ProgramErrorMessage(std::max(InfoLogLength, static_cast<int>(1)));
 
     GL_CHECK(glGetProgramInfoLog(program_id_, InfoLogLength, NULL, &ProgramErrorMessage[0]));
-    fprintf(stdout, "%s\n", &ProgramErrorMessage[0]);
+    fprintf(stderr, "%s\n", &ProgramErrorMessage[0]);
+
+    boost::format message = boost::format("Could not link program");
+    throw std::runtime_error(message.str());
   }
 }
 

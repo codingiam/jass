@@ -35,7 +35,7 @@ namespace GameObjects {
   }
 
   void PlayShipGameObject::Create() {
-    this->ship_ = std::make_shared<Drawables::GeometryDrawable>("data/obiecte/spaceship.obj");
+    this->ship_ = std::make_shared<Drawables::GeometryDrawable>("data/objects/spaceship.obj");
     this->ship_->Create();
   }
 

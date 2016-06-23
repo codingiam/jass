@@ -19,7 +19,7 @@ namespace GameObjects {
   }
 
   void PlayHealthbarGameObject::Create() {
-    this->bg_healthbar_ = std::make_shared<Drawables::BitampDrawable>("data/texturi/healthbar.png");
+    this->bg_healthbar_ = std::make_shared<Drawables::BitampDrawable>("data/textures/healthbar.png");
     this->bg_healthbar_->Create();
   }
 

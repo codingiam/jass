@@ -12,7 +12,7 @@ namespace Shaders {
 
 class Shader {
  public:
-  Shader(void);
+  Shader(std::string const &path);
   virtual ~Shader(void);
 
   virtual void Create(void) = 0;
@@ -22,10 +22,13 @@ class Shader {
   }
 
  protected:
-  void Create(const GLenum shader_type, const std::string &source);
+  void Create(const GLenum shader_type);
 
  private:
+  std::string LoadSource(void);
+
   GLuint shader_id_;
+  std::string path_;
 };
 
 }  // namespace Shaders

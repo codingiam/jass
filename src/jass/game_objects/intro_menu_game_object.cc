@@ -17,7 +17,7 @@ namespace GameObjects {
   }
 
   void IntroMenuGameObject::Create() {
-    this->bg_action_ = std::make_shared<Drawables::BitampDrawable>("data/texturi/action.png");
+    this->bg_action_ = std::make_shared<Drawables::BitampDrawable>("data/textures/action.png");
     this->bg_action_->Create();
   }
 

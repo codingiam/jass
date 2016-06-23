@@ -46,7 +46,7 @@ namespace GameObjects {
   }
 
   void IntroTextGameObject::Create() {
-    this->font_ = std::make_shared<Drawables::FontDrawable>("data/fonturi/font.png");
+    this->font_ = std::make_shared<Drawables::FontDrawable>("data/fonts/font.png");
     this->font_->Create();
   }
 

@@ -20,7 +20,7 @@ namespace GameObjects {
   }
 
   void IntroTitleGameObject::Create() {
-    this->bg_intro_ = std::make_shared<Drawables::BitampDrawable>("data/texturi/title.png");
+    this->bg_intro_ = std::make_shared<Drawables::BitampDrawable>("data/textures/title.png");
     this->bg_intro_->Create();
   }
 

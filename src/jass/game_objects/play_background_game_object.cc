@@ -16,7 +16,7 @@ namespace GameObjects {
   }
 
   void PlayBackgroundGameObject::Create() {
-    this->bg_space_ = std::make_shared<Drawables::BitampDrawable>("data/texturi/spacebg.png");
+    this->bg_space_ = std::make_shared<Drawables::BitampDrawable>("data/textures/spacebg.png");
     this->bg_space_->Create();
   }
 

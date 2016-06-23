@@ -4,14 +4,20 @@
 
 #include "jass/shaders/shader.h"
 
+#include <fstream>
+#include <iterator>
+
 namespace Shaders {
 
-  Shader::Shader() {
+  Shader::Shader(std::string const &path) {
+    this->path_ = path;
     this->shader_id_ = 0;
   }
 
-  void Shader::Create(const GLenum shader_type, const std::string &source) {
+  void Shader::Create(const GLenum shader_type) {
     GL_CHECK(this->shader_id_ = glCreateShader(shader_type));
+
+    const std::string source = LoadSource();
 
     char const *source_str = source.c_str();
     GL_CHECK(glShaderSource(shader_id_, 1, &source_str, NULL));
@@ -30,8 +36,23 @@ namespace Shaders {
 
       GL_CHECK(glGetShaderInfoLog(shader_id_, log_length, NULL, &error_message[0]));
 
-      fprintf(stdout, "%s\n", &error_message[0]);
+      fprintf(stderr, "%s\n", &error_message[0]);
+
+      boost::format message =
+        boost::format("Could not compile shader: %s") % path_;
+      throw std::runtime_error(message.str());
     }
+  }
+
+  std::string Shader::LoadSource() {
+    std::ifstream data_source { path_, std::ifstream::in };
+    if (!data_source.is_open()) {
+      boost::format message =
+        boost::format("Could not load shader: %s") % path_;
+      throw std::runtime_error(message.str());
+    }
+    std::string source { std::istreambuf_iterator<char>(data_source), std::istreambuf_iterator<char>() };
+    return source;
   }
 
   Shader::~Shader() {
