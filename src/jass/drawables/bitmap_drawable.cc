@@ -76,8 +76,9 @@ namespace Drawables {
     std::function<void(void)> func = [program, model, mvp, texture, g_vertex_buffer_data, color] () {
       GL_CHECK(glUseProgram(program->program_id_));
 
+      glActiveTexture(GL_TEXTURE0);
       texture->Bind();
-      // glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
+      glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
 
       BufferObject vbo(GL_ARRAY_BUFFER);
 
@@ -92,7 +93,7 @@ namespace Drawables {
       func = [program, model, mvp, color] (GLenum target) {
         GLint loc_vert, loc_tex;
 
-	      GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vpModelspace"));
+	    GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "position"));
 
         GL_CHECK(glVertexAttribPointer(
                 loc_vert,

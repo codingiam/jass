@@ -1,6 +1,6 @@
 # Wavefront OBJ exported by MilkShape 3D
 
-mtllib data/objects/spaceship.mtl
+mtllib spaceship.mtl
 
 v 3.266486 -2.707446 1.586021
 v 1.911963 -2.979776 -0.635168

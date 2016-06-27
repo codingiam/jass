@@ -16,6 +16,9 @@
 #include "jass/vertex_array_object.h"
 #include "jass/buffer_object.h"
 
+#include "jass/image.h"
+#include "jass/texture.h"
+
 namespace Drawables {
 
   GeometryDrawable::GeometryDrawable(std::string const &path) : path_(path) {
@@ -28,13 +31,16 @@ namespace Drawables {
   void GeometryDrawable::Create() {
     std::string err;
 
-    bool ret = tinyobj::LoadObj(shapes_, materials_, err, path_.c_str());
+    bool ret = tinyobj::LoadObj(shapes_, materials_, err, path_.c_str(), "resources/objects/");
 
     if (!ret) {
       boost::format message =
         boost::format("Geometry not loaded %s, error %s") % path_ % err;
       throw std::runtime_error(message.str());
     }
+
+    std::shared_ptr<Image> image = Image::MakeImage(boost::filesystem::path("resources/objects/") /= materials_[0].diffuse_texname);
+    this->texture_ = Texture::MakeTexture(image);
 
     auto vertex_shader = std::make_shared<Shaders::VertexShader>("resources/shaders/3default.vert");
     vertex_shader->Create();
@@ -59,14 +65,14 @@ namespace Drawables {
     vao.Create();
 
     auto program = this->program_;
-  //  auto texture = texture_;
-  //  auto color = this->color();
+    auto color = this->color();
 
     auto positions = this->shapes_[0].mesh.positions;
     auto normals = this->shapes_[0].mesh.normals;
     auto texcoords = this->shapes_[0].mesh.texcoords;
     auto indices = this->shapes_[0].mesh.indices;
     auto material = this->materials_[0];
+    auto texture = this->texture_;
 
     // std::cout << positions.size() << std::endl;
     // std::cout << normals.size() << std::endl;
@@ -74,15 +80,41 @@ namespace Drawables {
     // std::cout << indices.size() << std::endl;
     // std::cout << "***" << std::endl;
 
-    std::function<void(void)> vao_func = [program, model, mvp, /*texture*/positions, normals, indices, /*color*/material] () {
+    std::function<void(void)> vao_func = [program, model, mvp, texture, positions, normals, indices, color, material, texcoords] () {
       GL_CHECK(glUseProgram(program->program_id_));
 
-      // std::cout << "a0=" << glGetAttribLocation(program->program_id_, "vpModelspace") << std::endl;
+      // std::cout << "a0=" << glGetAttribLocation(program->program_id_, "position") << std::endl;
       // std::cout << "a1=" << glGetAttribLocation(program->program_id_, "vUV") << std::endl;
       // std::cout << "a2=" << glGetAttribLocation(program->program_id_, "van_modelspace") << std::endl;
 
-  //     texture->Bind();
-  //     // glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
+      BufferObject tvbo(GL_ARRAY_BUFFER);
+
+      tvbo.Create();
+
+      std::function<void(GLenum)> tvbo_func = [program, texture, texcoords] (GLenum target) {
+        glActiveTexture(GL_TEXTURE0);
+        texture->Bind();
+        glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
+
+        GL_CHECK(glBufferData(target, texcoords.size() * sizeof(decltype(texcoords)::value_type), texcoords.data(), GL_STATIC_DRAW));
+
+        GLint loc_tex;
+
+        GL_CHECK(loc_tex = glGetAttribLocation(program->program_id_, "vUV"));
+
+        GL_CHECK(glVertexAttribPointer(
+            loc_tex,
+            2,                  // size
+            GL_FLOAT,           // type
+            GL_FALSE,           // normalized?
+            2 * sizeof(float),  // stride
+            0  // array buffer offset
+        ));
+
+        GL_CHECK(glEnableVertexAttribArray(loc_tex));
+      };
+
+      tvbo.Bind(tvbo_func);
 
       BufferObject nvbo(GL_ARRAY_BUFFER);
 
@@ -93,7 +125,7 @@ namespace Drawables {
 
         GLint loc_vn;
 
-	      GL_CHECK(loc_vn = glGetAttribLocation(program->program_id_, "vnModelspace"));
+	    GL_CHECK(loc_vn = glGetAttribLocation(program->program_id_, "normal"));
 
         loc_vn = 2;
 
@@ -115,12 +147,12 @@ namespace Drawables {
 
       pvbo.Create();
 
-      std::function<void(GLenum)> pvbo_func = [program, model, mvp, positions, /*color*/material] (GLenum target) {
+      std::function<void(GLenum)> pvbo_func = [program, model, mvp, positions, color, material] (GLenum target) {
         GL_CHECK(glBufferData(target, positions.size() * sizeof(decltype(positions)::value_type), positions.data(), GL_STATIC_DRAW));
 
         GLint loc_vert/*, loc_tex*/;
 
-	      GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vpModelspace"));
+	      GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "position"));
 
         loc_vert = 0;
 
@@ -133,21 +165,7 @@ namespace Drawables {
                 0                   // array buffer offset
         ));
 
-  //       GL_CHECK(loc_tex = glGetAttribLocation(program->program_id_, "vUV"));
-
-  //       GL_CHECK(glVertexAttribPointer(
-  //                loc_tex,
-  //                2,                  // size
-  //                GL_FLOAT,           // type
-  //                GL_FALSE,           // normalized?
-  //                5 * sizeof(float),  // stride
-  //                (void *)(3 * sizeof(float))  // array buffer offset
-  //       ));
-
-        // GL_CHECK(glUseProgram(program->program_id_));
-
         GL_CHECK(glEnableVertexAttribArray(loc_vert));
-  //       GL_CHECK(glEnableVertexAttribArray(loc_tex));
 
         GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
         glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
@@ -160,20 +178,21 @@ namespace Drawables {
         GLint loc_mat_spec = glGetUniformLocation(program->program_id_, "material.specular");
         GLint loc_math_shine = glGetUniformLocation(program->program_id_, "material.shininess");
 
-        glUniform3fv(loc_mat_amb, 1, material.ambient);
+        //glUniform3fv(loc_mat_amb, 1, glm::value_ptr(color));
+        glUniform3f(loc_mat_amb,  material.ambient[0] * color.x, material.ambient[1] * color.y, material.ambient[2] * color.z);
         glUniform3fv(loc_mat_diff, 1, material.diffuse);
         glUniform3fv(loc_mat_spec, 1, material.specular);
         glUniform1f(loc_math_shine, material.shininess);
 
-        GLint lightAmbientLoc  = glGetUniformLocation(program->program_id_, "light.ambient");
-        GLint lightDiffuseLoc  = glGetUniformLocation(program->program_id_, "light.diffuse");
-        GLint lightSpecularLoc = glGetUniformLocation(program->program_id_, "light.specular");
-        GLint lightPosition = glGetUniformLocation(program->program_id_, "light.position");
-
-        glUniform3f(lightAmbientLoc, 1.0f, 1.0f, 1.0f);
-        glUniform3f(lightDiffuseLoc, 1.0f, 1.0f, 1.0f);
-        glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
-        glUniform3f(lightPosition, 0.0f, 0.0f, 10.0f);
+//        GLint loc_lig_amb  = glGetUniformLocation(program->program_id_, "light.ambient");
+//        GLint loc_lig_diff  = glGetUniformLocation(program->program_id_, "light.diffuse");
+//        GLint loc_lig_spec = glGetUniformLocation(program->program_id_, "light.specular");
+//        GLint loc_lig_pos = glGetUniformLocation(program->program_id_, "light.position");
+//
+//        glUniform3f(loc_lig_amb, 1.0f, 1.0f, 1.0f);
+//        glUniform3f(loc_lig_diff, 1.0f, 1.0f, 1.0f);
+//        glUniform3f(loc_lig_spec, 1.0f, 1.0f, 1.0f);
+//        glUniform3f(loc_lig_pos, 0.0f, 0.0f, 10.0f);
 
   //       GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));
 

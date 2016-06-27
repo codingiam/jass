@@ -11,6 +11,7 @@
 #include "jass/tiny_obj_loader.h"
 
 class Video;
+class Texture;
 
 namespace Shaders {
   class Program;
@@ -33,6 +34,8 @@ class GeometryDrawable : public Drawable {
   std::vector<tinyobj::material_t> materials_;
 
   std::string path_;
+
+  std::shared_ptr<Texture> texture_;
 };
 
 }  // namespace Drawables

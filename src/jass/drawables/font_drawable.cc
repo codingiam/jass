@@ -108,7 +108,9 @@ namespace Drawables {
       func = [program, model, mvp, text, color] (GLenum target) {
         GLint loc_vert, loc_tex;
 
-        GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "vpModelspace"));
+        GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "position"));
+        GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "position"));
+        GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "position"));
 
         GL_CHECK(glVertexAttribPointer(
                                        loc_vert,
