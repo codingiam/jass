@@ -16,7 +16,7 @@ namespace GameObjects {
   }
 
   void IntroBackgroundGameObject::Create() {
-    this->bg_space_ = std::make_shared<Drawables::BitampDrawable>("data/textures/introbg.png");
+    this->bg_space_ = std::make_shared<Drawables::BitampDrawable>("resources/textures/introbg.png");
     this->bg_space_->Create();
   }
 

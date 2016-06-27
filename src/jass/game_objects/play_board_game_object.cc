@@ -16,7 +16,7 @@ namespace GameObjects {
   }
 
   void PlayBoardGameObject::Create() {
-    this->bg_board_ = std::make_shared<Drawables::BitampDrawable>("data/textures/board.png");
+    this->bg_board_ = std::make_shared<Drawables::BitampDrawable>("resources/textures/board.png");
     this->bg_board_->Create();
   }
 

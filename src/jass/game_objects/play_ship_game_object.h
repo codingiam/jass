@@ -27,7 +27,7 @@ class PlayShipGameObject : public GameObject {
   bool Collide(const GLfloat x, const GLfloat y);
   GLfloat GetLife(void);
 
-  void Update(const Uint32 dt, const Uint8 *keystate);
+  void Update(const Uint32 dt, const Uint8 *keystate) override;
 
  private:
   std::shared_ptr<Drawables::GeometryDrawable> ship_;

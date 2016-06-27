@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-ENABLE_LANGUAGE(CXX C)
+ENABLE_LANGUAGE(CXX)
 
 SET(CMAKE_MODULE_PATH
     ${CMAKE_SOURCE_DIR}/cmake
@@ -15,7 +15,15 @@ FIND_PACKAGE(GLEW REQUIRED)
 
 PROJECT(jass)
 
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wno-unused-parameter -O0 -Wpedantic -D_DEBUG")
+IF(NOT (CMAKE_BUILD_TYPE MATCHES "Debug"))
+    MESSAGE(WARNING "Only Debug build is configured")
+ENDIF()
+
+IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O -Wall -Wextra -Wno-unused-parameter -Wno-missing-braces -Wpedantic -D_DEBUG -fsanitize=address -fno-omit-frame-pointer")
+ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O -Wall -Wextra -Wno-unused-parameter -Wpedantic -D_DEBUG")
+ENDIF()
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY
     ${CMAKE_SOURCE_DIR}/exe)

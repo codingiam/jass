@@ -13,12 +13,13 @@ namespace GameObjects {
    public:
     GameObject(void);
     GameObject(std::shared_ptr<GameObject> const &parent);
-    
+
     virtual ~GameObject(void);
 
     virtual void Create(void) { }
     virtual void Start(void) { }
 
+    virtual void Update(const Uint32 dt, const Uint8 *keystate) { }
     virtual void Update(const Uint32 dt) { }
     virtual void Render(Video *const video) { }
 

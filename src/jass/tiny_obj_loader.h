@@ -1,3 +1,5 @@
+#pragma GCC system_header
+
 //
 // Copyright 2012-2016, Syoyo Fujita.
 //

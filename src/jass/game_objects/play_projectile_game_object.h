@@ -27,7 +27,6 @@ namespace GameObjects {
 
   private:
     GLfloat angle_;
-    Uint32 lifetime_;
   };
 
 }

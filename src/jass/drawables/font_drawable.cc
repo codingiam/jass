@@ -36,10 +36,10 @@ namespace Drawables {
     std::shared_ptr<Image> image = Image::MakeImage(path_);
     this->texture_ = Texture::MakeTexture(image);
 
-    auto vertex_shader = std::make_shared<Shaders::VertexShader>("data/shaders/2default.vert");
+    auto vertex_shader = std::make_shared<Shaders::VertexShader>("resources/shaders/2default.vert");
     vertex_shader->Create();
 
-    auto fragment_shader = std::make_shared<Shaders::FragmentShader>("data/shaders/2default.frag");
+    auto fragment_shader = std::make_shared<Shaders::FragmentShader>("resources/shaders/2default.frag");
     fragment_shader->Create();
 
     this->program_ = std::make_shared<Shaders::Program>();
