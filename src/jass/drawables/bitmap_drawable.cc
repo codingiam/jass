@@ -45,62 +45,60 @@ namespace Drawables {
 
     this->program_ = std::make_shared<Shaders::Program>();
     program_->Create(vertex_shader, fragment_shader);
+
+    this->vao_ = std::make_shared<VertexArrayObject>();
+    vao_->Create();
+
+    this->vbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+    vbo_->Create();
   }
 
   void BitampDrawable::Render(Video *const video) {
     auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) * glm::scale(scale());
-    auto view = glm::mat4();
     auto projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f);
 
-    auto mvp = projection * view * model;
-
-    VertexArrayObject vao;
-
-    vao.Create();
+    auto mp = projection * model;
 
     auto program = program_;
     auto texture = texture_;
     auto color = this->color();
+    auto vbo = this->vbo_;
 
     const GLfloat g_vertex_buffer_data[] = {
       // Left bottom triangle
-        0.0f, height_, 0.0f, 0.0f, 1.0f,
-        0.0f,    0.0f, 0.0f, 0.0f, 0.0f,
-      width_,    0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, height_, 0.0f, 1.0f,
+        0.0f,    0.0f, 0.0f, 0.0f,
+      width_,    0.0f, 1.0f, 0.0f,
       // Right top triangle
-      width_,    0.0f, 0.0f, 1.0f, 0.0f,
-      width_, height_, 0.0f, 1.0f, 1.0f,
-        0.0f, height_, 0.0f, 0.0f, 1.0f
+      width_,    0.0f, 1.0f, 0.0f,
+      width_, height_, 1.0f, 1.0f,
+        0.0f, height_, 0.0f, 1.0f
     };
 
-    std::function<void(void)> func = [program, model, mvp, texture, g_vertex_buffer_data, color] () {
+    std::function<void(void)> func = [vbo, program, model, mp, texture, g_vertex_buffer_data, color] () {
       GL_CHECK(glUseProgram(program->program_id_));
 
       glActiveTexture(GL_TEXTURE0);
       texture->Bind();
       glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
 
-      BufferObject vbo(GL_ARRAY_BUFFER);
-
-      vbo.Create();
-
       std::function<void(GLenum)> func = [g_vertex_buffer_data] (GLenum target) {
         GL_CHECK(glBufferData(target, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
       };
 
-      vbo.Bind(func);
+      vbo->Bind(func);
 
-      func = [program, model, mvp, color] (GLenum target) {
+      func = [program, model, mp, color] (GLenum target) {
         GLint loc_vert, loc_tex;
 
 	    GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "position"));
 
         GL_CHECK(glVertexAttribPointer(
                 loc_vert,
-                3,                  // size
+                2,                  // size
                 GL_FLOAT,           // type
                 GL_FALSE,           // normalized?
-                5 * sizeof(float),  // stride
+                4 * sizeof(float),  // stride
                 0                   // array buffer offset
         ));
 
@@ -111,8 +109,8 @@ namespace Drawables {
                  2,                  // size
                  GL_FLOAT,           // type
                  GL_FALSE,           // normalized?
-                 5 * sizeof(float),  // stride
-                 (void *)(3 * sizeof(float))  // array buffer offset
+                 4 * sizeof(float),  // stride
+                 (void *)(2 * sizeof(float))  // array buffer offset
         ));
 
         // GL_CHECK(glUseProgram(program->program_id_));
@@ -120,8 +118,8 @@ namespace Drawables {
         GL_CHECK(glEnableVertexAttribArray(loc_vert));
         GL_CHECK(glEnableVertexAttribArray(loc_tex));
 
-        GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
-        glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+        GLint loc_mvp = glGetUniformLocation(program->program_id_, "mp");
+        glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mp));
 
         GLint loc_color = glGetUniformLocation(program->program_id_, "objectColor");
         glUniform4fv(loc_color, 1, glm::value_ptr(color));
@@ -132,11 +130,11 @@ namespace Drawables {
         GL_CHECK(glDisableVertexAttribArray(loc_vert));
       };
 
-      vbo.Bind(func);
+      vbo->Bind(func);
 
       glUseProgram(0);
     };
 
-    vao.Bind(func);
+    vao_->Bind(func);
   }
 }  // namespace Drawables

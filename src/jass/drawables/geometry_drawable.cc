@@ -50,6 +50,21 @@ namespace Drawables {
 
     this->program_ = std::make_shared<Shaders::Program>();
     program_->Create(vertex_shader, fragment_shader);
+
+    this->vao_ = std::make_shared<VertexArrayObject>();
+    vao_->Create();
+
+    this->tvbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+    tvbo_->Create();
+
+    this->nvbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+    nvbo_->Create();
+
+    this->pvbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+    pvbo_->Create();
+
+    this->ivbo_ = std::make_shared<BufferObject>(GL_ELEMENT_ARRAY_BUFFER);
+    ivbo_->Create();
   }
 
   void GeometryDrawable::Render(Video *const video) {
@@ -60,10 +75,6 @@ namespace Drawables {
 
     auto mvp = projection * view * model;
 
-    VertexArrayObject vao;
-
-    vao.Create();
-
     auto program = this->program_;
     auto color = this->color();
 
@@ -73,6 +84,10 @@ namespace Drawables {
     auto indices = this->shapes_[0].mesh.indices;
     auto material = this->materials_[0];
     auto texture = this->texture_;
+    auto tvbo = this->tvbo_;
+    auto nvbo = this->nvbo_;
+    auto pvbo = this->pvbo_;
+    auto ivbo = this->ivbo_;
 
     // std::cout << positions.size() << std::endl;
     // std::cout << normals.size() << std::endl;
@@ -80,16 +95,12 @@ namespace Drawables {
     // std::cout << indices.size() << std::endl;
     // std::cout << "***" << std::endl;
 
-    std::function<void(void)> vao_func = [program, model, mvp, texture, positions, normals, indices, color, material, texcoords] () {
+    std::function<void(void)> vao_func = [tvbo, nvbo, pvbo, ivbo, program, model, mvp, texture, positions, normals, indices, color, material, texcoords] () {
       GL_CHECK(glUseProgram(program->program_id_));
 
       // std::cout << "a0=" << glGetAttribLocation(program->program_id_, "position") << std::endl;
       // std::cout << "a1=" << glGetAttribLocation(program->program_id_, "vUV") << std::endl;
       // std::cout << "a2=" << glGetAttribLocation(program->program_id_, "van_modelspace") << std::endl;
-
-      BufferObject tvbo(GL_ARRAY_BUFFER);
-
-      tvbo.Create();
 
       std::function<void(GLenum)> tvbo_func = [program, texture, texcoords] (GLenum target) {
         glActiveTexture(GL_TEXTURE0);
@@ -114,11 +125,7 @@ namespace Drawables {
         GL_CHECK(glEnableVertexAttribArray(loc_tex));
       };
 
-      tvbo.Bind(tvbo_func);
-
-      BufferObject nvbo(GL_ARRAY_BUFFER);
-
-      nvbo.Create();
+      tvbo->Bind(tvbo_func);
 
       std::function<void(GLenum)> nvbo_func = [program, normals] (GLenum target) {
         GL_CHECK(glBufferData(target, normals.size() * sizeof(decltype(normals)::value_type), normals.data(), GL_STATIC_DRAW));
@@ -141,11 +148,7 @@ namespace Drawables {
         GL_CHECK(glEnableVertexAttribArray(loc_vn));
       };
 
-      nvbo.Bind(nvbo_func);
-
-      BufferObject pvbo(GL_ARRAY_BUFFER);
-
-      pvbo.Create();
+      nvbo->Bind(nvbo_func);
 
       std::function<void(GLenum)> pvbo_func = [program, model, mvp, positions, color, material] (GLenum target) {
         GL_CHECK(glBufferData(target, positions.size() * sizeof(decltype(positions)::value_type), positions.data(), GL_STATIC_DRAW));
@@ -200,11 +203,7 @@ namespace Drawables {
   //       GL_CHECK(glDisableVertexAttribArray(loc_vert));
       };
 
-      pvbo.Bind(pvbo_func);
-
-      BufferObject ivbo(GL_ELEMENT_ARRAY_BUFFER);
-
-      ivbo.Create();
+      pvbo->Bind(pvbo_func);
 
       std::function<void(GLenum)> ivbo_func = [indices] (GLenum target) {
         GL_CHECK(glBufferData(target, indices.size() * sizeof(decltype(indices)::value_type), indices.data(), GL_STATIC_DRAW));
@@ -217,12 +216,12 @@ namespace Drawables {
         );
       };
 
-      ivbo.Bind(ivbo_func);
+      ivbo->Bind(ivbo_func);
 
       glUseProgram(0);
     };
 
-    vao.Bind(vao_func);
+    vao_->Bind(vao_func);
   }
 
 }  // namespace Drawables

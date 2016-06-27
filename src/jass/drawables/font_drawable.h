@@ -11,6 +11,8 @@
 
 class Video;
 class Texture;
+class VertexArrayObject;
+class BufferObject;
 
 namespace Shaders {
   class Program;
@@ -38,6 +40,9 @@ class FontDrawable : public Drawable {
   std::string path_;
 
   std::string text_;
+
+  std::shared_ptr<VertexArrayObject> vao_;
+  std::shared_ptr<BufferObject> vbo_;
 };
 
 }  // namespace Drawables

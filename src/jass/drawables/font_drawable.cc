@@ -44,32 +44,30 @@ namespace Drawables {
 
     this->program_ = std::make_shared<Shaders::Program>();
     program_->Create(vertex_shader, fragment_shader);
+
+    this->vao_ = std::make_shared<VertexArrayObject>();
+    vao_->Create();
+
+    this->vbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+    vbo_->Create();
   }
 
   void FontDrawable::Render(Video *const video) {
     auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) * glm::scale(scale());
-    auto view = glm::mat4();
     auto projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f);
 
-    auto mvp = projection * view * model;
-
-    VertexArrayObject vao;
-
-    vao.Create();
+    auto mp = projection * model;
 
     auto program = program_;
     auto texture = texture_;
     auto text = text_;
     auto color = this->color();
+    auto vbo = this->vbo_;
 
-    std::function<void(void)> func = [program, model, mvp, texture, text, color] () {
+    std::function<void(void)> func = [vbo, program, model, mp, texture, text, color] () {
       GL_CHECK(glUseProgram(program->program_id_));
 
       texture->Bind();
-
-      BufferObject vbo(GL_ARRAY_BUFFER);
-
-      vbo.Create();
 
       std::function<void(GLenum)> func = [text] (GLenum target) {
         const char *p = nullptr;
@@ -103,9 +101,9 @@ namespace Drawables {
         GL_CHECK(glBufferData(target, vertices.size() * sizeof (tBox), &vertices[0], GL_DYNAMIC_DRAW));
       };
 
-      vbo.Bind(func);
+      vbo->Bind(func);
 
-      func = [program, model, mvp, text, color] (GLenum target) {
+      func = [program, model, mp, text, color] (GLenum target) {
         GLint loc_vert, loc_tex;
 
         GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "position"));
@@ -114,7 +112,7 @@ namespace Drawables {
 
         GL_CHECK(glVertexAttribPointer(
                                        loc_vert,
-                                       3,                  // size
+                                       2,                  // size
                                        GL_FLOAT,           // type
                                        GL_FALSE,           // normalized?
                                        5 * sizeof(float),  // stride
@@ -137,8 +135,8 @@ namespace Drawables {
         GL_CHECK(glEnableVertexAttribArray(loc_vert));
         GL_CHECK(glEnableVertexAttribArray(loc_tex));
 
-        GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
-        glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+        GLint loc_mvp = glGetUniformLocation(program->program_id_, "mp");
+        glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mp));
 
         GLint loc_color = glGetUniformLocation(program->program_id_, "objectColor");
         glUniform4fv(loc_color, 1, glm::value_ptr(color));
@@ -149,11 +147,11 @@ namespace Drawables {
         GL_CHECK(glDisableVertexAttribArray(loc_vert));
       };
 
-      vbo.Bind(func);
+      vbo->Bind(func);
 
       glUseProgram(0);
     };
 
-    vao.Bind(func);
+    vao_->Bind(func);
   }
 }  // namespace Drawables
