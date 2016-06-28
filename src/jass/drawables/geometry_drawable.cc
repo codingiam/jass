@@ -181,21 +181,21 @@ namespace Drawables {
         GLint loc_mat_spec = glGetUniformLocation(program->program_id_, "material.specular");
         GLint loc_math_shine = glGetUniformLocation(program->program_id_, "material.shininess");
 
-        //glUniform3fv(loc_mat_amb, 1, glm::value_ptr(color));
-        glUniform3f(loc_mat_amb,  material.ambient[0] * color.x, material.ambient[1] * color.y, material.ambient[2] * color.z);
+        glUniform3fv(loc_mat_amb, 1, glm::value_ptr(color));
+        //glUniform3f(loc_mat_amb,  material.ambient[0] * color.x, material.ambient[1] * color.y, material.ambient[2] * color.z);
         glUniform3fv(loc_mat_diff, 1, material.diffuse);
         glUniform3fv(loc_mat_spec, 1, material.specular);
         glUniform1f(loc_math_shine, material.shininess);
 
-//        GLint loc_lig_amb  = glGetUniformLocation(program->program_id_, "light.ambient");
-//        GLint loc_lig_diff  = glGetUniformLocation(program->program_id_, "light.diffuse");
-//        GLint loc_lig_spec = glGetUniformLocation(program->program_id_, "light.specular");
-//        GLint loc_lig_pos = glGetUniformLocation(program->program_id_, "light.position");
-//
-//        glUniform3f(loc_lig_amb, 1.0f, 1.0f, 1.0f);
-//        glUniform3f(loc_lig_diff, 1.0f, 1.0f, 1.0f);
-//        glUniform3f(loc_lig_spec, 1.0f, 1.0f, 1.0f);
-//        glUniform3f(loc_lig_pos, 0.0f, 0.0f, 10.0f);
+        GLint loc_lig_amb  = glGetUniformLocation(program->program_id_, "light.ambient");
+        GLint loc_lig_diff  = glGetUniformLocation(program->program_id_, "light.diffuse");
+        GLint loc_lig_spec = glGetUniformLocation(program->program_id_, "light.specular");
+        GLint loc_lig_pos = glGetUniformLocation(program->program_id_, "light.position");
+
+        glUniform3f(loc_lig_amb, 1.0f, 1.0f, 1.0f);
+        glUniform3f(loc_lig_diff, 1.0f, 1.0f, 1.0f);
+        glUniform3f(loc_lig_spec, 0.50f, 0.50f, 0.50f);
+        glUniform3f(loc_lig_pos, 0.0f, 0.0f, -75.0f);
 
   //       GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));
 

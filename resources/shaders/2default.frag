@@ -2,7 +2,7 @@
 
 in vec2 TexCoord;
 
-uniform sampler2D tex;
+layout(binding = 0) uniform sampler2D tex;
 uniform vec4 objectColor;
 
 out vec4 color;

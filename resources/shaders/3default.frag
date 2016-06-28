@@ -22,9 +22,9 @@ struct Light {
 
 uniform vec3 viewPos;
 uniform Material material;
-uniform Light light = Light(vec3(0.0f), vec3(1.0f), vec3(1.0f), vec3(1.0f));
+uniform Light light;
 
-uniform sampler2D tex;
+layout(binding = 0) uniform sampler2D tex;
 
 out vec4 color;
 
@@ -42,5 +42,5 @@ void main()
   float spec = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
   vec3 specular = light.specular * spec * material.specular;
 
-  color = texture(tex, TexCoord) * vec4(ambient + diffuse + specular, 1.0f);
+  color = texture(tex, TexCoord) * vec4(ambient + diffuse, 1.0f) + vec4(specular, 1.0f);
 }
