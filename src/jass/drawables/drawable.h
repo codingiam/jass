@@ -14,8 +14,11 @@ class Video;
 
 namespace Drawables {
 
-class Drawable : private boost::noncopyable {
+class Drawable {
  public:
+  Drawable(const Drawable &) = delete;
+  Drawable & operator=(const Drawable &) = delete;
+
   Drawable(void);
   virtual ~Drawable(void);
 

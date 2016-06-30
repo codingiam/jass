@@ -26,7 +26,8 @@ namespace {
 
 namespace GameObjects {
 
-  PlayShipGameObject::PlayShipGameObject(const GLfloat xpos, const GLfloat ypos, const Uint32 id, const GLfloat angle, std::array<Uint32, 6> const &keys) :
+  PlayShipGameObject::PlayShipGameObject(const GLfloat xpos, const GLfloat ypos,
+      const Uint32 id, const GLfloat angle, std::array<Uint32, 6> const &keys) :
     ixpos_(xpos), iypos_(ypos), id_(id), iangle_(angle), keys_(keys) {
   }
 
@@ -35,7 +36,8 @@ namespace GameObjects {
   }
 
   void PlayShipGameObject::Create() {
-    this->ship_ = std::make_shared<Drawables::GeometryDrawable>("resources/objects/spaceship.obj");
+    this->ship_ = std::make_shared<Drawables::GeometryDrawable>(
+        "resources/objects/spaceship.obj");
     this->ship_->Create();
   }
 
@@ -102,7 +104,8 @@ namespace GameObjects {
     if ((ticks_ - last_time_SHO_) > 100) {
       if ((keystate[keys_[K_SHOOT]]) && (energy_ >= 0.15f)) {
         std::shared_ptr<States::StatePlay> play =
-          std::static_pointer_cast<States::StatePlay>(States::State::Find(States::kStatePlay).lock());
+          std::static_pointer_cast<States::StatePlay>(
+              States::State::Find(States::kStatePlay).lock());
 
         GLfloat amy = - cos(3.141516f * angle_ / 180);
         GLfloat amx = sin(3.141516f * angle_ / 180);
@@ -110,12 +113,12 @@ namespace GameObjects {
         play->AddProjectile(xpos_ + amx, ypos_ + amy, angle_, id_);
 
         energy_ -= 0.15f;
+
+        this->last_time_SHO_ = ticks_;
       }
 
       energy_ += 0.01f;
       if (energy_ > 1.0f) this->energy_ = 1.0f;
-
-      this->last_time_SHO_ = ticks_;
     }
 
     Uint32 diff = ticks_ - last_time_MOV_;
@@ -141,7 +144,9 @@ namespace GameObjects {
 
   void PlayShipGameObject::Render(Video *const video) {
     ship_->translation(glm::vec3(xpos_, ypos_, -10.0f));
-    ship_->rotation(glm::rotate(glm::angleAxis(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)), glm::radians(angle_), glm::vec3(0.0f, 1.0f, 0.0f)));
+    ship_->rotation(glm::rotate(glm::angleAxis(glm::radians(90.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f)), glm::radians(angle_),
+        glm::vec3(0.0f, 1.0f, 0.0f)));
     ship_->scale(glm::vec3(0.035f, 0.035f, 0.035f));
 
     if (id_ == 1) {
@@ -185,4 +190,4 @@ namespace GameObjects {
     return life_;
   }
 
-}
+}  // namespace GameObjects

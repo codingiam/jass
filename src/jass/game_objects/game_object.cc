@@ -5,12 +5,15 @@
 #include "jass/game_objects/game_object.h"
 
 namespace GameObjects {
-  GameObject::GameObject() : parent_(std::weak_ptr<GameObject>()) {
-  }
 
-  GameObject::GameObject(std::shared_ptr<GameObject> const &parent) : parent_(parent) {
-  }
-
-  GameObject::~GameObject() {
-  }
+GameObject::GameObject() : parent_(std::weak_ptr<GameObject>()) {
 }
+
+GameObject::GameObject(std::shared_ptr<GameObject> const &parent) :
+    parent_(parent) {
+}
+
+GameObject::~GameObject() {
+}
+
+}  // namespace GameObjects

@@ -13,11 +13,11 @@
 #include "jass/jass.h"
 
 namespace GameObjects {
-  class PlayBackgroundGameObject;
-  class PlayHealthbarGameObject;
-  class PlayShipGameObject;
-  class PlayBoardGameObject;
-  class PlayProjectileGameObject;
+class PlayBackgroundGameObject;
+class PlayHealthbarGameObject;
+class PlayShipGameObject;
+class PlayBoardGameObject;
+class PlayProjectilesGameObject;
 }
 
 namespace States {
@@ -30,7 +30,8 @@ class StatePlay : public State {
   void Update(const Uint32 dt, const Uint8 *keystate) override;
   void Render(Video *const video) override;
 
-  void AddProjectile(const GLfloat xpos, const GLfloat ypos, const GLfloat angle, const GLuint owner);
+  void AddProjectile(const GLfloat xpos, const GLfloat ypos,
+      const GLfloat angle, const GLuint owner);
 
  protected:
   void Create(void) override;
@@ -45,12 +46,12 @@ class StatePlay : public State {
 
   std::shared_ptr<GameObjects::PlayHealthbarGameObject> red_ship_healthbar_;
   std::shared_ptr<GameObjects::PlayHealthbarGameObject> blue_ship_healthbar_;
-  
+
   std::shared_ptr<GameObjects::PlayBoardGameObject> bg_board_;
 
-  std::vector<std::shared_ptr<GameObjects::PlayProjectileGameObject> > projectiles_;
+  std::shared_ptr<GameObjects::PlayProjectilesGameObject> projectiles_;
 };
 
-}
+}  // namespace States
 
 #endif  // JASS_STATE_PLAY_H_

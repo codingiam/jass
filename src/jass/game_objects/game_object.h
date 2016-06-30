@@ -9,24 +9,33 @@
 class Video;
 
 namespace GameObjects {
-  class GameObject : private boost::noncopyable {
-   public:
-    GameObject(void);
-    GameObject(std::shared_ptr<GameObject> const &parent);
 
-    virtual ~GameObject(void);
+class PlayShipGameObject;
 
-    virtual void Create(void) { }
-    virtual void Start(void) { }
+class GameObject {
+ public:
+  GameObject(const GameObject &) = delete;
+  GameObject & operator=(const GameObject &) = delete;
 
-    virtual void Update(const Uint32 dt, const Uint8 *keystate) { }
-    virtual void Update(const Uint32 dt) { }
-    virtual void Render(Video *const video) { }
+  GameObject(void);
+  explicit GameObject(std::shared_ptr<GameObject> const &parent);
+  virtual ~GameObject(void);
 
-    // virtual bool Updatable(void) { return false; }
-    // virtual bool Renderable(void)  { return false; }
+  virtual void Create(void) { }
+  virtual void Start(void) { }
 
-   protected:
-    std::weak_ptr<GameObject> const parent_;
-  };
-}
+  virtual void Update(const Uint32 dt,
+      PlayShipGameObject *const red_ship,
+      PlayShipGameObject *const blue_ship) {}
+  virtual void Update(const Uint32 dt, const Uint8 *keystate) { }
+  virtual void Update(const Uint32 dt) { }
+  virtual void Render(Video *const video) { }
+
+//  virtual bool Updatable(void) { return false; }
+//  virtual bool Renderable(void)  { return false; }
+
+ protected:
+  std::weak_ptr<GameObject> const parent_;
+};
+
+}  // namespace GameObjects

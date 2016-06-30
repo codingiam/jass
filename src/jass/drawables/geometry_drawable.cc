@@ -31,7 +31,8 @@ namespace Drawables {
   void GeometryDrawable::Create() {
     std::string err;
 
-    bool ret = tinyobj::LoadObj(shapes_, materials_, err, path_.c_str(), "resources/objects/");
+    bool ret = tinyobj::LoadObj(shapes_, materials_, err,
+        path_.c_str(), "resources/objects/");
 
     if (!ret) {
       boost::format message =
@@ -39,13 +40,19 @@ namespace Drawables {
       throw std::runtime_error(message.str());
     }
 
-    std::shared_ptr<Image> image = Image::MakeImage(boost::filesystem::path("resources/objects/") /= materials_[0].diffuse_texname);
+    std::shared_ptr<Image> image =
+        Image::MakeImage(boost::filesystem::path("resources/objects/") /=
+            materials_[0].diffuse_texname);
     this->texture_ = Texture::MakeTexture(image);
 
-    auto vertex_shader = std::make_shared<Shaders::VertexShader>("resources/shaders/3default.vert");
+    auto vertex_shader =
+        std::make_shared<Shaders::VertexShader>(
+            "resources/shaders/3default.vert");
     vertex_shader->Create();
 
-    auto fragment_shader = std::make_shared<Shaders::FragmentShader>("resources/shaders/3default.frag");
+    auto fragment_shader =
+        std::make_shared<Shaders::FragmentShader>(
+            "resources/shaders/3default.frag");
     fragment_shader->Create();
 
     this->program_ = std::make_shared<Shaders::Program>();
@@ -68,10 +75,13 @@ namespace Drawables {
   }
 
   void GeometryDrawable::Render(Video *const video) {
-    auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) * glm::scale(scale());
+    auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) *
+        glm::scale(scale());
     auto view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
-      glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    auto projection = glm::perspective(glm::radians(45.0f), (GLfloat) 800 / (GLfloat) 600, 0.1f, 100.0f);
+        glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    auto projection =
+        glm::perspective(glm::radians(45.0f), (GLfloat) 800 / (GLfloat) 600,
+            0.1f, 100.0f);
 
     auto mvp = projection * view * model;
 
@@ -89,84 +99,84 @@ namespace Drawables {
     auto pvbo = this->pvbo_;
     auto ivbo = this->ivbo_;
 
-    // std::cout << positions.size() << std::endl;
-    // std::cout << normals.size() << std::endl;
-    // std::cout << texcoords.size() << std::endl;
-    // std::cout << indices.size() << std::endl;
-    // std::cout << "***" << std::endl;
-
-    std::function<void(void)> vao_func = [tvbo, nvbo, pvbo, ivbo, program, model, mvp, texture, positions, normals, indices, color, material, texcoords] () {
+    std::function<void(void)> vao_func = [tvbo, nvbo, pvbo, ivbo, program,
+        model, mvp, texture, positions, normals, indices, color, material,
+        texcoords] () {
       GL_CHECK(glUseProgram(program->program_id_));
 
-      // std::cout << "a0=" << glGetAttribLocation(program->program_id_, "position") << std::endl;
-      // std::cout << "a1=" << glGetAttribLocation(program->program_id_, "vUV") << std::endl;
-      // std::cout << "a2=" << glGetAttribLocation(program->program_id_, "van_modelspace") << std::endl;
-
-      std::function<void(GLenum)> tvbo_func = [program, texture, texcoords] (GLenum target) {
+      std::function<void(GLenum)> tvbo_func = [program, texture,
+          texcoords] (GLenum target) {
         glActiveTexture(GL_TEXTURE0);
         texture->Bind();
         glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
 
-        GL_CHECK(glBufferData(target, texcoords.size() * sizeof(decltype(texcoords)::value_type), texcoords.data(), GL_STATIC_DRAW));
+        GL_CHECK(glBufferData(target,
+            texcoords.size() * sizeof(decltype(texcoords)::value_type),
+            texcoords.data(), GL_STATIC_DRAW));
 
-        GLint loc_tex;
+        GLint loc_tex_coord;
 
-        GL_CHECK(loc_tex = glGetAttribLocation(program->program_id_, "vUV"));
+        GL_CHECK(loc_tex_coord =
+                     glGetAttribLocation(program->program_id_, "vUV"));
 
-        GL_CHECK(glVertexAttribPointer(
-            loc_tex,
-            2,                  // size
-            GL_FLOAT,           // type
-            GL_FALSE,           // normalized?
-            2 * sizeof(float),  // stride
-            0  // array buffer offset
-        ));
+        if (loc_tex_coord != -1) {
+          GL_CHECK(glVertexAttribPointer(
+              loc_tex_coord,
+              2,
+              GL_FLOAT,
+              GL_FALSE,
+              2 * sizeof(float),
+              0));
 
-        GL_CHECK(glEnableVertexAttribArray(loc_tex));
+          GL_CHECK(glEnableVertexAttribArray(loc_tex_coord));
+        }
       };
 
       tvbo->Bind(tvbo_func);
 
-      std::function<void(GLenum)> nvbo_func = [program, normals] (GLenum target) {
-        GL_CHECK(glBufferData(target, normals.size() * sizeof(decltype(normals)::value_type), normals.data(), GL_STATIC_DRAW));
+      std::function<void(GLenum)> nvbo_func = [program,
+          normals] (GLenum target) {
+        GL_CHECK(glBufferData(target,
+            normals.size() * sizeof(decltype(normals)::value_type),
+            normals.data(), GL_STATIC_DRAW));
 
         GLint loc_vn;
 
-	    GL_CHECK(loc_vn = glGetAttribLocation(program->program_id_, "normal"));
+        GL_CHECK(loc_vn = glGetAttribLocation(program->program_id_, "normal"));
 
         loc_vn = 2;
 
         GL_CHECK(glVertexAttribPointer(
-                loc_vn,
-                3,                  // size
-                GL_FLOAT,           // type
-                GL_FALSE,           // normalized?
-                3 * sizeof(float),  // stride
-                0                   // array buffer offset
-        ));
+            loc_vn,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            3 * sizeof(float),
+            0));
 
         GL_CHECK(glEnableVertexAttribArray(loc_vn));
       };
 
       nvbo->Bind(nvbo_func);
 
-      std::function<void(GLenum)> pvbo_func = [program, model, mvp, positions, color, material] (GLenum target) {
-        GL_CHECK(glBufferData(target, positions.size() * sizeof(decltype(positions)::value_type), positions.data(), GL_STATIC_DRAW));
+      std::function<void(GLenum)> pvbo_func = [program, model, mvp, positions,
+          color, material] (GLenum target) {
+        GL_CHECK(glBufferData(target,
+            positions.size() * sizeof(decltype(positions)::value_type),
+            positions.data(), GL_STATIC_DRAW));
 
         GLint loc_vert/*, loc_tex*/;
 
-	      GL_CHECK(loc_vert = glGetAttribLocation(program->program_id_, "position"));
-
-        loc_vert = 0;
+        GL_CHECK(loc_vert =
+                     glGetAttribLocation(program->program_id_, "position"));
 
         GL_CHECK(glVertexAttribPointer(
-                loc_vert,
-                3,                  // size
-                GL_FLOAT,           // type
-                GL_FALSE,           // normalized?
-                3 * sizeof(float),  // stride
-                0                   // array buffer offset
-        ));
+            loc_vert,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            3 * sizeof(float),
+            0));
 
         GL_CHECK(glEnableVertexAttribArray(loc_vert));
 
@@ -176,21 +186,30 @@ namespace Drawables {
         GLint loc_model = glGetUniformLocation(program->program_id_, "model");
         glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(model));
 
-        GLint loc_mat_amb  = glGetUniformLocation(program->program_id_, "material.ambient");
-        GLint loc_mat_diff  = glGetUniformLocation(program->program_id_, "material.diffuse");
-        GLint loc_mat_spec = glGetUniformLocation(program->program_id_, "material.specular");
-        GLint loc_math_shine = glGetUniformLocation(program->program_id_, "material.shininess");
+        GLint loc_mat_amb =
+            glGetUniformLocation(program->program_id_, "material.ambient");
+        GLint loc_mat_diff =
+            glGetUniformLocation(program->program_id_, "material.diffuse");
+        GLint loc_mat_spec =
+            glGetUniformLocation(program->program_id_, "material.specular");
+        GLint loc_math_shine =
+            glGetUniformLocation(program->program_id_, "material.shininess");
 
         glUniform3fv(loc_mat_amb, 1, glm::value_ptr(color));
-        //glUniform3f(loc_mat_amb,  material.ambient[0] * color.x, material.ambient[1] * color.y, material.ambient[2] * color.z);
+        // glUniform3f(loc_mat_amb,  material.ambient[0] * color.x,
+        //     material.ambient[1] * color.y, material.ambient[2] * color.z);
         glUniform3fv(loc_mat_diff, 1, material.diffuse);
         glUniform3fv(loc_mat_spec, 1, material.specular);
         glUniform1f(loc_math_shine, material.shininess);
 
-        GLint loc_lig_amb  = glGetUniformLocation(program->program_id_, "light.ambient");
-        GLint loc_lig_diff  = glGetUniformLocation(program->program_id_, "light.diffuse");
-        GLint loc_lig_spec = glGetUniformLocation(program->program_id_, "light.specular");
-        GLint loc_lig_pos = glGetUniformLocation(program->program_id_, "light.position");
+        GLint loc_lig_amb =
+            glGetUniformLocation(program->program_id_, "light.ambient");
+        GLint loc_lig_diff =
+            glGetUniformLocation(program->program_id_, "light.diffuse");
+        GLint loc_lig_spec =
+            glGetUniformLocation(program->program_id_, "light.specular");
+        GLint loc_lig_pos =
+            glGetUniformLocation(program->program_id_, "light.position");
 
         glUniform3f(loc_lig_amb, 1.0f, 1.0f, 1.0f);
         glUniform3f(loc_lig_diff, 1.0f, 1.0f, 1.0f);
@@ -206,14 +225,15 @@ namespace Drawables {
       pvbo->Bind(pvbo_func);
 
       std::function<void(GLenum)> ivbo_func = [indices] (GLenum target) {
-        GL_CHECK(glBufferData(target, indices.size() * sizeof(decltype(indices)::value_type), indices.data(), GL_STATIC_DRAW));
+        GL_CHECK(glBufferData(target,
+            indices.size() * sizeof(decltype(indices)::value_type),
+            indices.data(), GL_STATIC_DRAW));
 
         glDrawElements(
-          GL_TRIANGLES,      // mode
-          indices.size(),    // count
-          GL_UNSIGNED_INT,   // type
-          (void*)0           // element array buffer offset
-        );
+            GL_TRIANGLES,
+            indices.size(),
+            GL_UNSIGNED_INT,
+            0);
       };
 
       ivbo->Bind(ivbo_func);

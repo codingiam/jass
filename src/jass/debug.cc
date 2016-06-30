@@ -7,14 +7,28 @@
 #include <GL/glew.h>
 
 #include <execinfo.h>
-#include <SDL_opengl.h>
+#include <malloc.h>
 
-#include <cstdlib>
-#include <cstdio>
+#include <boost/format.hpp>
+
+#include <iostream>
 
 #ifndef APIENTRY
   #define APIENTRY
 #endif
+
+void Backtrace() {
+  void *array[10];
+
+  int size = backtrace(array, 10);
+  char **strings = backtrace_symbols(array, size);
+
+  for (int i = 0; i < size; i++) {
+    std::cerr << strings[i] << std::endl;
+  }
+
+  free(strings);
+}
 
 void APIENTRY OpenGLCallbackFunction(GLenum source,
                                      GLenum type,
@@ -24,7 +38,10 @@ void APIENTRY OpenGLCallbackFunction(GLenum source,
                                      const GLchar *message,
                                      const void *userParam) {
   if (type != GL_DEBUG_TYPE_OTHER) {
-    printf("OpenGL error: %s\n", message);
+    const GLchar *msg = length > 0 ? message : "";
+    std::cerr << boost::format("OpenGL error: source = %08x, type = %08x, "
+        "id = %u, severity = %08x, userParam = %08x, message = %s") %
+        source % type % id % severity % userParam % msg << std::endl;
   }
 }
 
@@ -38,29 +55,16 @@ void EnableOpenGLErrorCallback() {
   GLuint unusedIds = 0;
 
   GL_CHECK(glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE,
-    0, &unusedIds, true));
-}
-
-void Backtrace() {
-  void *array[10];
-  size_t size;
-  char **strings;
-  size_t i;
-
-  size = backtrace(array, 10);
-  strings = backtrace_symbols(array, size);
-
-  for (i = 0; i < size; i++)
-     fprintf(stderr, "%s\n", strings[i]);
-
-  free(strings);
+    0, &unusedIds, GL_TRUE));
 }
 
 void CheckOpenGLError(const char *stmt, const char *fname, int line) {
   GLenum err = glGetError();
   if (err != GL_NO_ERROR) {
-    fprintf(stderr, "OpenGL error %08x, at %s:%i - for %s\n", err, fname, line, stmt);
+    std::cerr <<
+        boost::format("OpenGL error %08x, at %s:%i - for %s") %
+        err % fname % line % stmt << std::endl;
     Backtrace();
-    abort();
+    throw std::runtime_error("OpenGL call returned an error");
   }
 }
