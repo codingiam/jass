@@ -27,7 +27,7 @@ void Menu::Create() {
   this->bg_action_->Create();
 }
 
-void Menu::Update(const Uint32 dt) {
+void Menu::Update(const uint32_t dt) {
   this->ticks_action_ += dt;
 
   this->blue_action_ = static_cast<float>(ticks_action_) / speed_action_;
@@ -35,10 +35,10 @@ void Menu::Update(const Uint32 dt) {
   if (blue_action_ >= 1.0f) this->ticks_action_ -= speed_action_;
 }
 
-void Menu::Render(Video *const video) {
+void Menu::Render() {
   bg_action_->translation(glm::vec3(262, 440, 0));
   bg_action_->color(glm::vec4(1.0f, 1.0f - blue_action_, blue_action_, 1.0f));
-  bg_action_->Render(video);
+  bg_action_->Render();
 }
 
 }  // namespace Intro

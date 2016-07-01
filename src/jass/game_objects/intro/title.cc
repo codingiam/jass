@@ -30,16 +30,16 @@ void Title::Create() {
   this->bg_intro_->Create();
 }
 
-void Title::Update(const Uint32 dt) {
+void Title::Update(const uint32_t dt) {
   this->ticks_title_ += dt;
   this->alpha_title_ = static_cast<float>(ticks_title_) / speed_title_;
   if (alpha_title_ >= 1.0f) this->alpha_title_ = 1.0f;
 }
 
-void Title::Render(Video *const video) {
+void Title::Render() {
   bg_intro_->translation(glm::vec3(272, 8, 0));
   bg_intro_->color(glm::vec4(1.0f, 1.0f, 1.0f, alpha_title_));
-  bg_intro_->Render(video);
+  bg_intro_->Render();
 }
 
 }  // namespace Intro

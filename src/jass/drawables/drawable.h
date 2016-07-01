@@ -8,10 +8,6 @@
 #include <glm/vec4.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "jass/jass.h"
-
-class Video;
-
 namespace Drawables {
 
 class Drawable {
@@ -23,7 +19,7 @@ class Drawable {
   virtual ~Drawable(void);
 
   virtual void Create(void) = 0;
-  virtual void Render(Video *const video) = 0;
+  virtual void Render(void) = 0;
 
   void translation(const glm::vec3 &translation) {
     this->translation_ = translation;

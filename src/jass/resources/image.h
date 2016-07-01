@@ -6,11 +6,15 @@
 #define JASS_IMAGE_H_
 #pragma once
 
+#include <GL/glew.h>
+
+#include <IL/il.h>
+
 #include <boost/filesystem.hpp>
 
 #include <string>
 
-#include "jass/jass.h"
+namespace Resources {
 
 class Image {
  public:
@@ -35,8 +39,10 @@ class Image {
  private:
   ILuint image_;
   std::string file_name_;
-  ILint width_;
-  ILint height_;
+  ILuint width_;
+  ILuint height_;
 };
+
+}  // namespace Resources
 
 #endif  // JASS_IMAGE_H_

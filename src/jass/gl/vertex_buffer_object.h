@@ -1,30 +1,32 @@
-//
-//  buffer_object.h
-//  jass
-//
-//  Created by Doru Budai on 13/07/15.
-//  Copyright (c) 2015 Doru Budai. All rights reserved.
-//
+// Copyright (c) 2015, Doru Budai. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
 #ifndef __jass__buffer_object__
 #define __jass__buffer_object__
 
-#include "jass/jass.h"
+#include <GL/glew.h>
 
-class BufferObject {
-public:
-  BufferObject(const BufferObject &) = delete;
-  BufferObject & operator=(const BufferObject &) = delete;
+#include <functional>
 
-  BufferObject(const GLenum target);
-  ~BufferObject(void);
+namespace GL {
+
+class VertexBufferObject {
+ public:
+  VertexBufferObject(const VertexBufferObject &) = delete;
+  VertexBufferObject & operator=(const VertexBufferObject &) = delete;
+
+  explicit VertexBufferObject(const GLenum target);
+  ~VertexBufferObject(void);
 
   void Create(void);
 
   bool Bind(std::function<void(GLenum)> const &func);
-private:
+ private:
   GLenum target_;
   GLuint vbo_id_;
 };
+
+}  // namespace GL
 
 #endif /* defined(__jass__buffer_object__) */

@@ -21,15 +21,15 @@ class Title : public GameObject {
   void Create(void) override;
   void Start(void) override;
 
-  void Update(const Uint32 dt) override;
-  void Render(Video *const video) override;
+  void Update(const uint32_t dt) override;
+  void Render(void) override;
 
  private:
   std::shared_ptr<Drawables::Bitmap> bg_intro_;
 
   float alpha_title_;
-  Uint32 ticks_title_;
-  Uint32 speed_title_;
+  uint32_t ticks_title_;
+  uint32_t speed_title_;
 };
 
 }  // namespace Intro

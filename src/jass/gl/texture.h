@@ -4,9 +4,15 @@
 
 #pragma once
 
-#include "jass/jass.h"
+#include <GL/glew.h>
 
+#include <memory>
+
+namespace Resources {
 class Image;
+}
+
+namespace GL {
 
 class Texture {
  public:
@@ -16,10 +22,10 @@ class Texture {
   Texture(void);
   ~Texture(void);
 
-  bool LoadTexture(std::shared_ptr<Image> const &image);
+  bool LoadTexture(std::shared_ptr<Resources::Image> const &image);
 
   static std::shared_ptr<Texture> MakeTexture(
-    std::shared_ptr<Image> const &image);
+    std::shared_ptr<Resources::Image> const &image);
 
   bool Bind(std::function<void(void)> const &func);
 
@@ -29,3 +35,5 @@ class Texture {
  private:
   GLuint texture_;
 };
+
+}  // namespace GL

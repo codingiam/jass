@@ -2,9 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "texture.h"
+#include "jass/gl/texture.h"
+
+#include <boost/format.hpp>
 
 #include "jass/resources/image.h"
+
+namespace GL {
 
 Texture::Texture() {
   this->texture_ = 0;
@@ -12,12 +16,12 @@ Texture::Texture() {
 
 Texture::~Texture() {
   if (texture_) {
-    GL_CHECK(glDeleteTextures(1, &texture_));
+    glDeleteTextures(1, &texture_);
     this->texture_ = 0;
   }
 }
 
-bool Texture::LoadTexture(std::shared_ptr<Image> const &image) {
+bool Texture::LoadTexture(std::shared_ptr<Resources::Image> const &image) {
   if (texture_) {
     return false;
   }
@@ -31,25 +35,25 @@ bool Texture::LoadTexture(std::shared_ptr<Image> const &image) {
 
   std::function<void(GLubyte *, GLuint , GLuint)> func =
       [texture] (GLubyte *pixels, GLuint width, GLuint height) {
-    GL_CHECK(glBindTexture(GL_TEXTURE_2D, *texture));
+    glBindTexture(GL_TEXTURE_2D, *texture);
 
-    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-      0, GL_RGBA, GL_UNSIGNED_BYTE, pixels));
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+      0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-    GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
+    glBindTexture(GL_TEXTURE_2D, 0);
   };
 
   return image->Bind(func);
 }
 
 std::shared_ptr<Texture> Texture::MakeTexture(
-    std::shared_ptr<Image> const &image) {
+    std::shared_ptr<Resources::Image> const &image) {
   std::shared_ptr<Texture> texture =
     std::make_shared<Texture>();
 
@@ -87,9 +91,8 @@ bool Texture::Bind(void) {
   }
 
   glBindTexture(GL_TEXTURE_2D, texture_);
-  if (glGetError() != GL_NO_ERROR) {
-    return false;
-  }
 
-  return true;
+  return glGetError() == GL_NO_ERROR;
 }
+
+}  // namespace GL

@@ -12,8 +12,7 @@ namespace Play {
 
 Healthbar::Healthbar(const int x, const int y,
     const int w, const int h, std::shared_ptr<GameObject> const &parent) :
-    GameObject(parent), x_(x), y_(y), w_(w), h_(h)
-{
+    GameObject(parent), x_(x), y_(y), w_(w), h_(h) {
   this->life_ = 0;
 }
 
@@ -29,17 +28,17 @@ void Healthbar::Create() {
 void Healthbar::Start() {
 }
 
-void Healthbar::Update(const Uint32 dt) {
+void Healthbar::Update(const uint32_t dt) {
   this->life_ =
       std::static_pointer_cast<Ship>(parent_.lock())->GetLife();
 }
 
-void Healthbar::Render(Video *const video) {
+void Healthbar::Render() {
   bg_healthbar_->color(glm::vec4(1.0f, life_, life_, 0.5f));
   bg_healthbar_->translation(glm::vec3(x_, y_, 0));
   bg_healthbar_->scale(glm::vec3(w_ / bg_healthbar_->width(),
       h_ / bg_healthbar_->height(), 1.0));
-  bg_healthbar_->Render(video);
+  bg_healthbar_->Render();
 }
 
 }  // namespace Play

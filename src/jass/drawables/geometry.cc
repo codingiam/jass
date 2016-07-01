@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "jass/subsystems/video.h"
+#include <boost/format.hpp>
 
 #include "jass/shaders/vertex_shader.h"
 #include "jass/shaders/fragment_shader.h"
@@ -40,10 +40,11 @@ void Geometry::Create() {
     throw std::runtime_error(message.str());
   }
 
-  std::shared_ptr<Image> image =
-      Image::MakeImage(boost::filesystem::path("resources/objects/") /=
-          materials_[0].diffuse_texname);
-  this->texture_ = Texture::MakeTexture(image);
+  std::shared_ptr<Resources::Image> image =
+      Resources::Image::MakeImage(
+          boost::filesystem::path("resources/objects/") /=
+              materials_[0].diffuse_texname);
+  this->texture_ = GL::Texture::MakeTexture(image);
 
   auto vertex_shader =
       std::make_shared<Shaders::VertexShader>(
@@ -58,23 +59,23 @@ void Geometry::Create() {
   this->program_ = std::make_shared<Shaders::Program>();
   program_->Create(vertex_shader, fragment_shader);
 
-  this->vao_ = std::make_shared<VertexArrayObject>();
+  this->vao_ = std::make_shared<GL::VertexArrayObject>();
   vao_->Create();
 
-  this->tvbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+  this->tvbo_ = std::make_shared<GL::VertexBufferObject>(GL_ARRAY_BUFFER);
   tvbo_->Create();
 
-  this->nvbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+  this->nvbo_ = std::make_shared<GL::VertexBufferObject>(GL_ARRAY_BUFFER);
   nvbo_->Create();
 
-  this->pvbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+  this->pvbo_ = std::make_shared<GL::VertexBufferObject>(GL_ARRAY_BUFFER);
   pvbo_->Create();
 
-  this->ivbo_ = std::make_shared<BufferObject>(GL_ELEMENT_ARRAY_BUFFER);
+  this->ivbo_ = std::make_shared<GL::VertexBufferObject>(GL_ELEMENT_ARRAY_BUFFER);
   ivbo_->Create();
 }
 
-void Geometry::Render(Video *const video) {
+void Geometry::Render() {
   auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) *
       glm::scale(scale());
   auto view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
@@ -102,7 +103,7 @@ void Geometry::Render(Video *const video) {
   std::function<void(void)> vao_func = [tvbo, nvbo, pvbo, ivbo, program,
       model, mvp, texture, positions, normals, indices, color, material,
       texcoords] () {
-    GL_CHECK(glUseProgram(program->program_id_));
+    glUseProgram(program->program_id_);
 
     std::function<void(GLenum)> tvbo_func = [program, texture,
         texcoords] (GLenum target) {
@@ -110,25 +111,25 @@ void Geometry::Render(Video *const video) {
       texture->Bind();
       glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
 
-      GL_CHECK(glBufferData(target,
+      glBufferData(target,
           texcoords.size() * sizeof(decltype(texcoords)::value_type),
-          texcoords.data(), GL_STATIC_DRAW));
+          texcoords.data(), GL_STATIC_DRAW);
 
       GLint loc_tex_coord;
 
-      GL_CHECK(loc_tex_coord =
-                   glGetAttribLocation(program->program_id_, "vUV"));
+      loc_tex_coord =
+                   glGetAttribLocation(program->program_id_, "vUV");
 
       if (loc_tex_coord != -1) {
-        GL_CHECK(glVertexAttribPointer(
+        glVertexAttribPointer(
             loc_tex_coord,
             2,
             GL_FLOAT,
             GL_FALSE,
             2 * sizeof(float),
-            0));
+            0);
 
-        GL_CHECK(glEnableVertexAttribArray(loc_tex_coord));
+        glEnableVertexAttribArray(loc_tex_coord);
       }
     };
 
@@ -136,49 +137,49 @@ void Geometry::Render(Video *const video) {
 
     std::function<void(GLenum)> nvbo_func = [program,
         normals] (GLenum target) {
-      GL_CHECK(glBufferData(target,
+      glBufferData(target,
           normals.size() * sizeof(decltype(normals)::value_type),
-          normals.data(), GL_STATIC_DRAW));
+          normals.data(), GL_STATIC_DRAW);
 
       GLint loc_vn;
 
-      GL_CHECK(loc_vn = glGetAttribLocation(program->program_id_, "normal"));
+      loc_vn = glGetAttribLocation(program->program_id_, "normal");
 
       loc_vn = 2;
 
-      GL_CHECK(glVertexAttribPointer(
+      glVertexAttribPointer(
           loc_vn,
           3,
           GL_FLOAT,
           GL_FALSE,
           3 * sizeof(float),
-          0));
+          0);
 
-      GL_CHECK(glEnableVertexAttribArray(loc_vn));
+      glEnableVertexAttribArray(loc_vn);
     };
 
     nvbo->Bind(nvbo_func);
 
     std::function<void(GLenum)> pvbo_func = [program, model, mvp, positions,
         color, material] (GLenum target) {
-      GL_CHECK(glBufferData(target,
+      glBufferData(target,
           positions.size() * sizeof(decltype(positions)::value_type),
-          positions.data(), GL_STATIC_DRAW));
+          positions.data(), GL_STATIC_DRAW);
 
       GLint loc_vert/*, loc_tex*/;
 
-      GL_CHECK(loc_vert =
-                   glGetAttribLocation(program->program_id_, "position"));
+      loc_vert =
+                   glGetAttribLocation(program->program_id_, "position");
 
-      GL_CHECK(glVertexAttribPointer(
+      glVertexAttribPointer(
           loc_vert,
           3,
           GL_FLOAT,
           GL_FALSE,
           3 * sizeof(float),
-          0));
+          0);
 
-      GL_CHECK(glEnableVertexAttribArray(loc_vert));
+      glEnableVertexAttribArray(loc_vert);
 
       GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
       glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
@@ -225,9 +226,9 @@ void Geometry::Render(Video *const video) {
     pvbo->Bind(pvbo_func);
 
     std::function<void(GLenum)> ivbo_func = [indices] (GLenum target) {
-      GL_CHECK(glBufferData(target,
+      glBufferData(target,
           indices.size() * sizeof(decltype(indices)::value_type),
-          indices.data(), GL_STATIC_DRAW));
+          indices.data(), GL_STATIC_DRAW);
 
       glDrawElements(
           GL_TRIANGLES,

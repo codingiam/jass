@@ -6,11 +6,11 @@
 #define JASS_STATE_PLAY_H_
 #pragma once
 
+#include <GL/glew.h>
+
 #include <vector>
 
 #include "jass/states/state.h"
-
-#include "jass/jass.h"
 
 namespace GameObjects {
 namespace Play {
@@ -29,8 +29,8 @@ class Play : public State {
   Play(void);
   ~Play(void);
 
-  void Update(const Uint32 dt, const Uint8 *keystate) override;
-  void Render(Video *const video) override;
+  void Update(const uint32_t dt, const uint8_t *keystate) override;
+  void Render(void) override;
 
   void AddProjectile(const GLfloat xpos, const GLfloat ypos,
       const GLfloat angle, const GLuint owner);

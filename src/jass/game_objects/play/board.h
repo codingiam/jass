@@ -21,7 +21,7 @@ class Board : public GameObject {
   void Create(void) override;
   void Start(void) override {}
 
-  void Render(Video *const video) override;
+  void Render(void) override;
 
  private:
   std::shared_ptr<Drawables::Bitmap> bg_board_;

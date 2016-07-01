@@ -4,14 +4,18 @@
 
 #pragma once
 
+#include <GL/glew.h>
+
 #include <string>
+#include <memory>
 
 #include "jass/drawables/drawable.h"
 
-class Video;
-class Texture;
+namespace GL {
 class VertexArrayObject;
-class BufferObject;
+class VertexBufferObject;
+class Texture;
+}
 
 namespace Shaders {
 class Program;
@@ -25,7 +29,7 @@ class Bitmap : public Drawable {
   virtual ~Bitmap(void);
 
   void Create(void) override;
-  void Render(Video *const video) override;
+  void Render(void) override;
 
   GLfloat width(void) { return width_; }
   GLfloat height(void) { return height_; }
@@ -33,15 +37,15 @@ class Bitmap : public Drawable {
  private:
   std::shared_ptr<Shaders::Program> program_;
 
-  std::shared_ptr<Texture> texture_;
+  std::shared_ptr<GL::Texture> texture_;
 
   std::string path_;
 
   GLfloat width_;
   GLfloat height_;
 
-  std::shared_ptr<VertexArrayObject> vao_;
-  std::shared_ptr<BufferObject> vbo_;
+  std::shared_ptr<GL::VertexArrayObject> vao_;
+  std::shared_ptr<GL::VertexBufferObject> vbo_;
 };
 
 }  // namespace Drawables

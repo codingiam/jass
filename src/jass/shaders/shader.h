@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include <string>
+#include <GL/glew.h>
 
-#include "jass/jass.h"
+#include <string>
 
 namespace Shaders {
 
 class Shader {
  public:
-  Shader(std::string const &path);
+  explicit Shader(std::string const &path);
   virtual ~Shader(void);
 
   virtual void Create(void) = 0;

@@ -4,6 +4,8 @@
 
 #include "jass/jass.h"
 
+#include <iostream>
+
 #include "jass/application.h"
 
 int main(int argc, char *argv[]) {

@@ -6,13 +6,15 @@
 #define font_drawable_h
 
 #include <string>
+#include <memory>
 
 #include "jass/drawables/drawable.h"
 
-class Video;
-class Texture;
+namespace GL {
 class VertexArrayObject;
-class BufferObject;
+class VertexBufferObject;
+class Texture;
+}
 
 namespace Shaders {
 class Program;
@@ -26,7 +28,7 @@ class Font : public Drawable {
   virtual ~Font(void);
 
   void Create(void) override;
-  void Render(Video *const video) override;
+  void Render(void) override;
 
   void text(const std::string &text) {
     this->text_ = text;
@@ -35,14 +37,14 @@ class Font : public Drawable {
  private:
   std::shared_ptr<Shaders::Program> program_;
 
-  std::shared_ptr<Texture> texture_;
+  std::shared_ptr<GL::Texture> texture_;
 
   std::string path_;
 
   std::string text_;
 
-  std::shared_ptr<VertexArrayObject> vao_;
-  std::shared_ptr<BufferObject> vbo_;
+  std::shared_ptr<GL::VertexArrayObject> vao_;
+  std::shared_ptr<GL::VertexBufferObject> vbo_;
 };
 
 }  // namespace Drawables

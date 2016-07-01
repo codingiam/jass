@@ -4,8 +4,6 @@
 
 #include "jass/game_objects/intro/text.h"
 
-#include "jass/subsystems/video.h"
-
 #include "jass/resources/image.h"
 
 #include "jass/drawables/font.h"
@@ -52,7 +50,7 @@ void Text::Create() {
   this->font_->Create();
 }
 
-void Text::Update(const Uint32 dt) {
+void Text::Update(const uint32_t dt) {
   this->ticks_intro_text_ += dt;
 
   this->position_text_ =
@@ -60,17 +58,15 @@ void Text::Update(const Uint32 dt) {
 
   if (position_text_ >= 1.0f) this->position_text_ = 1.0f;
 
-  this->show_to_ = (Uint32) (size_intro_text_ * position_text_);
+  this->show_to_ = (uint32_t) (size_intro_text_ * position_text_);
 }
 
-void Text::Render(Video *const video) {
-  // GL_CHECK(glColor3f(1.0f, 1.0f, 1.0f));
-
-  Uint32 marime = 0;
+void Text::Render() {
+  uint32_t marime = 0;
   char buffer[100 + 1];
 
   for (int i = 0; show_to_ > 0; i++) {
-    marime = (Uint32) strlen(introText[i]);  // introText[i].length();
+    marime = (uint32_t) strlen(introText[i]);  // introText[i].length();
     if (marime > show_to_) marime = show_to_;
     if (marime > 100) marime = 100;
     // size_t copied = introText[i].copy(buffer, marime);
@@ -80,7 +76,7 @@ void Text::Render(Video *const video) {
     font_->translation(glm::vec3(40, 105 + 20 * i, 0));
     font_->scale(glm::vec3(800.0 / 800.0, 600.0 / 600.0, 1.0));
     font_->text(buffer);
-    font_->Render(video);
+    font_->Render();
   }
 }
 

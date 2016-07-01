@@ -10,7 +10,7 @@ namespace Shaders {
 
 class FragmentShader : public Shader {
  public:
-  FragmentShader(std::string const &path);
+  explicit FragmentShader(std::string const &path);
   ~FragmentShader(void);
 
   void Create(void) override;

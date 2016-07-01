@@ -4,8 +4,6 @@
 
 #include "jass/game_objects/play/ship.h"
 
-#include "jass/subsystems/video.h"
-
 #include "jass/drawables/geometry.h"
 
 #include "jass/states/states_manager.h"
@@ -27,8 +25,8 @@ namespace {
 namespace GameObjects {
 namespace Play {
 
-Ship::Ship(const GLfloat xpos, const GLfloat ypos,
-    const Uint32 id, const GLfloat angle, std::array<Uint32, 6> const &keys) :
+Ship::Ship(const GLfloat xpos, const GLfloat ypos, const uint32_t id,
+    const GLfloat angle, std::array<uint32_t, 6> const &keys) :
   ixpos_(xpos), iypos_(ypos), id_(id), iangle_(angle), keys_(keys) {
 }
 
@@ -59,7 +57,7 @@ void Ship::Start() {
   this->ticks_ = 0;
 }
 
-void Ship::Update(const Uint32 dt, const Uint8 *keystate) {
+void Ship::Update(const uint32_t dt, const uint8_t *keystate) {
   ticks_ += dt;
 
   if ((ticks_ - last_time_ACC_) > 150) {
@@ -121,7 +119,7 @@ void Ship::Update(const Uint32 dt, const Uint8 *keystate) {
     if (energy_ > 1.0f) this->energy_ = 1.0f;
   }
 
-  Uint32 diff = ticks_ - last_time_MOV_;
+  uint32_t diff = ticks_ - last_time_MOV_;
 
   if (diff > 100) diff = 100;
 
@@ -142,7 +140,7 @@ void Ship::Update(const Uint32 dt, const Uint8 *keystate) {
   }
 }
 
-void Ship::Render(Video *const video) {
+void Ship::Render() {
   ship_->translation(glm::vec3(xpos_, ypos_, -10.0f));
   ship_->rotation(glm::rotate(glm::angleAxis(glm::radians(90.0f),
       glm::vec3(1.0f, 0.0f, 0.0f)), glm::radians(angle_),
@@ -155,7 +153,7 @@ void Ship::Render(Video *const video) {
     ship_->color(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
   }
 
-  ship_->Render(video);
+  ship_->Render();
 }
 
 bool Ship::Collide(const GLfloat x, const GLfloat y) {

@@ -35,14 +35,14 @@ void Primitives::Create() {
   this->program_ = std::make_shared<Shaders::Program>();
   program_->Create(vertex_shader, fragment_shader);
 
-  this->vao_ = std::make_shared<VertexArrayObject>();
+  this->vao_ = std::make_shared<GL::VertexArrayObject>();
   vao_->Create();
 
-  this->vbo_ = std::make_shared<BufferObject>(GL_ARRAY_BUFFER);
+  this->vbo_ = std::make_shared<GL::VertexBufferObject>(GL_ARRAY_BUFFER);
   vbo_->Create();
 }
 
-void Primitives::Render(Video *const video) {
+void Primitives::Render() {
   auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) *
       glm::scale(scale());
   auto view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
@@ -62,35 +62,33 @@ void Primitives::Render(Video *const video) {
 
   std::function<void(void)> vao_func = [vbo, program, model, mvp, positions,
       colors, point_size] () {
-    GL_CHECK(glUseProgram(program->program_id_));
+    glUseProgram(program->program_id_);
 
     std::function<void(GLenum)> vbo_func = [program, model, mvp, positions,
         colors, point_size] (GLenum target) {
-      GL_CHECK(glBufferData(target,
+      glBufferData(target,
           positions.size() * sizeof(decltype(positions)::value_type),
-          positions.data(), GL_DYNAMIC_DRAW));
+          positions.data(), GL_DYNAMIC_DRAW);
 
-      GLint loc_vert;
+      GLint loc_vert = glGetAttribLocation(program->program_id_, "position");
 
-      GL_CHECK(loc_vert =
-                   glGetAttribLocation(program->program_id_, "position"));
-
-      GL_CHECK(glVertexAttribPointer(
-          loc_vert,
-          2,
-          GL_FLOAT,
-          GL_FALSE,
-          2 * sizeof(float),
-          0));
-
-      GL_CHECK(glEnableVertexAttribArray(loc_vert));
+      if (loc_vert >= 0) {
+        glVertexAttribPointer(
+            static_cast<GLuint>(loc_vert),
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            2 * sizeof(float),
+            0);
+        glEnableVertexAttribArray(static_cast<GLuint>(loc_vert));
+      }
 
       GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
       glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
-      GL_CHECK(glPointSize(point_size));
+      glPointSize(point_size);
 
-      GL_CHECK(glDrawArrays(GL_POINTS, 0, positions.size()));
+      glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(positions.size()));
     };
 
     vbo->Bind(vbo_func);

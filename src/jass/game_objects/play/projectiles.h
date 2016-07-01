@@ -6,11 +6,11 @@
 #define JASS_PROJECTILE_H_
 #pragma once
 
+#include <GL/glew.h>
+
 #include <vector>
 
 #include "jass/game_objects/game_object.h"
-
-class Video;
 
 namespace Drawables {
 class Primitives;
@@ -30,10 +30,10 @@ class Projectiles : public GameObject {
 
   void Create(void) override;
 
-  void Update(const Uint32 dt,
+  void Update(const uint32_t dt,
       Ship *const red_ship,
       Ship *const blue_ship) override;
-  void Render(Video *const video) override;
+  void Render(void) override;
 
   void AddProjectile(GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner);
   void Clear(void);

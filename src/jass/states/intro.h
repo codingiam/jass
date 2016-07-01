@@ -8,8 +8,6 @@
 
 #include "jass/states/state.h"
 
-#include "jass/jass.h"
-
 namespace GameObjects {
 namespace Intro {
 class Background;
@@ -26,8 +24,8 @@ class Intro : public State {
   Intro(void);
   ~Intro(void);
 
-  void Update(const Uint32 dt, const Uint8 *keystate) override;
-  void Render(Video *const video) override;
+  void Update(const uint32_t dt, const uint8_t *keystate) override;
+  void Render(void) override;
 
  protected:
   void Create(void) override;

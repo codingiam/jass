@@ -5,13 +5,17 @@
 #ifndef JASS_PRIMITIVES_DRAWABLE_H
 #define JASS_PRIMITIVES_DRAWABLE_H
 
+#include <GL/glew.h>
+
 #include <vector>
+#include <memory>
 
 #include "jass/drawables/drawable.h"
 
-class Video;
+namespace GL {
 class VertexArrayObject;
-class BufferObject;
+class VertexBufferObject;
+}
 
 namespace Shaders {
 class Program;
@@ -25,7 +29,7 @@ class Primitives : public Drawable {
   virtual ~Primitives(void);
 
   void Create(void) override;
-  void Render(Video *const video) override;
+  void Render(void) override;
 
   void point_size(GLfloat const point_size) {
     this->point_size_ = point_size;
@@ -41,8 +45,8 @@ class Primitives : public Drawable {
 
  private:
   std::shared_ptr<Shaders::Program> program_;
-  std::shared_ptr<VertexArrayObject> vao_;
-  std::shared_ptr<BufferObject> vbo_;
+  std::shared_ptr<GL::VertexArrayObject> vao_;
+  std::shared_ptr<GL::VertexBufferObject> vbo_;
 
   GLfloat point_size_;
   std::vector<glm::vec2> vertices_;

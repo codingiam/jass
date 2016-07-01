@@ -16,14 +16,15 @@ StatesManager::StatesManager() {
 
 
 StatesManager::~StatesManager() {
+  ShutDown();
 }
 
-void StatesManager::Initialize(Video *const video) {
+void StatesManager::Initialize() {
   this->state_intro_ = std::make_shared<Intro>();
   this->state_play_ = std::make_shared<Play>();
 
-  State::Register(kIntro, state_intro_, video);
-  State::Register(kPlay, state_play_, video);
+  State::Register(kIntro, state_intro_);
+  State::Register(kPlay, state_play_);
 
   State::SetState(state_intro_.get());
   State::Swap();

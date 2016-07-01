@@ -4,9 +4,7 @@
 
 #pragma once
 
-#include "jass/jass.h"
-
-class Video;
+#include <memory>
 
 namespace GameObjects {
 
@@ -26,12 +24,12 @@ class GameObject {
   virtual void Create(void) { }
   virtual void Start(void) { }
 
-  virtual void Update(const Uint32 dt,
+  virtual void Update(const uint32_t dt,
       Play::Ship *const red_ship,
       Play::Ship *const blue_ship) {}
-  virtual void Update(const Uint32 dt, const Uint8 *keystate) { }
-  virtual void Update(const Uint32 dt) { }
-  virtual void Render(Video *const video) { }
+  virtual void Update(const uint32_t dt, const uint8_t *keystate) { }
+  virtual void Update(const uint32_t dt) { }
+  virtual void Render(void) { }
 
 //  virtual bool Updatable(void) { return false; }
 //  virtual bool Renderable(void)  { return false; }

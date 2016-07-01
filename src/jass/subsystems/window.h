@@ -6,11 +6,14 @@
 #define JASS_WINDOW_H_
 #pragma once
 
-#include "jass/jass.h"
+#include <GL/glew.h>
+#include <SDL.h>
+
+namespace Subsystems {
 
 class Window {
  public:
-  enum { kWidth = 800, kHeight = 600, kBpp = 16, kFull = false };
+  enum { kWidth = 800, kHeight = 600, /*kBpp = 24, kFull = false */};
 
   Window(const Window &) = delete;
   Window & operator=(const Window &) = delete;
@@ -30,5 +33,7 @@ class Window {
   SDL_GLContext gl_context_;
   SDL_Window *sdl_window_;
 };
+
+}  // namespace Subsystems
 
 #endif  // JASS_WINDOW_H_

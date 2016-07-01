@@ -4,7 +4,6 @@
 
 #include "jass/states/intro.h"
 
-#include "jass/subsystems/video.h"
 #include "jass/application.h"
 #include "jass/states/states_manager.h"
 #include "jass/subsystems/window.h"
@@ -54,7 +53,7 @@ void Intro::Start() {
 void Intro::Stop() {
 }
 
-void Intro::Update(const Uint32 dt, const Uint8 *keystate) {
+void Intro::Update(const uint32_t dt, const uint8_t *keystate) {
   bg_intro_->Update(dt);
   bg_intro_text_->Update(dt);
   bg_action_->Update(dt);
@@ -66,15 +65,16 @@ void Intro::Update(const Uint32 dt, const Uint8 *keystate) {
       State::SetState(NULL);
 }
 
-void Intro::Render(Video *const video) {
-  GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
+void Intro::Render() {
+  glClear(GL_COLOR_BUFFER_BIT);
 
-  video->Init2DScene(Window::kWidth, Window::kHeight);
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
 
-  bg_space_->Render(video);
-  bg_intro_->Render(video);
-  bg_intro_text_->Render(video);
-  bg_action_->Render(video);
+  bg_space_->Render();
+  bg_intro_->Render();
+  bg_intro_text_->Render();
+  bg_action_->Render();
 }
 
 }  // namespace States

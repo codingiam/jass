@@ -16,13 +16,6 @@
 
 void EnableOpenGLErrorCallback(void);
 
-void CheckOpenGLError(const char *stmt, const char *fname, int line);
-
-#define GL_CHECK(stmt) { \
-  stmt; \
-  ::CheckOpenGLError(#stmt, __FILE__, __LINE__); \
-}
-
 #else
 
 #define GL_CHECK(stmt) stmt

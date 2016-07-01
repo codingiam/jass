@@ -23,11 +23,11 @@ struct Projectile {
     this->owner_ = owner;
   }
 
-  void Update(const Uint32 dt) {
-    Uint32 diff = dt > 25 ? 25 : dt;
+  void Update(const uint32_t dt) {
+    uint32_t diff = dt > 25 ? 25 : dt;
 
-    GLfloat amy = -0.5f * cos(glm::pi<float>() * angle_ / 180);
-    GLfloat amx = 0.5f * sin(glm::pi<float>() * angle_ / 180);
+    GLfloat amy = -0.5f * glm::cos(glm::pi<float>() * angle_ / 180);
+    GLfloat amx = 0.5f * glm::sin(glm::pi<float>() * angle_ / 180);
 
     ypos_ += amy * 0.5f * (diff / 25.0f);
     xpos_ += amx * 0.5f * (diff / 25.0f);
@@ -44,7 +44,7 @@ Projectiles::Projectiles() {
 Projectiles::~Projectiles() {
 }
 
-void Projectiles::Update(const Uint32 dt,
+void Projectiles::Update(const uint32_t dt,
       Ship *const red_ship,
       Ship *const blue_ship) {
   for (auto it = projectiles_.begin(); it != projectiles_.end(); ) {
@@ -62,7 +62,7 @@ void Projectiles::Update(const Uint32 dt,
   }
 }
 
-  void Projectiles::Render(Video *const video) {
+  void Projectiles::Render() {
     const size_t size = projectiles_.size();
 
     if (size) {
@@ -81,7 +81,7 @@ void Projectiles::Update(const Uint32 dt,
       points_->point_size(5.0f);
       points_->vertices(std::move(vertices));
       points_->colors(std::move(colors));
-      points_->Render(video);
+      points_->Render();
     }
 
 //    GL_CHECK(glDisable(GL_TEXTURE_2D));

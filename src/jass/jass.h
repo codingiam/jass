@@ -6,23 +6,12 @@
 #define JASS_JASS_H_
 #pragma once
 
-#include <GL/glew.h>
+#ifndef EXIT_FAILURE
+  #define EXIT_FAILURE 1
+#endif
 
-#include <SDL.h>
-#include <SDL_opengl.h>
-
-#include <IL/il.h>
-
-#include <boost/format.hpp>
-
-#include <iostream>
-
-#include <stdexcept>
-
-#include "jass/utils/debug.h"
-
-#ifdef _WINDOWS
-  #define snprintf _snprintf
+#ifndef EXIT_SUCCESS
+  #define EXIT_SUCCESS 0
 #endif
 
 #endif  // JASS_JASS_H_

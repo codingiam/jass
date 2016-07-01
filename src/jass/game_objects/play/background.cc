@@ -22,11 +22,11 @@ void Background::Create() {
   this->bg_space_->Create();
 }
 
-void Background::Render(Video *const video) {
+void Background::Render() {
   bg_space_->translation(glm::vec3(0, 0, 0));
   bg_space_->scale(glm::vec3(800.0 / bg_space_->width(),
       600.0 / bg_space_->height(), 1.0));
-  bg_space_->Render(video);
+  bg_space_->Render();
 }
 
 }  // namespace Play

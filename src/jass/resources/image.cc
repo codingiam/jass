@@ -2,9 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "image.h"
+#include "jass/resources/image.h"
 
-#include <string>
+#include <boost/format.hpp>
+
+namespace Resources {
 
 Image::Image(void) {
   this->image_ = 0;
@@ -37,14 +39,23 @@ bool Image::LoadImage(std::string const &file_name) {
   }
 
   bool success = ilLoadImage(file_name.c_str()) == IL_TRUE;
-  
+
   if (success) {
     success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE) == IL_TRUE;
   }
 
   if (success) {
-    this->width_ = ilGetInteger(IL_IMAGE_WIDTH);
-    this->height_ = ilGetInteger(IL_IMAGE_HEIGHT);
+    this->width_ = static_cast<ILuint>(ilGetInteger(IL_IMAGE_WIDTH));
+    if (ilGetError() != IL_NO_ERROR) {
+      this->width_ = 0;
+      success = false;
+    }
+
+    this->height_ = static_cast<ILuint>(ilGetInteger(IL_IMAGE_HEIGHT));
+    if (ilGetError() != IL_NO_ERROR) {
+      this->height_ = 0;
+      success = false;
+    }
   }
 
   ilBindImage(0);
@@ -81,3 +92,5 @@ bool Image::Bind(
 
   return true;
 }
+
+}  // namespace Resources

@@ -4,7 +4,9 @@
 
 #pragma once
 
-#include "jass/jass.h"
+#include <GL/glew.h>
+
+#include <memory>
 
 namespace Shaders {
 

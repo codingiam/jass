@@ -6,14 +6,16 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "jass/drawables/drawable.h"
 #include "jass/resources/tiny_obj_loader.h"
 
-class Video;
-class Texture;
+namespace GL {
 class VertexArrayObject;
-class BufferObject;
+class VertexBufferObject;
+class Texture;
+}
 
 namespace Shaders {
 class Program;
@@ -27,7 +29,7 @@ class Geometry : public Drawable {
   virtual ~Geometry(void);
 
   void Create(void) override;
-  void Render(Video *const video) override;
+  void Render(void) override;
 
  private:
   std::shared_ptr<Shaders::Program> program_;
@@ -37,13 +39,13 @@ class Geometry : public Drawable {
 
   std::string path_;
 
-  std::shared_ptr<Texture> texture_;
+  std::shared_ptr<GL::Texture> texture_;
 
-  std::shared_ptr<VertexArrayObject> vao_;
-  std::shared_ptr<BufferObject> tvbo_;
-  std::shared_ptr<BufferObject> nvbo_;
-  std::shared_ptr<BufferObject> pvbo_;
-  std::shared_ptr<BufferObject> ivbo_;
+  std::shared_ptr<GL::VertexArrayObject> vao_;
+  std::shared_ptr<GL::VertexBufferObject> tvbo_;
+  std::shared_ptr<GL::VertexBufferObject> nvbo_;
+  std::shared_ptr<GL::VertexBufferObject> pvbo_;
+  std::shared_ptr<GL::VertexBufferObject> ivbo_;
 };
 
 }  // namespace Drawables

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "debug.h"
+#include "jass/utils/debug.h"
 
 #include <GL/glew.h>
 
@@ -18,9 +18,9 @@
 #endif
 
 void Backtrace() {
-  void *array[10];
+  void *array[15];
 
-  int size = backtrace(array, 10);
+  int size = backtrace(array, 15);
   char **strings = backtrace_symbols(array, size);
 
   for (int i = 0; i < size; i++) {
@@ -42,7 +42,24 @@ void APIENTRY OpenGLCallbackFunction(GLenum source,
     std::cerr << boost::format("OpenGL error: source = %08x, type = %08x, "
         "id = %u, severity = %08x, userParam = %08x, message = %s") %
         source % type % id % severity % userParam % msg << std::endl;
+    Backtrace();
+    throw std::runtime_error("OpenGL call returned an error");
   }
+}
+
+void CheckOpenGLError(const char *stmt, const char *fname, int line) {
+  GLenum err = glGetError();
+  if (err != GL_NO_ERROR) {
+    std::cerr <<
+    boost::format("OpenGL error %08x, at %s:%i - for %s") %
+    err % fname % line % stmt << std::endl;
+    throw std::runtime_error("OpenGL call returned an error");
+  }
+}
+
+#define GL_CHECK(stmt) { \
+  stmt; \
+  ::CheckOpenGLError(#stmt, __FILE__, __LINE__); \
 }
 
 void EnableOpenGLErrorCallback() {
@@ -56,15 +73,4 @@ void EnableOpenGLErrorCallback() {
 
   GL_CHECK(glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE,
     0, &unusedIds, GL_TRUE));
-}
-
-void CheckOpenGLError(const char *stmt, const char *fname, int line) {
-  GLenum err = glGetError();
-  if (err != GL_NO_ERROR) {
-    std::cerr <<
-        boost::format("OpenGL error %08x, at %s:%i - for %s") %
-        err % fname % line % stmt << std::endl;
-    Backtrace();
-    throw std::runtime_error("OpenGL call returned an error");
-  }
 }

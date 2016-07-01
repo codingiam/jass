@@ -4,6 +4,9 @@
 
 #include "jass/shaders/program.h"
 
+#include <boost/format.hpp>
+
+#include <vector>
 #include <algorithm>
 
 #include "jass/shaders/vertex_shader.h"
@@ -17,31 +20,38 @@ Program::Program() {
 
 Program::~Program() {
   if (program_id_) {
-    GL_CHECK(glDeleteProgram(program_id_));
+    glDeleteProgram(program_id_);
     this->program_id_ = 0;
   }
 }
 
 void Program::Create(std::shared_ptr<VertexShader> const &vertex_shader,
     std::shared_ptr<FragmentShader> const &fragment_shader) {
-  GL_CHECK(this->program_id_ = glCreateProgram());
+  this->program_id_ = glCreateProgram();
 
-  GL_CHECK(glAttachShader(program_id_, vertex_shader->shader_id()));
-  GL_CHECK(glAttachShader(program_id_, fragment_shader->shader_id()));
+  glAttachShader(program_id_, vertex_shader->shader_id());
+  glAttachShader(program_id_, fragment_shader->shader_id());
 
-  GL_CHECK(glLinkProgram(program_id_));
+  glLinkProgram(program_id_);
 
-  GLint Result = GL_FALSE;
-  GL_CHECK(glGetProgramiv(program_id_, GL_LINK_STATUS, &Result));
+  GLint result = GL_FALSE;
+  glGetProgramiv(program_id_, GL_LINK_STATUS, &result);
 
-  if (Result != GL_TRUE) {
-    int InfoLogLength;
-    GL_CHECK(glGetProgramiv(program_id_, GL_INFO_LOG_LENGTH, &InfoLogLength));
+  if (result != GL_TRUE) {
+    GLint log_length;
 
-    std::vector<char> ProgramErrorMessage(std::max(InfoLogLength, static_cast<int>(1)));
+    glGetProgramiv(program_id_, GL_INFO_LOG_LENGTH, &log_length);
 
-    GL_CHECK(glGetProgramInfoLog(program_id_, InfoLogLength, NULL, &ProgramErrorMessage[0]));
-    fprintf(stderr, "%s\n", &ProgramErrorMessage[0]);
+    if (log_length > 0) {
+      std::vector<char> error_message;
+
+      error_message.reserve(static_cast<size_t>(log_length));
+
+      glGetProgramInfoLog(program_id_, log_length, NULL,
+          &error_message[0]);
+
+      fprintf(stderr, "%s\n", &error_message[0]);
+    }
 
     boost::format message = boost::format("Could not link program");
     throw std::runtime_error(message.str());

@@ -4,16 +4,20 @@
 
 #include "jass/application.h"
 
-#include "jass/subsystems/video.h"
+#include <boost/format.hpp>
+
+#include <iostream>
+
+#include "jass/subsystems/devil.h"
 #include "jass/states/state.h"
 #include "jass/subsystems/window.h"
 #include "jass/states/states_manager.h"
 
 namespace {
-  const Uint32 TARGET_FPS = 60;
-  const Uint32 MAX_DT = 1000;  // ms
+  const uint32_t TARGET_FPS = 60;
+  const uint32_t MAX_DT = 1000;  // ms
 
-  const Uint32 TARGET_DT = MAX_DT / TARGET_FPS;
+  const uint32_t TARGET_DT = MAX_DT / TARGET_FPS;
 }
 
 Application::Application() {
@@ -53,28 +57,28 @@ void Application::ShutDown() {
 }
 
 void Application::InitializeWindow() {
-  this->window_ = std::make_shared<Window>();
+  this->window_ = std::make_shared<Subsystems::Window>();
   window_->Initialize();
 }
 
 void Application::InitializeVideo() {
-  this->video_ = std::make_shared<Video>();
+  this->video_ = std::make_shared<Subsystems::DevIL>();
   video_->Initialize();
 }
 
 void Application::InitialiseStates() {
   this->states_manager_ = std::make_shared<States::StatesManager>();
-  states_manager_->Initialize(this->video_.get());
+  states_manager_->Initialize();
 }
 
 void Application::Run() {
-  Uint32 dt = TARGET_DT;
-  Uint32 begin_ms = SDL_GetTicks();
+  uint32_t dt = TARGET_DT;
+  uint32_t begin_ms = SDL_GetTicks();
 
   while (States::State::GetState() != NULL) {
     Tick(dt);
 
-    const Uint32 end_ms = SDL_GetTicks();
+    const uint32_t end_ms = SDL_GetTicks();
 
     dt = end_ms - begin_ms;
 
@@ -86,12 +90,12 @@ void Application::Run() {
   }
 }
 
-void Application::Tick(const Uint32 dt) {
-    const Uint8 *keys_state = SDL_GetKeyboardState(NULL);
+void Application::Tick(const uint32_t dt) {
+    const uint8_t *keys_state = SDL_GetKeyboardState(NULL);
 
     States::State::GetState()->Update(dt, keys_state);
 
-    States::State::GetState()->Render(video_.get());
+    States::State::GetState()->Render();
 
     window_->SwapBuffers();
 

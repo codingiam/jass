@@ -4,7 +4,6 @@
 
 #include "jass/states/play.h"
 
-#include "jass/subsystems/video.h"
 #include "jass/application.h"
 #include "jass/states/states_manager.h"
 #include "jass/subsystems/window.h"
@@ -35,10 +34,10 @@ void Play::Create() {
   this->bg_space_ = std::make_shared<GameObjects::Play::Background>();
   this->bg_space_->Create();
 
-  std::array<Uint32, 6> keys1 = { SDL_SCANCODE_Q, SDL_SCANCODE_S,
+  std::array<uint32_t, 6> keys1 = { SDL_SCANCODE_Q, SDL_SCANCODE_S,
       SDL_SCANCODE_C, SDL_SCANCODE_V, SDL_SCANCODE_LCTRL, 0 };
 
-  std::array<Uint32, 6> keys2 = { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN,
+  std::array<uint32_t, 6> keys2 = { SDL_SCANCODE_UP, SDL_SCANCODE_DOWN,
       SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_RCTRL, 0 };
 
   this->red_ship_ =
@@ -78,7 +77,7 @@ void Play::Stop() {
   projectiles_->Clear();
 }
 
-void Play::Update(const Uint32 dt, const Uint8 *keystate) {
+void Play::Update(const uint32_t dt, const uint8_t *keystate) {
   red_ship_->Update(dt, keystate);
   blue_ship_->Update(dt, keystate);
 
@@ -102,26 +101,31 @@ void Play::AddProjectile(const GLfloat xpos, const GLfloat ypos,
   projectiles_->AddProjectile(xpos, ypos, angle, owner);
 }
 
-void Play::Render(Video *const video) {
-  GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
+void Play::Render() {
+  glClear(GL_COLOR_BUFFER_BIT);
 
-  video->Init2DScene(Window::kWidth, Window::kHeight);
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
 
-  bg_space_->Render(video);
+  bg_space_->Render();
 
-  video->Init3DScene(Window::kWidth, Window::kHeight);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
 
-  red_ship_->Render(video);
-  blue_ship_->Render(video);
+  glClear(GL_DEPTH_BUFFER_BIT);
 
-  projectiles_->Render(video);
+  red_ship_->Render();
+  blue_ship_->Render();
 
-  video->Init2DScene(Window::kWidth, Window::kHeight);
+  projectiles_->Render();
 
-  blue_ship_healthbar_->Render(video);
-  red_ship_healthbar_->Render(video);
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_CULL_FACE);
 
-  bg_board_->Render(video);
+  blue_ship_healthbar_->Render();
+  red_ship_healthbar_->Render();
+
+  bg_board_->Render();
 }
 
 }  // namespace States

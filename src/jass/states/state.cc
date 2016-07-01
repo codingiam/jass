@@ -4,9 +4,6 @@
 
 #include "jass/states/state.h"
 
-#include <cassert>
-#include <string>
-#include <map>
 #include <utility>
 
 namespace States {
@@ -17,8 +14,7 @@ State* State::next_ = NULL;
 std::map<std::string, std::weak_ptr<State> > State::states_;
 
 void State::Register(const std::string& name,
-                     const std::weak_ptr<State>& state,
-                     Video *const video) {
+                     const std::weak_ptr<State>& state) {
   const std::map<std::string, std::weak_ptr<State> >::iterator it =
     states_.find(name);
 
@@ -70,4 +66,4 @@ void State::SetState(State* state) {
     next_ = state;
 }
 
-}
+}  // namespace States

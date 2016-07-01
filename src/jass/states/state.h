@@ -8,10 +8,7 @@
 
 #include <map>
 #include <string>
-
-#include "jass/jass.h"
-
-class Video;
+#include <memory>
 
 namespace States {
 
@@ -25,8 +22,8 @@ class State {
 
   virtual void Create(void) = 0;
   virtual void Start(void) = 0;
-  virtual void Update(const Uint32 dt, const Uint8 *keystate) = 0;
-  virtual void Render(Video *const video) = 0;
+  virtual void Update(const uint32_t dt, const uint8_t *keystate) = 0;
+  virtual void Render(void) = 0;
   virtual void Stop(void) = 0;
   virtual void Destroy(void) { }
 
@@ -36,8 +33,7 @@ class State {
   static State* GetState(void) { return state_; }
 
   static void Register(const std::string &name,
-    const std::weak_ptr<State> &state,
-    Video *const video);
+    const std::weak_ptr<State> &state);
   static std::weak_ptr<State> Find(const std::string &name);
   static std::weak_ptr<State> Unregister(const std::string &name);
 

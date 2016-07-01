@@ -6,11 +6,8 @@
 #define JASS_STATES_MANAGER_H_
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include "jass/jass.h"
-
-class Video;
 
 namespace States {
 
@@ -28,7 +25,7 @@ class StatesManager {
   StatesManager(void);
   ~StatesManager(void);
 
-  void Initialize(Video *const video);
+  void Initialize(void);
 
  private:
   void ShutDown(void);
