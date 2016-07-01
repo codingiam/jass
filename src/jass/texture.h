@@ -8,8 +8,11 @@
 
 class Image;
 
-class Texture : private boost::noncopyable {
+class Texture {
  public:
+  Texture(const Texture &) = delete;
+  Texture & operator=(const Texture &) = delete;
+
   Texture(void);
   ~Texture(void);
 
@@ -18,7 +21,7 @@ class Texture : private boost::noncopyable {
   static std::shared_ptr<Texture> MakeTexture(
     std::shared_ptr<Image> const &image);
 
-  bool Callback(std::function<void(void)> const &func);
+  bool Bind(std::function<void(void)> const &func);
 
   // TODO(Doru): Deprecate this.
   bool Bind(void);

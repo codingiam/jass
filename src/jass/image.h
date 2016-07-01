@@ -12,8 +12,11 @@
 
 #include "jass/jass.h"
 
-class Image : private boost::noncopyable {
+class Image {
  public:
+  Image(const Image &) = delete;
+  Image & operator=(const Image &) = delete;
+
   Image(void);
   ~Image(void);
 
@@ -22,13 +25,18 @@ class Image : private boost::noncopyable {
   static std::shared_ptr<Image>
     MakeImage(boost::filesystem::path const &path);
 
-  bool Callback(std::function<void(GLubyte *, GLuint , GLuint)> const &func);
+  bool Bind(std::function<void(GLubyte *, GLuint , GLuint)> const &func);
 
   std::string file_name() const { return file_name_; }
+
+  ILint width(void) { return width_; }
+  ILint height(void) { return height_; }
 
  private:
   ILuint image_;
   std::string file_name_;
+  ILint width_;
+  ILint height_;
 };
 
 #endif  // JASS_IMAGE_H_

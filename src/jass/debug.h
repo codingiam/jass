@@ -14,22 +14,13 @@
 
 #endif
 
-namespace {
+void EnableOpenGLErrorCallback(void);
 
-void CheckOpenGLError(const char *stmt, const char *fname, int line) {
-  GLenum err = glGetError();
-  if (err != GL_NO_ERROR) {
-    printf("OpenGL error %08x, at %s:%i - for %s\n", err, fname, line, stmt);
-    CheckOpenGLError(stmt, fname, line);
-    abort();
-  }
-}
-
-}  // namespace
+void CheckOpenGLError(const char *stmt, const char *fname, int line);
 
 #define GL_CHECK(stmt) { \
   stmt; \
-  CheckOpenGLError(#stmt, __FILE__, __LINE__); \
+  ::CheckOpenGLError(#stmt, __FILE__, __LINE__); \
 }
 
 #else

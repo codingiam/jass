@@ -8,6 +8,8 @@
 
 Image::Image(void) {
   this->image_ = 0;
+  this->width_ = 0;
+  this->height_ = 0;
 }
 
 Image::~Image(void) {
@@ -35,8 +37,14 @@ bool Image::LoadImage(std::string const &file_name) {
   }
 
   bool success = ilLoadImage(file_name.c_str()) == IL_TRUE;
+  
   if (success) {
     success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE) == IL_TRUE;
+  }
+
+  if (success) {
+    this->width_ = ilGetInteger(IL_IMAGE_WIDTH);
+    this->height_ = ilGetInteger(IL_IMAGE_HEIGHT);
   }
 
   ilBindImage(0);
@@ -56,7 +64,7 @@ std::shared_ptr<Image> Image::MakeImage(boost::filesystem::path const &path) {
   return image;
 }
 
-bool Image::Callback(
+bool Image::Bind(
     std::function<void(GLubyte *, GLuint , GLuint)> const &func) {
   if (image_ == 0) {
     return false;
@@ -67,8 +75,7 @@ bool Image::Callback(
     return false;
   }
 
-  func(ilGetData(),
-    ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT));
+  func(ilGetData(), width_, height_);
 
   ilBindImage(0);
 

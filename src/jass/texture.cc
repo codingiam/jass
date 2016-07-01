@@ -33,10 +33,11 @@ bool Texture::LoadTexture(std::shared_ptr<Image> const &image) {
       [texture] (GLubyte *pixels, GLuint width, GLuint height) {
     GL_CHECK(glBindTexture(GL_TEXTURE_2D, *texture));
 
-    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
     GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
     GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 
     GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
       0, GL_RGBA, GL_UNSIGNED_BYTE, pixels));
@@ -44,7 +45,7 @@ bool Texture::LoadTexture(std::shared_ptr<Image> const &image) {
     GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
   };
 
-  return image->Callback(func);
+  return image->Bind(func);
 }
 
 std::shared_ptr<Texture> Texture::MakeTexture(
@@ -61,19 +62,21 @@ std::shared_ptr<Texture> Texture::MakeTexture(
   return texture;
 }
 
-bool Texture::Callback(std::function<void(void)> const &func) {
+bool Texture::Bind(std::function<void(void)> const &func) {
   if (texture_ == 0) {
     return false;
   }
 
-  glBindTexture(GL_TEXTURE_2D, texture_);
-  if (glGetError() != GL_NO_ERROR) {
-    return false;
-  }
+  glActiveTexture(GL_TEXTURE0);
+
+//  glBindTexture(GL_TEXTURE_2D, texture_);GL_PRINT_ERROR();
+//  if (glGetError() != GL_NO_ERROR) {
+//    return false;
+//  }
 
   func();
 
-  GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
+//  GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
 
   return true;
 }
