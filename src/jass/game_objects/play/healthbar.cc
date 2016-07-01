@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Doru Catalin Budai. All rights reserved.
+// Copyright (c) 2015, Doru Budai. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 
 #include "jass/game_objects/play/healthbar.h"
