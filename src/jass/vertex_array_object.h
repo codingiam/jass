@@ -11,8 +11,11 @@
 
 #include "jass/jass.h"
 
-class VertexArrayObject : private boost::noncopyable {
+class VertexArrayObject {
 public:
+  VertexArrayObject(const VertexArrayObject &) = delete;
+  VertexArrayObject & operator=(const VertexArrayObject &) = delete;
+
   VertexArrayObject(void);
   ~VertexArrayObject(void);
 

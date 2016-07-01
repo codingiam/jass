@@ -8,8 +8,11 @@
 
 class Image;
 
-class Texture : private boost::noncopyable {
+class Texture {
  public:
+  Texture(const Texture &) = delete;
+  Texture & operator=(const Texture &) = delete;
+
   Texture(void);
   ~Texture(void);
 

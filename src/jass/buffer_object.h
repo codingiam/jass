@@ -11,8 +11,11 @@
 
 #include "jass/jass.h"
 
-class BufferObject : private boost::noncopyable {
+class BufferObject {
 public:
+  BufferObject(const BufferObject &) = delete;
+  BufferObject & operator=(const BufferObject &) = delete;
+
   BufferObject(const GLenum target);
   ~BufferObject(void);
 

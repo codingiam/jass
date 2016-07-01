@@ -13,7 +13,6 @@
 
 #include <IL/il.h>
 
-#include <boost/noncopyable.hpp>
 #include <boost/format.hpp>
 
 #include <iostream>

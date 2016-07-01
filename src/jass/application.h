@@ -15,8 +15,11 @@ namespace States {
   class StatesManager;
 }
 
-class Application : private boost::noncopyable  {
+class Application  {
  public:
+  Application(const Application &) = delete;
+  Application & operator=(const Application &) = delete;
+
   Application(void);
   ~Application(void);
 

@@ -13,8 +13,11 @@
 class Image;
 class Texture;
 
-class Video : private boost::noncopyable {
+class Video {
  public:
+  Video(const Video &) = delete;
+  Video & operator=(const Video &) = delete;
+
   Video(void);
   ~Video(void);
 

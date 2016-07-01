@@ -12,8 +12,11 @@
 
 #include "jass/jass.h"
 
-class Image : private boost::noncopyable {
+class Image {
  public:
+  Image(const Image &) = delete;
+  Image & operator=(const Image &) = delete;
+
   Image(void);
   ~Image(void);
 

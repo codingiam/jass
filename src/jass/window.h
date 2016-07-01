@@ -8,9 +8,12 @@
 
 #include "jass/jass.h"
 
-class Window : private boost::noncopyable {
+class Window {
  public:
   enum { kWidth = 800, kHeight = 600, kBpp = 16, kFull = false };
+
+  Window(const Window &) = delete;
+  Window & operator=(const Window &) = delete;
 
   Window(void);
   ~Window(void);
