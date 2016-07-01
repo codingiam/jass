@@ -9,15 +9,17 @@
 #include "jass/game_objects/game_object.h"
 
 namespace Drawables {
-  class GeometryDrawable;
+class Geometry;
 }
 
 namespace GameObjects {
+namespace Play {
 
-class PlayShipGameObject : public GameObject {
+class Ship : public GameObject {
  public:
-  PlayShipGameObject(const GLfloat xpos, const GLfloat ypos, const Uint32 id, const GLfloat angle, std::array<Uint32, 6> const &keys);
-  ~PlayShipGameObject(void);
+  Ship(const GLfloat xpos, const GLfloat ypos, const Uint32 id,
+      const GLfloat angle, std::array<Uint32, 6> const &keys);
+  ~Ship(void);
 
   void Create(void) override;
   void Start(void) override;
@@ -30,7 +32,7 @@ class PlayShipGameObject : public GameObject {
   void Update(const Uint32 dt, const Uint8 *keystate) override;
 
  private:
-  std::shared_ptr<Drawables::GeometryDrawable> ship_;
+  std::shared_ptr<Drawables::Geometry> ship_;
 
   const GLfloat ixpos_, iypos_;
   const Uint32 id_;
@@ -42,7 +44,7 @@ class PlayShipGameObject : public GameObject {
 
   GLfloat angle_;
   GLfloat xpos_, ypos_;
-  GLfloat accel_, speed_;
+  GLfloat accel_;
   GLfloat life_;
   GLfloat energy_;
   Uint32 last_time_ACC_;
@@ -52,4 +54,5 @@ class PlayShipGameObject : public GameObject {
   Uint32 ticks_;
 };
 
+}  // namespace Play
 }  // namespace GameObjects

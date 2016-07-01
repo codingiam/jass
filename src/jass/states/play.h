@@ -13,19 +13,21 @@
 #include "jass/jass.h"
 
 namespace GameObjects {
-class PlayBackgroundGameObject;
-class PlayHealthbarGameObject;
-class PlayShipGameObject;
-class PlayBoardGameObject;
-class PlayProjectilesGameObject;
-}
+namespace Play {
+class Background;
+class Healthbar;
+class Ship;
+class Board;
+class Projectiles;
+}  // namespace Play
+}  // namespace GameObjects
 
 namespace States {
 
-class StatePlay : public State {
+class Play : public State {
  public:
-  StatePlay(void);
-  ~StatePlay(void);
+  Play(void);
+  ~Play(void);
 
   void Update(const Uint32 dt, const Uint8 *keystate) override;
   void Render(Video *const video) override;
@@ -39,17 +41,19 @@ class StatePlay : public State {
   void Stop(void) override;
 
  private:
-  std::shared_ptr<GameObjects::PlayBackgroundGameObject> bg_space_;
+  std::shared_ptr<GameObjects::Play::Background> bg_space_;
 
-  std::shared_ptr<GameObjects::PlayShipGameObject> red_ship_;
-  std::shared_ptr<GameObjects::PlayShipGameObject> blue_ship_;
+  std::shared_ptr<GameObjects::Play::Ship> red_ship_;
+  std::shared_ptr<GameObjects::Play::Ship> blue_ship_;
 
-  std::shared_ptr<GameObjects::PlayHealthbarGameObject> red_ship_healthbar_;
-  std::shared_ptr<GameObjects::PlayHealthbarGameObject> blue_ship_healthbar_;
+  std::shared_ptr<GameObjects::Play::Healthbar>
+      red_ship_healthbar_;
+  std::shared_ptr<GameObjects::Play::Healthbar>
+      blue_ship_healthbar_;
 
-  std::shared_ptr<GameObjects::PlayBoardGameObject> bg_board_;
+  std::shared_ptr<GameObjects::Play::Board> bg_board_;
 
-  std::shared_ptr<GameObjects::PlayProjectilesGameObject> projectiles_;
+  std::shared_ptr<GameObjects::Play::Projectiles> projectiles_;
 };
 
 }  // namespace States

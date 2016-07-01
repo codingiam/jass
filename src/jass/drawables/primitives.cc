@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/drawables/primitives_drawable.h"
+#include "jass/drawables/primitives.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
@@ -15,13 +15,13 @@
 
 namespace Drawables {
 
-PrimitivesDrawable::PrimitivesDrawable() {
+Primitives::Primitives() {
 }
 
-PrimitivesDrawable::~PrimitivesDrawable() {
+Primitives::~Primitives() {
 }
 
-void PrimitivesDrawable::Create() {
+void Primitives::Create() {
   auto vertex_shader =
       std::make_shared<Shaders::VertexShader>(
           "resources/shaders/3duntextured.vert");
@@ -42,7 +42,7 @@ void PrimitivesDrawable::Create() {
   vbo_->Create();
 }
 
-void PrimitivesDrawable::Render(Video *const video) {
+void Primitives::Render(Video *const video) {
   auto model = glm::translate(translation()) * glm::mat4_cast(rotation()) *
       glm::scale(scale());
   auto view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),

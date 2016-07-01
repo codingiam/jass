@@ -19,10 +19,10 @@ class Program;
 
 namespace Drawables {
 
-class PrimitivesDrawable : public Drawable {
+class Primitives : public Drawable {
  public:
-  PrimitivesDrawable(void);
-  virtual ~PrimitivesDrawable(void);
+  Primitives(void);
+  virtual ~Primitives(void);
 
   void Create(void) override;
   void Render(Video *const video) override;

@@ -13,25 +13,26 @@
 class Video;
 
 namespace Drawables {
-class PrimitivesDrawable;
+class Primitives;
 }
 
 namespace GameObjects {
+namespace Play {
 
-class PlayShipGameObject;
+class Ship;
 
 struct Projectile;
 
-class PlayProjectilesGameObject : public GameObject {
+class Projectiles : public GameObject {
  public:
-  PlayProjectilesGameObject(void);
-  ~PlayProjectilesGameObject(void);
+  Projectiles(void);
+  ~Projectiles(void);
 
   void Create(void) override;
 
   void Update(const Uint32 dt,
-      PlayShipGameObject *const red_ship,
-      PlayShipGameObject *const blue_ship) override;
+      Ship *const red_ship,
+      Ship *const blue_ship) override;
   void Render(Video *const video) override;
 
   void AddProjectile(GLfloat xpos, GLfloat ypos, GLfloat angle, GLuint owner);
@@ -39,9 +40,10 @@ class PlayProjectilesGameObject : public GameObject {
 
  private:
   std::vector<Projectile> projectiles_;
-  std::shared_ptr<Drawables::PrimitivesDrawable> points_;
+  std::shared_ptr<Drawables::Primitives> points_;
 };
 
+}  // namespace Play
 }  // namespace GameObjects
 
 #endif  // JASS_PROJECTILE_H_

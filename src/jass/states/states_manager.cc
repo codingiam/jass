@@ -6,8 +6,8 @@
 
 #include "jass/states/state.h"
 
-#include "jass/states/state_intro.h"
-#include "jass/states/state_play.h"
+#include "jass/states/intro.h"
+#include "jass/states/play.h"
 
 namespace States {
 
@@ -19,19 +19,19 @@ StatesManager::~StatesManager() {
 }
 
 void StatesManager::Initialize(Video *const video) {
-  this->state_intro_ = std::make_shared<StateIntro>();
-  this->state_play_ = std::make_shared<StatePlay>();
+  this->state_intro_ = std::make_shared<Intro>();
+  this->state_play_ = std::make_shared<Play>();
 
-  State::Register(kStateIntro, state_intro_, video);
-  State::Register(kStatePlay, state_play_, video);
+  State::Register(kIntro, state_intro_, video);
+  State::Register(kPlay, state_play_, video);
 
-  State::SetState(state_play_.get());
+  State::SetState(state_intro_.get());
   State::Swap();
 }
 
 void StatesManager::ShutDown() {
-  State::Unregister(kStatePlay);
-  State::Unregister(kStateIntro);
+  State::Unregister(kPlay);
+  State::Unregister(kIntro);
 }
 
 }  // namespace States

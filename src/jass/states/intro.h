@@ -11,18 +11,20 @@
 #include "jass/jass.h"
 
 namespace GameObjects {
-  class IntroBackgroundGameObject;
-  class IntroTitleGameObject;
-  class IntroTextGameObject;
-  class IntroMenuGameObject;
+namespace Intro {
+class Background;
+class Title;
+class Text;
+class Menu;
+}
 }
 
 namespace States {
 
-class StateIntro : public State {
+class Intro : public State {
  public:
-  StateIntro(void);
-  ~StateIntro(void);
+  Intro(void);
+  ~Intro(void);
 
   void Update(const Uint32 dt, const Uint8 *keystate) override;
   void Render(Video *const video) override;
@@ -33,12 +35,12 @@ class StateIntro : public State {
   void Stop(void) override;
 
  private:
-  std::shared_ptr<GameObjects::IntroBackgroundGameObject> bg_space_;
-  std::shared_ptr<GameObjects::IntroTitleGameObject> bg_intro_; 
-  std::shared_ptr<GameObjects::IntroMenuGameObject> bg_action_;
-  std::shared_ptr<GameObjects::IntroTextGameObject> bg_intro_text_;
+  std::shared_ptr<GameObjects::Intro::Background> bg_space_;
+  std::shared_ptr<GameObjects::Intro::Title> bg_intro_;
+  std::shared_ptr<GameObjects::Intro::Menu> bg_action_;
+  std::shared_ptr<GameObjects::Intro::Text> bg_intro_text_;
 };
 
-}
+}  // namespace States
 
 #endif  // JASS_STATE_INTRO_H_

@@ -2,8 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef font_drawable_h
-#define font_drawable_h
+#pragma once
 
 #include <string>
 
@@ -15,22 +14,21 @@ class VertexArrayObject;
 class BufferObject;
 
 namespace Shaders {
-  class Program;
+class Program;
 }
 
 namespace Drawables {
 
-class FontDrawable : public Drawable {
+class Bitmap : public Drawable {
  public:
-  FontDrawable(std::string const &path);
-  virtual ~FontDrawable(void);
+  explicit Bitmap(std::string const &path);
+  virtual ~Bitmap(void);
 
   void Create(void) override;
   void Render(Video *const video) override;
 
-  void text(const std::string &text) {
-    this->text_ = text;
-  }
+  GLfloat width(void) { return width_; }
+  GLfloat height(void) { return height_; }
 
  private:
   std::shared_ptr<Shaders::Program> program_;
@@ -39,12 +37,11 @@ class FontDrawable : public Drawable {
 
   std::string path_;
 
-  std::string text_;
+  GLfloat width_;
+  GLfloat height_;
 
   std::shared_ptr<VertexArrayObject> vao_;
   std::shared_ptr<BufferObject> vbo_;
 };
 
 }  // namespace Drawables
-
-#endif /* font_drawable_h */

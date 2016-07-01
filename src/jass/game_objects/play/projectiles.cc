@@ -2,14 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/game_objects/play_projectiles_game_object.h"
+#include "jass/game_objects/play/projectiles.h"
 
 #include <glm/gtc/constants.hpp>
 
-#include "jass/game_objects/play_ship_game_object.h"
-#include "jass/drawables/primitives_drawable.h"
+#include "jass/game_objects/play/ship.h"
+#include "jass/drawables/primitives.h"
 
 namespace GameObjects {
+namespace Play {
 
 struct Projectile {
   Projectile(GLfloat xpos, GLfloat ypos,
@@ -37,15 +38,15 @@ struct Projectile {
   GLfloat angle_;
 };
 
-PlayProjectilesGameObject::PlayProjectilesGameObject() {
+Projectiles::Projectiles() {
 }
 
-PlayProjectilesGameObject::~PlayProjectilesGameObject() {
+Projectiles::~Projectiles() {
 }
 
-void PlayProjectilesGameObject::Update(const Uint32 dt,
-      PlayShipGameObject *const red_ship,
-      PlayShipGameObject *const blue_ship) {
+void Projectiles::Update(const Uint32 dt,
+      Ship *const red_ship,
+      Ship *const blue_ship) {
   for (auto it = projectiles_.begin(); it != projectiles_.end(); ) {
     auto p = &(*it);
 
@@ -61,7 +62,7 @@ void PlayProjectilesGameObject::Update(const Uint32 dt,
   }
 }
 
-  void PlayProjectilesGameObject::Render(Video *const video) {
+  void Projectiles::Render(Video *const video) {
     const size_t size = projectiles_.size();
 
     if (size) {
@@ -104,18 +105,19 @@ void PlayProjectilesGameObject::Update(const Uint32 dt,
 //    GL_CHECK(glEnable(GL_TEXTURE_2D));
   }
 
-void PlayProjectilesGameObject::AddProjectile(GLfloat xpos, GLfloat ypos,
+void Projectiles::AddProjectile(GLfloat xpos, GLfloat ypos,
                                             GLfloat angle, GLuint owner) {
   projectiles_.push_back(Projectile(xpos, ypos, angle, owner));
 }
 
-void PlayProjectilesGameObject::Clear() {
+void Projectiles::Clear() {
   projectiles_.clear();
 }
 
-void PlayProjectilesGameObject::Create() {
-  this->points_ = std::make_shared<Drawables::PrimitivesDrawable>();
+void Projectiles::Create() {
+  this->points_ = std::make_shared<Drawables::Primitives>();
   this->points_->Create();
 }
 
+}  // namespace Play
 }  // namespace GameObjects

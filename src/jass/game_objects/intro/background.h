@@ -7,15 +7,16 @@
 #include "jass/game_objects/game_object.h"
 
 namespace Drawables {
-  class BitampDrawable;
+class Bitmap;
 }
 
 namespace GameObjects {
+namespace Intro {
 
-class PlayBackgroundGameObject : public GameObject {
+class Background : public GameObject {
  public:
-  PlayBackgroundGameObject(void);
-  ~PlayBackgroundGameObject(void);
+  Background(void);
+  ~Background(void);
 
   void Create(void) override;
   void Start(void) override {}
@@ -23,7 +24,8 @@ class PlayBackgroundGameObject : public GameObject {
   void Render(Video *const video) override;
 
  private:
-  std::shared_ptr<Drawables::BitampDrawable> bg_space_;
+  std::shared_ptr<Drawables::Bitmap> bg_space_;
 };
 
+}  // namespace Intro
 }  // namespace GameObjects

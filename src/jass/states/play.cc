@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/states/state_play.h"
+#include "jass/states/play.h"
 
 #include "jass/video.h"
 #include "jass/application.h"
@@ -10,18 +10,18 @@
 #include "jass/window.h"
 #include "jass/image.h"
 
-#include "jass/game_objects/play_background_game_object.h"
-#include "jass/game_objects/play_healthbar_game_object.h"
-#include "jass/game_objects/play_ship_game_object.h"
-#include "jass/game_objects/play_board_game_object.h"
-#include "jass/game_objects/play_projectiles_game_object.h"
+#include "jass/game_objects/play/background.h"
+#include "jass/game_objects/play/healthbar.h"
+#include "jass/game_objects/play/ship.h"
+#include "jass/game_objects/play/board.h"
+#include "jass/game_objects/play/projectiles.h"
 
 namespace States {
 
-StatePlay::StatePlay() {
+Play::Play() {
 }
 
-StatePlay::~StatePlay() {
+Play::~Play() {
   bg_space_.reset();
   red_ship_healthbar_.reset();
   blue_ship_healthbar_.reset();
@@ -31,8 +31,8 @@ StatePlay::~StatePlay() {
   projectiles_.reset();
 }
 
-void StatePlay::Create() {
-  this->bg_space_ = std::make_shared<GameObjects::PlayBackgroundGameObject>();
+void Play::Create() {
+  this->bg_space_ = std::make_shared<GameObjects::Play::Background>();
   this->bg_space_->Create();
 
   std::array<Uint32, 6> keys1 = { SDL_SCANCODE_Q, SDL_SCANCODE_S,
@@ -42,43 +42,43 @@ void StatePlay::Create() {
       SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_RCTRL, 0 };
 
   this->red_ship_ =
-      std::make_shared<GameObjects::PlayShipGameObject>(-4.5f, 3.25f, 1, 0.0f,
-          keys1);
+      std::make_shared<GameObjects::Play::Ship>(-4.5f, 3.25f, 1,
+          0.0f, keys1);
   this->red_ship_->Create();
 
   this->blue_ship_ =
-      std::make_shared<GameObjects::PlayShipGameObject>(4.5f, -2.40f, 2, 180.0f,
-          keys2);
+      std::make_shared<GameObjects::Play::Ship>(4.5f, -2.40f, 2,
+          180.0f, keys2);
   this->blue_ship_->Create();
 
   this->red_ship_healthbar_ =
-      std::make_shared<GameObjects::PlayHealthbarGameObject>(10, 10, 20, 512,
-          red_ship_);
+      std::make_shared<GameObjects::Play::Healthbar>(10, 10, 20,
+          512, red_ship_);
   this->red_ship_healthbar_->Create();
 
   this->blue_ship_healthbar_ =
-      std::make_shared<GameObjects::PlayHealthbarGameObject>(770, 10, 20, 512,
-          blue_ship_);
+      std::make_shared<GameObjects::Play::Healthbar>(770, 10, 20,
+          512, blue_ship_);
   this->blue_ship_healthbar_->Create();
 
-  this->bg_board_ = std::make_shared<GameObjects::PlayBoardGameObject>();
+  this->bg_board_ = std::make_shared<GameObjects::Play::Board>();
   this->bg_board_->Create();
 
   this->projectiles_ =
-      std::make_shared<GameObjects::PlayProjectilesGameObject>();
+      std::make_shared<GameObjects::Play::Projectiles>();
   this->projectiles_->Create();
 }
 
-void StatePlay::Start() {
+void Play::Start() {
   red_ship_->Start();
   blue_ship_->Start();
 }
 
-void StatePlay::Stop() {
+void Play::Stop() {
   projectiles_->Clear();
 }
 
-void StatePlay::Update(const Uint32 dt, const Uint8 *keystate) {
+void Play::Update(const Uint32 dt, const Uint8 *keystate) {
   red_ship_->Update(dt, keystate);
   blue_ship_->Update(dt, keystate);
 
@@ -88,21 +88,21 @@ void StatePlay::Update(const Uint32 dt, const Uint8 *keystate) {
   red_ship_healthbar_->Update(dt);
 
   if (keystate[SDL_SCANCODE_ESCAPE]) {
-    State::SetState(States::State::Find(States::kStateIntro).lock().get());
+    State::SetState(States::State::Find(States::kIntro).lock().get());
     return;
   }
 
   if ((red_ship_->GetLife() <= 0.0f) || (blue_ship_->GetLife() <= 0.0f)) {
-    State::SetState(States::State::Find(States::kStateIntro).lock().get());
+    State::SetState(States::State::Find(States::kIntro).lock().get());
   }
 }
 
-void StatePlay::AddProjectile(const GLfloat xpos, const GLfloat ypos,
+void Play::AddProjectile(const GLfloat xpos, const GLfloat ypos,
     const GLfloat angle, const GLuint owner) {
   projectiles_->AddProjectile(xpos, ypos, angle, owner);
 }
 
-void StatePlay::Render(Video *const video) {
+void Play::Render(Video *const video) {
   GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
 
   video->Init2DScene(Window::kWidth, Window::kHeight);

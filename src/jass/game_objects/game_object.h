@@ -10,7 +10,9 @@ class Video;
 
 namespace GameObjects {
 
-class PlayShipGameObject;
+namespace Play {
+class Ship;
+}
 
 class GameObject {
  public:
@@ -25,8 +27,8 @@ class GameObject {
   virtual void Start(void) { }
 
   virtual void Update(const Uint32 dt,
-      PlayShipGameObject *const red_ship,
-      PlayShipGameObject *const blue_ship) {}
+      Play::Ship *const red_ship,
+      Play::Ship *const blue_ship) {}
   virtual void Update(const Uint32 dt, const Uint8 *keystate) { }
   virtual void Update(const Uint32 dt) { }
   virtual void Render(Video *const video) { }

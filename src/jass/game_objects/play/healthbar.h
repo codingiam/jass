@@ -7,15 +7,17 @@
 #include "jass/game_objects/game_object.h"
 
 namespace Drawables {
-  class BitampDrawable;
+class Bitmap;
 }
 
 namespace GameObjects {
+namespace Play {
 
-class PlayHealthbarGameObject : public GameObject {
+class Healthbar : public GameObject {
  public:
-  PlayHealthbarGameObject(const int x, const int y, const int w, const int h, std::shared_ptr<GameObject> const &parent);
-  ~PlayHealthbarGameObject(void);
+  Healthbar(const int x, const int y, const int w, const int h,
+      std::shared_ptr<GameObject> const &parent);
+  ~Healthbar(void);
 
   void Create(void) override;
   void Start(void) override;
@@ -24,11 +26,12 @@ class PlayHealthbarGameObject : public GameObject {
   void Render(Video *const video) override;
 
  private:
-   std::shared_ptr<Drawables::BitampDrawable> bg_healthbar_;
+  std::shared_ptr<Drawables::Bitmap> bg_healthbar_;
 
-   float life_;
+  float life_;
 
-   const int x_, y_, w_, h_;
+  const int x_, y_, w_, h_;
 };
 
+}  // namespace Play
 }  // namespace GameObjects

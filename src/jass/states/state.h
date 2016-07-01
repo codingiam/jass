@@ -14,35 +14,40 @@
 class Video;
 
 namespace States {
-  class State : private boost::noncopyable {
-   public:
-    State(void) { }
-    virtual ~State(void) { }
 
-    virtual void Create(void) = 0;
-    virtual void Start(void) = 0;
-    virtual void Update(const Uint32 dt, const Uint8 *keystate) = 0;
-    virtual void Render(Video *const video) = 0;
-    virtual void Stop(void) = 0;
-    virtual void Destroy(void) { }
+class State {
+ public:
+  State(const State &) = delete;
+  State & operator=(const State &) = delete;
 
-    static void Swap(void);
+  State(void) { }
+  virtual ~State(void) { }
 
-    static void SetState(State *state);
-    static State* GetState(void) { return state_; }
+  virtual void Create(void) = 0;
+  virtual void Start(void) = 0;
+  virtual void Update(const Uint32 dt, const Uint8 *keystate) = 0;
+  virtual void Render(Video *const video) = 0;
+  virtual void Stop(void) = 0;
+  virtual void Destroy(void) { }
 
-    static void Register(const std::string &name,
-      const std::weak_ptr<State> &state,
-      Video *const video);
-    static std::weak_ptr<State> Find(const std::string &name);
-    static std::weak_ptr<State> Unregister(const std::string &name);
+  static void Swap(void);
 
-   private:
-    static std::map<std::string, std::weak_ptr<State> > states_;
+  static void SetState(State *state);
+  static State* GetState(void) { return state_; }
 
-    static State *state_;
-    static State *next_;
-  };
-}
+  static void Register(const std::string &name,
+    const std::weak_ptr<State> &state,
+    Video *const video);
+  static std::weak_ptr<State> Find(const std::string &name);
+  static std::weak_ptr<State> Unregister(const std::string &name);
+
+ private:
+  static std::map<std::string, std::weak_ptr<State> > states_;
+
+  static State *state_;
+  static State *next_;
+};
+
+}  // namespace States
 
 #endif  // JASS_STATE_H_

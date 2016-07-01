@@ -14,14 +14,17 @@ class Video;
 
 namespace States {
 
-class StateIntro;
-class StatePlay;
+class Intro;
+class Play;
 
-static const std::string kStateIntro = "state_intro";
-static const std::string kStatePlay = "state_play";
+static const char kIntro[] = "state_intro";
+static const char kPlay[] = "state_play";
 
-class StatesManager : private boost::noncopyable {
+class StatesManager {
  public:
+  StatesManager(const StatesManager &) = delete;
+  StatesManager & operator=(const StatesManager &) = delete;
+
   StatesManager(void);
   ~StatesManager(void);
 
@@ -30,10 +33,10 @@ class StatesManager : private boost::noncopyable {
  private:
   void ShutDown(void);
 
-  std::shared_ptr<StateIntro> state_intro_;
-  std::shared_ptr<StatePlay> state_play_;
+  std::shared_ptr<Intro> state_intro_;
+  std::shared_ptr<Play> state_play_;
 };
 
-}
+}  // namespace States
 
 #endif  // JASS_STATES_MANAGER_H_
