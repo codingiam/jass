@@ -4,7 +4,7 @@
 
 #include "jass/game_objects/play/ship.h"
 
-#include "jass/video.h"
+#include "jass/subsystems/video.h"
 
 #include "jass/drawables/geometry.h"
 

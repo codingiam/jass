@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/image.h"
+#include "image.h"
 
 #include <string>
 

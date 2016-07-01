@@ -4,9 +4,9 @@
 
 #include "jass/application.h"
 
-#include "jass/video.h"
+#include "jass/subsystems/video.h"
 #include "jass/states/state.h"
-#include "jass/window.h"
+#include "jass/subsystems/window.h"
 #include "jass/states/states_manager.h"
 
 namespace {

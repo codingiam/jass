@@ -10,8 +10,8 @@
 #include "jass/shaders/vertex_shader.h"
 #include "jass/shaders/fragment_shader.h"
 #include "jass/shaders/program.h"
-#include "jass/vertex_array_object.h"
-#include "jass/buffer_object.h"
+#include "jass/gl/vertex_array_object.h"
+#include "jass/gl/vertex_buffer_object.h"
 
 namespace Drawables {
 

@@ -19,7 +19,7 @@
 
 #include <stdexcept>
 
-#include "jass/debug.h"
+#include "jass/utils/debug.h"
 
 #ifdef _WINDOWS
   #define snprintf _snprintf

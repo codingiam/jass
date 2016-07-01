@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/video.h"
+#include "video.h"
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -14,8 +14,8 @@
 
 #include "jass/application.h"
 
-#include "jass/image.h"
-#include "jass/texture.h"
+#include "jass/resources/image.h"
+#include "jass/gl/texture.h"
 
 namespace {
 

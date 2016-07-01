@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "jass/drawables/drawable.h"
-#include "jass/tiny_obj_loader.h"
+#include "jass/resources/tiny_obj_loader.h"
 
 class Video;
 class Texture;

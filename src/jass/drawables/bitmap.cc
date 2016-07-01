@@ -7,16 +7,16 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "jass/image.h"
-#include "jass/texture.h"
+#include "jass/resources/image.h"
+#include "jass/gl/texture.h"
 
-#include "jass/video.h"
+#include "jass/subsystems/video.h"
 
 #include "jass/shaders/vertex_shader.h"
 #include "jass/shaders/fragment_shader.h"
 #include "jass/shaders/program.h"
-#include "jass/vertex_array_object.h"
-#include "jass/buffer_object.h"
+#include "jass/gl/vertex_array_object.h"
+#include "jass/gl/vertex_buffer_object.h"
 
 namespace Drawables {
 

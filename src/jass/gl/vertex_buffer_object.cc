@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Doru Budai. All rights reserved.
 //
 
-#include "buffer_object.h"
+#include "vertex_buffer_object.h"
 
 BufferObject::BufferObject(const GLenum target) {
   this->target_ = target;

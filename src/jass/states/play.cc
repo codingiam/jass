@@ -4,11 +4,11 @@
 
 #include "jass/states/play.h"
 
-#include "jass/video.h"
+#include "jass/subsystems/video.h"
 #include "jass/application.h"
 #include "jass/states/states_manager.h"
-#include "jass/window.h"
-#include "jass/image.h"
+#include "jass/subsystems/window.h"
+#include "jass/resources/image.h"
 
 #include "jass/game_objects/play/background.h"
 #include "jass/game_objects/play/healthbar.h"

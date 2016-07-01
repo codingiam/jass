@@ -4,9 +4,9 @@
 
 #include "jass/game_objects/intro/text.h"
 
-#include "jass/video.h"
+#include "jass/subsystems/video.h"
 
-#include "jass/image.h"
+#include "jass/resources/image.h"
 
 #include "jass/drawables/font.h"
 
