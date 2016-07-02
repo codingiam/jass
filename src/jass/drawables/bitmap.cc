@@ -77,7 +77,7 @@ void Bitmap::Render() {
       0.0f, height_, 0.0f, 1.0f
   };
 
-  std::function<void(void)> func = [vbo, program, model, mp, texture,
+  std::function<void(void)> func_vbo = [vbo, program, model, mp, texture,
       g_vertex_buffer_data, color] () {
     glUseProgram(program->program_id_);
 
@@ -94,34 +94,28 @@ void Bitmap::Render() {
     vbo->Bind(func);
 
     func = [program, model, mp, color] (GLenum target) {
-      GLint loc_vert, loc_tex;
-
-      loc_vert = glGetAttribLocation(program->program_id_,
-          "position");
+      GLint loc_vert = glGetAttribLocation(program->program_id_, "vPosition");
 
       glVertexAttribPointer(
-              loc_vert,
-              2,                  // size
-              GL_FLOAT,           // type
-              GL_FALSE,           // normalized?
-              4 * sizeof(float),  // stride
-              0                   // array buffer offset
-      );
-
-      loc_tex = glGetAttribLocation(program->program_id_, "vUV");
-
-      glVertexAttribPointer(
-               loc_tex,
-               2,                  // size
-               GL_FLOAT,           // type
-               GL_FALSE,           // normalized?
-               4 * sizeof(float),  // stride
-               (void *)(2 * sizeof(float))  // array buffer offset
-      );
-
-      // GL_CHECK(glUseProgram(program->program_id_));
+          loc_vert,
+          2,
+          GL_FLOAT,
+          GL_FALSE,
+          4 * sizeof(GLfloat),
+          0);
 
       glEnableVertexAttribArray(loc_vert);
+
+      GLint loc_tex = glGetAttribLocation(program->program_id_, "vUV");
+
+      glVertexAttribPointer(
+          loc_tex,
+          2,
+          GL_FLOAT,
+          GL_FALSE,
+          4 * sizeof(GLfloat),
+          reinterpret_cast<GLvoid *>(2 * sizeof(GLfloat)));
+
       glEnableVertexAttribArray(loc_tex);
 
       GLint loc_mvp = glGetUniformLocation(program->program_id_, "mp");
@@ -142,7 +136,7 @@ void Bitmap::Render() {
     glUseProgram(0);
   };
 
-  vao_->Bind(func);
+  vao_->Bind(func_vbo);
 }
 
 }  // namespace Drawables

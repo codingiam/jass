@@ -7,6 +7,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include <vector>
+
 #include "jass/resources/image.h"
 #include "jass/gl/texture.h"
 
@@ -70,67 +72,58 @@ void Font::Render() {
     texture->Bind();
 
     std::function<void(GLenum)> func = [text] (GLenum target) {
-      const char *p = nullptr;
+      GLfloat x2 = 0, y2 = 0;
 
-      float x2 = 0, y2 = 0;
+      std::vector<std::array<std::array<GLfloat, 4>, 6> > vertices;
 
-      typedef std::array<std::array<GLfloat, 5>, 6> tBox;
-
-      std::vector<tBox> vertices;
-
-      for(p = text.c_str(); *p; p++) {
+      for (const char *p = text.c_str(); *p; p++) {
         int tx, ty;
 
         tx = ((*p - 32) % 16) * 16;
         ty = ((*p - 32) / 16) * 16;
 
-        tBox box = {{
-          { x2,       y2,      0.0f, tx / 256.0f,        ty / 256.0f },
-          { x2 + 15,  y2,      0.0f, (tx + 15) / 256.0f, ty / 256.0f },
-          { x2,       y2 + 15, 0.0f, tx / 256.0f,        (ty + 15) / 256.0f },
-          { x2,       y2 + 15, 0.0f, tx / 256.0f,        (ty + 15) / 256.0f },
-          { x2 + 15,  y2,      0.0f, (tx + 15) / 256.0f, ty / 256.0f },
-          { x2 + 15,  y2 + 15, 0.0f, (tx + 15) / 256.0f, (ty + 15) / 256.0f },
-        }};
-
-        vertices.push_back(box);
+        vertices.push_back({{
+            { x2,       y2,      tx / 256.0f,        ty / 256.0f },
+            { x2 + 15,  y2,      (tx + 15) / 256.0f, ty / 256.0f },
+            { x2,       y2 + 15, tx / 256.0f,        (ty + 15) / 256.0f },
+            { x2,       y2 + 15, tx / 256.0f,        (ty + 15) / 256.0f },
+            { x2 + 15,  y2,      (tx + 15) / 256.0f, ty / 256.0f },
+            { x2 + 15,  y2 + 15, (tx + 15) / 256.0f, (ty + 15) / 256.0f },
+        }});
 
         x2 += 16;
       }
 
-      glBufferData(target, vertices.size() * sizeof (tBox),
+      glBufferData(target, vertices.size() *
+          sizeof(decltype(vertices)::value_type),
           &vertices[0], GL_DYNAMIC_DRAW);
     };
 
     vbo->Bind(func);
 
     func = [program, model, mp, text, color] (GLenum target) {
-      GLint loc_vert, loc_tex;
-
-      loc_vert = glGetAttribLocation(program->program_id_,
-          "position");
+      GLint loc_vert = glGetAttribLocation(program->program_id_, "vPosition");
 
       glVertexAttribPointer(
-                                     loc_vert,
-                                     2,                  // size
-                                     GL_FLOAT,           // type
-                                     GL_FALSE,           // normalized?
-                                     5 * sizeof(float),  // stride
-                                     0);
-
-      loc_tex = glGetAttribLocation(program->program_id_, "vUV");
-
-      glVertexAttribPointer(
-                                     loc_tex,
-                                     2,                  // size
-                                     GL_FLOAT,           // type
-                                     GL_FALSE,           // normalized?
-                                     5 * sizeof(float),  // stride
-                                     (void *)(3 * sizeof(float)));
-
-      // GL_CHECK(glUseProgram(program->program_id_));
+          loc_vert,
+          2,
+          GL_FLOAT,
+          GL_FALSE,
+          4 * sizeof(GLfloat),
+          0);
 
       glEnableVertexAttribArray(loc_vert);
+
+      GLint loc_tex = glGetAttribLocation(program->program_id_, "vUV");
+
+      glVertexAttribPointer(
+          loc_tex,
+          2,
+          GL_FLOAT,
+          GL_FALSE,
+          4 * sizeof(GLfloat),
+          reinterpret_cast<GLvoid *>(2 * sizeof(GLfloat)));
+
       glEnableVertexAttribArray(loc_tex);
 
       GLint loc_mvp = glGetUniformLocation(program->program_id_, "mp");
@@ -140,7 +133,7 @@ void Font::Render() {
           "objectColor");
       glUniform4fv(loc_color, 1, glm::value_ptr(color));
 
-      glDrawArrays(GL_TRIANGLES, 0, 6 * text.length());
+      glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(6 * text.length()));
 
       glDisableVertexAttribArray(loc_tex);
       glDisableVertexAttribArray(loc_vert);

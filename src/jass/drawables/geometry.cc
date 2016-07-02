@@ -115,22 +115,17 @@ void Geometry::Render() {
           texcoords.size() * sizeof(decltype(texcoords)::value_type),
           texcoords.data(), GL_STATIC_DRAW);
 
-      GLint loc_tex_coord;
+      GLint loc_tex_coord = glGetAttribLocation(program->program_id_, "vUV");
 
-      loc_tex_coord =
-                   glGetAttribLocation(program->program_id_, "vUV");
+      glVertexAttribPointer(
+          loc_tex_coord,
+          2,
+          GL_FLOAT,
+          GL_FALSE,
+          2 * sizeof(float),
+          0);
 
-      if (loc_tex_coord != -1) {
-        glVertexAttribPointer(
-            loc_tex_coord,
-            2,
-            GL_FLOAT,
-            GL_FALSE,
-            2 * sizeof(float),
-            0);
-
-        glEnableVertexAttribArray(loc_tex_coord);
-      }
+      glEnableVertexAttribArray(loc_tex_coord);
     };
 
     tvbo->Bind(tvbo_func);
@@ -141,11 +136,7 @@ void Geometry::Render() {
           normals.size() * sizeof(decltype(normals)::value_type),
           normals.data(), GL_STATIC_DRAW);
 
-      GLint loc_vn;
-
-      loc_vn = glGetAttribLocation(program->program_id_, "normal");
-
-      loc_vn = 2;
+      GLint loc_vn = glGetAttribLocation(program->program_id_, "vNormal");
 
       glVertexAttribPointer(
           loc_vn,
@@ -166,10 +157,7 @@ void Geometry::Render() {
           positions.size() * sizeof(decltype(positions)::value_type),
           positions.data(), GL_STATIC_DRAW);
 
-      GLint loc_vert/*, loc_tex*/;
-
-      loc_vert =
-                   glGetAttribLocation(program->program_id_, "position");
+      GLint loc_vert = glGetAttribLocation(program->program_id_, "vPosition");
 
       glVertexAttribPointer(
           loc_vert,
@@ -217,8 +205,6 @@ void Geometry::Render() {
       glUniform3f(loc_lig_spec, 0.50f, 0.50f, 0.50f);
       glUniform3f(loc_lig_pos, 0.0f, 0.0f, -75.0f);
 
-//       GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));
-
 //       GL_CHECK(glDisableVertexAttribArray(loc_tex));
 //       GL_CHECK(glDisableVertexAttribArray(loc_vert));
     };
@@ -232,7 +218,7 @@ void Geometry::Render() {
 
       glDrawElements(
           GL_TRIANGLES,
-          indices.size(),
+          static_cast<GLsizei>(indices.size()),
           GL_UNSIGNED_INT,
           0);
     };

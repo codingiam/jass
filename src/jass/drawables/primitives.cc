@@ -70,18 +70,16 @@ void Primitives::Render() {
           positions.size() * sizeof(decltype(positions)::value_type),
           positions.data(), GL_DYNAMIC_DRAW);
 
-      GLint loc_vert = glGetAttribLocation(program->program_id_, "position");
+      GLint loc_vert = glGetAttribLocation(program->program_id_, "vPosition");
 
-      if (loc_vert >= 0) {
-        glVertexAttribPointer(
-            static_cast<GLuint>(loc_vert),
-            2,
-            GL_FLOAT,
-            GL_FALSE,
-            2 * sizeof(float),
-            0);
-        glEnableVertexAttribArray(static_cast<GLuint>(loc_vert));
-      }
+      glVertexAttribPointer(
+          static_cast<GLuint>(loc_vert),
+          2,
+          GL_FLOAT,
+          GL_FALSE,
+          2 * sizeof(float),
+          0);
+      glEnableVertexAttribArray(static_cast<GLuint>(loc_vert));
 
       GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
       glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
