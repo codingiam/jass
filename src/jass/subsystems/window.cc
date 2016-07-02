@@ -10,6 +10,15 @@
 
 #include "jass/utils/debug.h"
 
+#include "jass/states/state.h"
+
+namespace {
+const uint32_t TARGET_FPS = 60;
+const uint32_t MAX_DT = 1000;  // ms
+
+const uint32_t TARGET_DT = MAX_DT / TARGET_FPS;
+}
+
 namespace Subsystems {
 
 Window::Window() {
@@ -142,6 +151,45 @@ void Window::Initialize() {
 
 void Window::SwapBuffers() {
   SDL_GL_SwapWindow(sdl_window_);
+}
+
+void Window::Run() {
+  uint32_t dt = TARGET_DT;
+  uint32_t begin_ms = SDL_GetTicks();
+
+  while (States::State::GetState() != NULL) {
+    Tick(dt);
+
+    const uint32_t end_ms = SDL_GetTicks();
+
+    dt = end_ms - begin_ms;
+
+    if (dt > MAX_DT) {
+      dt = TARGET_DT;
+    }
+
+    begin_ms = end_ms;
+  }
+}
+
+void Window::Tick(const uint32_t dt) {
+  const uint8_t *keys_state = SDL_GetKeyboardState(NULL);
+
+  States::State::GetState()->Update(dt, keys_state);
+
+  States::State::GetState()->Render();
+
+  SwapBuffers();
+
+  SDL_Event sdl_event;
+
+  while (SDL_PollEvent(&sdl_event)) {
+    if (sdl_event.type == SDL_QUIT) {
+      States::State::SetState(NULL);
+    }
+  }
+
+  States::State::Swap();
 }
 
 }  // namespace Subsystems

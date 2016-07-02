@@ -12,11 +12,13 @@ int main(int argc, char *argv[]) {
   int result = EXIT_FAILURE;
 
   try {
-    Application application;
+    {
+      Application application;
 
-    application.Initialize();
+      application.Initialize();
 
-    application.Run();
+      application.Run();
+    }
 
     result = EXIT_SUCCESS;
   } catch (const std::runtime_error &e) {

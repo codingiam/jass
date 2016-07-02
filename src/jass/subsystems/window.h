@@ -22,9 +22,13 @@ class Window {
 
   void Initialize(void);
 
+  void Run(void);
+
   void SwapBuffers(void);
 
  private:
+  void Tick(const uint32_t dt);
+
   bool subsystem_initialized_;
 
   bool glew_initialized_;

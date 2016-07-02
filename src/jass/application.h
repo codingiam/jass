@@ -32,16 +32,12 @@ class Application  {
   void ShutDown(void);
 
   void InitializeWindow(void);
-  void InitializeVideo(void);
-  void InitialiseStates(void);
-
-  void Tick(const uint32_t dt);
-
-  bool sdl_initialized_;
+  void InitializeDevIL(void);
+  void InitializeStates(void);
 
   std::shared_ptr<Subsystems::Window> window_;
+  std::shared_ptr<Subsystems::DevIL> devil_;
   std::shared_ptr<States::StatesManager> states_manager_;
-  std::shared_ptr<Subsystems::DevIL> video_;
 };
 
 #endif  // JASS_APPLICATION_H_
