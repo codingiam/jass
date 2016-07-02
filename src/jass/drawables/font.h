@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef font_drawable_h
-#define font_drawable_h
+#ifndef JASS_DRAWABLES_FONT_H_
+#define JASS_DRAWABLES_FONT_H_
 
 #include <string>
 #include <memory>
@@ -46,4 +46,4 @@ class Font : public Drawable {
 
 }  // namespace Drawables
 
-#endif /* font_drawable_h */
+#endif  // JASS_DRAWABLES_FONT_H_

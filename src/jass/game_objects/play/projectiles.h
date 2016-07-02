@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_PROJECTILE_H_
-#define JASS_PROJECTILE_H_
-#pragma once
+#ifndef JASS_GAME_OBJECTS_PLAY_PROJECTILES_H_
+#define JASS_GAME_OBJECTS_PLAY_PROJECTILES_H_
 
 #include <GL/glew.h>
 
@@ -46,4 +45,4 @@ class Projectiles : public GameObject {
 }  // namespace Play
 }  // namespace GameObjects
 
-#endif  // JASS_PROJECTILE_H_
+#endif  // JASS_GAME_OBJECTS_PLAY_PROJECTILES_H_

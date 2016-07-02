@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_WINDOW_H_
-#define JASS_WINDOW_H_
-#pragma once
+#ifndef JASS_SUBSYSTEMS_WINDOW_H_
+#define JASS_SUBSYSTEMS_WINDOW_H_
 
 #include <GL/glew.h>
 #include <SDL.h>
@@ -36,4 +35,4 @@ class Window {
 
 }  // namespace Subsystems
 
-#endif  // JASS_WINDOW_H_
+#endif  // JASS_SUBSYSTEMS_WINDOW_H_

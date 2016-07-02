@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef __jass__vertex_array_object__
-#define __jass__vertex_array_object__
+#ifndef JASS_GL_VERTEX_ARRAY_OBJECT_H_
+#define JASS_GL_VERTEX_ARRAY_OBJECT_H_
 
 #include <GL/glew.h>
 
@@ -28,4 +28,4 @@ class VertexArrayObject {
 
 }  // namespace GL
 
-#endif /* defined(__jass__vertex_array_object__) */
+#endif  // JASS_GL_VERTEX_ARRAY_OBJECT_H_

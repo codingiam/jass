@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#pragma once
+#ifndef JASS_DRAWABLES_GEOMETRY_H_
+#define JASS_DRAWABLES_GEOMETRY_H_
 
 #include <string>
 #include <vector>
@@ -46,3 +47,5 @@ class Geometry : public Drawable {
 };
 
 }  // namespace Drawables
+
+#endif  // JASS_DRAWABLES_GEOMETRY_H_

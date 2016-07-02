@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_VIDEO_H_
-#define JASS_VIDEO_H_
-#pragma once
+#ifndef JASS_SUBSYSTEMS_DEVIL_H_
+#define JASS_SUBSYSTEMS_DEVIL_H_
 
 namespace Subsystems {
 
@@ -24,4 +23,4 @@ class DevIL {
 
 }  // namespace Subsystems
 
-#endif  // JASS_VIDEO_H_
+#endif  // JASS_SUBSYSTEMS_DEVIL_H_

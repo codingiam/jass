@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#pragma once
+#ifndef JASS_GAME_OBJECTS_PLAY_BACKGROUND_H_
+#define JASS_GAME_OBJECTS_PLAY_BACKGROUND_H_
 
 #include "jass/game_objects/game_object.h"
 
@@ -29,3 +30,5 @@ class Background : public GameObject {
 
 }  // namespace Play
 }  // namespace GameObjects
+
+#endif  // JASS_GAME_OBJECTS_PLAY_BACKGROUND_H_

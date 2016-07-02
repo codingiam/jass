@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_IMAGE_H_
-#define JASS_IMAGE_H_
-#pragma once
+#ifndef JASS_RESOURCES_IMAGE_H_
+#define JASS_RESOURCES_IMAGE_H_
 
 #include <GL/glew.h>
 
@@ -45,4 +44,4 @@ class Image {
 
 }  // namespace Resources
 
-#endif  // JASS_IMAGE_H_
+#endif  // JASS_RESOURCES_IMAGE_H_

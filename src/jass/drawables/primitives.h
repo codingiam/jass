@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_PRIMITIVES_DRAWABLE_H
-#define JASS_PRIMITIVES_DRAWABLE_H
+#ifndef JASS_DRAWABLES_PRIMITIVES_H_
+#define JASS_DRAWABLES_PRIMITIVES_H_
 
 #include <GL/glew.h>
 
@@ -52,4 +52,4 @@ class Primitives : public Drawable {
 
 }  // namespace Drawables
 
-#endif  // JASS_PRIMITIVES_DRAWABLE_H
+#endif  // JASS_DRAWABLES_PRIMITIVES_H_

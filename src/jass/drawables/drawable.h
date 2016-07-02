@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#pragma once
+#ifndef JASS_DRAWABLES_DRAWABLE_H_
+#define JASS_DRAWABLES_DRAWABLE_H_
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -62,3 +63,5 @@ class Drawable {
 };
 
 }  // namespace Drawables
+
+#endif  // JASS_DRAWABLES_DRAWABLE_H_

@@ -4,7 +4,6 @@
 
 #ifndef JASS_APPLICATION_H_
 #define JASS_APPLICATION_H_
-#pragma once
 
 #include <memory>
 

@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_DEBUG_H_
-#define JASS_DEBUG_H_
-#pragma once
+#ifndef JASS_UTILS_DEBUG_H_
+#define JASS_UTILS_DEBUG_H_
 
 #if defined(_DEBUG)
 
@@ -22,4 +21,4 @@ void EnableOpenGLErrorCallback(void);
 
 #endif
 
-#endif  // JASS_DEBUG_H_
+#endif  // JASS_UTILS_DEBUG_H_

@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#pragma once
+#ifndef JASS_GAME_OBJECTS_INTRO_TITLE_H_
+#define JASS_GAME_OBJECTS_INTRO_TITLE_H_
 
 #include "jass/game_objects/game_object.h"
 
@@ -34,3 +35,5 @@ class Title : public GameObject {
 
 }  // namespace Intro
 }  // namespace GameObjects
+
+#endif  // JASS_GAME_OBJECTS_INTRO_TITLE_H_

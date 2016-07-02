@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#pragma once
+#ifndef JASS_GL_TEXTURE_H_
+#define JASS_GL_TEXTURE_H_
 
 #include <GL/glew.h>
 
@@ -37,3 +38,5 @@ class Texture {
 };
 
 }  // namespace GL
+
+#endif  // JASS_GL_TEXTURE_H_

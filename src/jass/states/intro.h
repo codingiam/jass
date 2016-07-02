@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_STATE_INTRO_H_
-#define JASS_STATE_INTRO_H_
-#pragma once
+#ifndef JASS_STATES_INTRO_H_
+#define JASS_STATES_INTRO_H_
 
 #include "jass/states/state.h"
 
@@ -41,4 +40,4 @@ class Intro : public State {
 
 }  // namespace States
 
-#endif  // JASS_STATE_INTRO_H_
+#endif  // JASS_STATES_INTRO_H_

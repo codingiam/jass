@@ -4,7 +4,6 @@
 
 #ifndef JASS_JASS_H_
 #define JASS_JASS_H_
-#pragma once
 
 #ifndef EXIT_FAILURE
   #define EXIT_FAILURE 1

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef __jass__buffer_object__
-#define __jass__buffer_object__
+#ifndef JASS_GL_VERTEX_BUFFER_OBJECT_H_
+#define JASS_GL_VERTEX_BUFFER_OBJECT_H_
 
 #include <GL/glew.h>
 
@@ -29,4 +29,4 @@ class VertexBufferObject {
 
 }  // namespace GL
 
-#endif /* defined(__jass__buffer_object__) */
+#endif  // JASS_GL_VERTEX_BUFFER_OBJECT_H_

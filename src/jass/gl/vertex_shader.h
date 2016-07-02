@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#pragma once
+#ifndef JASS_GL_VERTEX_SHADER_H_
+#define JASS_GL_VERTEX_SHADER_H_
 
 #include <string>
 
@@ -19,3 +20,5 @@ class VertexShader : public Shader {
 };
 
 }  // namespace GL
+
+#endif  // JASS_GL_VERTEX_SHADER_H_

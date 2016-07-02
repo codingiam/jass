@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_STATE_PLAY_H_
-#define JASS_STATE_PLAY_H_
-#pragma once
+#ifndef JASS_STATES_PLAY_H_
+#define JASS_STATES_PLAY_H_
 
 #include <GL/glew.h>
 
@@ -58,4 +57,4 @@ class Play : public State {
 
 }  // namespace States
 
-#endif  // JASS_STATE_PLAY_H_
+#endif  // JASS_STATES_PLAY_H_

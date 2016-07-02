@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#pragma once
+#ifndef JASS_GAME_OBJECTS_GAME_OBJECT_H_
+#define JASS_GAME_OBJECTS_GAME_OBJECT_H_
 
 #include <memory>
 
@@ -39,3 +40,5 @@ class GameObject {
 };
 
 }  // namespace GameObjects
+
+#endif  // JASS_GAME_OBJECTS_GAME_OBJECT_H_

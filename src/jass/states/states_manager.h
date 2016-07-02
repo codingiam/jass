@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef JASS_STATES_MANAGER_H_
-#define JASS_STATES_MANAGER_H_
-#pragma once
+#ifndef JASS_STATES_STATES_MANAGER_H_
+#define JASS_STATES_STATES_MANAGER_H_
 
 #include <memory>
 #include <string>
@@ -36,4 +35,4 @@ class StatesManager {
 
 }  // namespace States
 
-#endif  // JASS_STATES_MANAGER_H_
+#endif  // JASS_STATES_STATES_MANAGER_H_
