@@ -12,9 +12,9 @@
 #include "jass/resources/image.h"
 #include "jass/gl/texture.h"
 
-#include "jass/shaders/vertex_shader.h"
-#include "jass/shaders/fragment_shader.h"
-#include "jass/shaders/program.h"
+#include "jass/gl/vertex_shader.h"
+#include "jass/gl/fragment_shader.h"
+#include "jass/gl/program.h"
 #include "jass/gl/vertex_array_object.h"
 #include "jass/gl/vertex_buffer_object.h"
 
@@ -32,18 +32,9 @@ void Font::Create(void) {
   std::shared_ptr<Resources::Image> image = Resources::Image::MakeImage(path_);
   this->texture_ = GL::Texture::MakeTexture(image);
 
-  auto vertex_shader =
-      std::make_shared<Shaders::VertexShader>(
-          "resources/shaders/2default.vert");
-  vertex_shader->Create();
-
-  auto fragment_shader =
-      std::make_shared<Shaders::FragmentShader>(
-          "resources/shaders/2default.frag");
-  fragment_shader->Create();
-
-  this->program_ = std::make_shared<Shaders::Program>();
-  program_->Create(vertex_shader, fragment_shader);
+  this->program_ = std::make_shared<GL::Program>();
+  program_->Create("resources/shaders/2default.vert",
+      "resources/shaders/2default.frag");
 
   this->vao_ = std::make_shared<GL::VertexArrayObject>();
   vao_->Create();
@@ -67,7 +58,7 @@ void Font::Render() {
 
   std::function<void(void)> vao_func = [vbo, program, model, mp, texture, text,
       color] () {
-    glUseProgram(program->program_id_);
+    glUseProgram(program->program_id());
 
     texture->Bind();
 
@@ -102,7 +93,7 @@ void Font::Render() {
     vbo->Bind(func);
 
     func = [program, model, mp, text, color] (GLenum target) {
-      GLint loc_vert = glGetAttribLocation(program->program_id_, "vPosition");
+      GLint loc_vert = glGetAttribLocation(program->program_id(), "vPosition");
 
       glVertexAttribPointer(
           loc_vert,
@@ -114,7 +105,7 @@ void Font::Render() {
 
       glEnableVertexAttribArray(loc_vert);
 
-      GLint loc_tex = glGetAttribLocation(program->program_id_, "vUV");
+      GLint loc_tex = glGetAttribLocation(program->program_id(), "vUV");
 
       glVertexAttribPointer(
           loc_tex,
@@ -126,10 +117,10 @@ void Font::Render() {
 
       glEnableVertexAttribArray(loc_tex);
 
-      GLint loc_mvp = glGetUniformLocation(program->program_id_, "mp");
+      GLint loc_mvp = glGetUniformLocation(program->program_id(), "mp");
       glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mp));
 
-      GLint loc_color = glGetUniformLocation(program->program_id_,
+      GLint loc_color = glGetUniformLocation(program->program_id(),
           "objectColor");
       glUniform4fv(loc_color, 1, glm::value_ptr(color));
 

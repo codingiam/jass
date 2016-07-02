@@ -15,9 +15,6 @@
 namespace GL {
 class VertexArrayObject;
 class VertexBufferObject;
-}
-
-namespace Shaders {
 class Program;
 }
 
@@ -44,7 +41,7 @@ class Primitives : public Drawable {
   }
 
  private:
-  std::shared_ptr<Shaders::Program> program_;
+  std::shared_ptr<GL::Program> program_;
   std::shared_ptr<GL::VertexArrayObject> vao_;
   std::shared_ptr<GL::VertexBufferObject> vbo_;
 

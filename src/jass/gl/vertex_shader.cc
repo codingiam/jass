@@ -2,11 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/shaders/vertex_shader.h"
+#include "jass/gl/vertex_shader.h"
 
 #include <string>
 
-namespace Shaders {
+namespace GL {
 
 VertexShader::VertexShader(std::string const &path) : Shader(path) {
 }
@@ -18,4 +18,4 @@ void VertexShader::Create() {
   Shader::Create(GL_VERTEX_SHADER);
 }
 
-}  // namespace Shaders
+}  // namespace GL

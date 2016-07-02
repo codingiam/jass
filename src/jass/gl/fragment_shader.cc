@@ -2,11 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/shaders/fragment_shader.h"
+#include "jass/gl/fragment_shader.h"
 
 #include <string>
 
-namespace Shaders {
+namespace GL {
 
 FragmentShader::FragmentShader(std::string const &path) : Shader(path) {
 }
@@ -18,4 +18,4 @@ void FragmentShader::Create() {
   Shader::Create(GL_FRAGMENT_SHADER);
 }
 
-}  // namespace Shaders
+}  // namespace GL

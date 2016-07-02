@@ -15,9 +15,6 @@ namespace GL {
 class VertexArrayObject;
 class VertexBufferObject;
 class Texture;
-}
-
-namespace Shaders {
 class Program;
 }
 
@@ -32,7 +29,7 @@ class Geometry : public Drawable {
   void Render(void) override;
 
  private:
-  std::shared_ptr<Shaders::Program> program_;
+  std::shared_ptr<GL::Program> program_;
 
   std::vector<tinyobj::shape_t> shapes_;
   std::vector<tinyobj::material_t> materials_;

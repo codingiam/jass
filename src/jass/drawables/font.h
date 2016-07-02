@@ -14,9 +14,6 @@ namespace GL {
 class VertexArrayObject;
 class VertexBufferObject;
 class Texture;
-}
-
-namespace Shaders {
 class Program;
 }
 
@@ -35,7 +32,7 @@ class Font : public Drawable {
   }
 
  private:
-  std::shared_ptr<Shaders::Program> program_;
+  std::shared_ptr<GL::Program> program_;
 
   std::shared_ptr<GL::Texture> texture_;
 

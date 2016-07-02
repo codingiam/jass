@@ -2,17 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/shaders/program.h"
+#include "jass/gl/program.h"
 
 #include <boost/format.hpp>
 
 #include <vector>
-#include <algorithm>
+#include <string>
 
-#include "jass/shaders/vertex_shader.h"
-#include "jass/shaders/fragment_shader.h"
+#include "jass/gl/shader.h"
+#include "jass/gl/vertex_shader.h"
+#include "jass/gl/fragment_shader.h"
 
-namespace Shaders {
+namespace GL {
 
 Program::Program() {
   this->program_id_ = 0;
@@ -23,6 +24,19 @@ Program::~Program() {
     glDeleteProgram(program_id_);
     this->program_id_ = 0;
   }
+}
+
+void Program::Create(std::string const &vertex_shader_path,
+    std::string const &fragment_shader_path) {
+  auto vertex_shader =
+      std::make_shared<VertexShader>(vertex_shader_path);
+  vertex_shader->Create();
+
+  auto fragment_shader =
+      std::make_shared<FragmentShader>(fragment_shader_path);
+  fragment_shader->Create();
+
+  Create(vertex_shader, fragment_shader);
 }
 
 void Program::Create(std::shared_ptr<VertexShader> const &vertex_shader,
@@ -58,4 +72,4 @@ void Program::Create(std::shared_ptr<VertexShader> const &vertex_shader,
   }
 }
 
-}  // namespace Shaders
+}  // namespace GL

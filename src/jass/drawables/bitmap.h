@@ -15,9 +15,6 @@ namespace GL {
 class VertexArrayObject;
 class VertexBufferObject;
 class Texture;
-}
-
-namespace Shaders {
 class Program;
 }
 
@@ -35,7 +32,7 @@ class Bitmap : public Drawable {
   GLfloat height(void) { return height_; }
 
  private:
-  std::shared_ptr<Shaders::Program> program_;
+  std::shared_ptr<GL::Program> program_;
 
   std::shared_ptr<GL::Texture> texture_;
 

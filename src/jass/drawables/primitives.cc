@@ -7,9 +7,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "jass/shaders/vertex_shader.h"
-#include "jass/shaders/fragment_shader.h"
-#include "jass/shaders/program.h"
+#include "jass/gl/vertex_shader.h"
+#include "jass/gl/fragment_shader.h"
+#include "jass/gl/program.h"
 #include "jass/gl/vertex_array_object.h"
 #include "jass/gl/vertex_buffer_object.h"
 
@@ -22,18 +22,9 @@ Primitives::~Primitives() {
 }
 
 void Primitives::Create() {
-  auto vertex_shader =
-      std::make_shared<Shaders::VertexShader>(
-          "resources/shaders/3duntextured.vert");
-  vertex_shader->Create();
-
-  auto fragment_shader =
-      std::make_shared<Shaders::FragmentShader>(
-          "resources/shaders/3duntextured.frag");
-  fragment_shader->Create();
-
-  this->program_ = std::make_shared<Shaders::Program>();
-  program_->Create(vertex_shader, fragment_shader);
+  this->program_ = std::make_shared<GL::Program>();
+  program_->Create("resources/shaders/3duntextured.vert",
+      "resources/shaders/3duntextured.frag");
 
   this->vao_ = std::make_shared<GL::VertexArrayObject>();
   vao_->Create();
@@ -62,7 +53,7 @@ void Primitives::Render() {
 
   std::function<void(void)> vao_func = [vbo, program, model, mvp, positions,
       colors, point_size] () {
-    glUseProgram(program->program_id_);
+    glUseProgram(program->program_id());
 
     std::function<void(GLenum)> vbo_func = [program, model, mvp, positions,
         colors, point_size] (GLenum target) {
@@ -70,7 +61,7 @@ void Primitives::Render() {
           positions.size() * sizeof(decltype(positions)::value_type),
           positions.data(), GL_DYNAMIC_DRAW);
 
-      GLint loc_vert = glGetAttribLocation(program->program_id_, "vPosition");
+      GLint loc_vert = glGetAttribLocation(program->program_id(), "vPosition");
 
       glVertexAttribPointer(
           static_cast<GLuint>(loc_vert),
@@ -81,7 +72,7 @@ void Primitives::Render() {
           0);
       glEnableVertexAttribArray(static_cast<GLuint>(loc_vert));
 
-      GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
+      GLint loc_mvp = glGetUniformLocation(program->program_id(), "mvp");
       glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
       glPointSize(point_size);

@@ -4,16 +4,18 @@
 
 #pragma once
 
-#include "jass/shaders/shader.h"
+#include <string>
 
-namespace Shaders {
+#include "jass/gl/shader.h"
 
-class VertexShader : public Shader {
+namespace GL {
+
+class FragmentShader : public Shader {
  public:
-  explicit VertexShader(std::string const &path);
-  ~VertexShader(void);
+  explicit FragmentShader(std::string const &path);
+  ~FragmentShader(void);
 
   void Create(void) override;
 };
 
-}  // namespace Shaders
+}  // namespace GL

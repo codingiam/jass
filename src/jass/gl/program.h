@@ -7,8 +7,9 @@
 #include <GL/glew.h>
 
 #include <memory>
+#include <string>
 
-namespace Shaders {
+namespace GL {
 
 class VertexShader;
 class FragmentShader;
@@ -18,10 +19,18 @@ class Program {
   Program(void);
   ~Program(void);
 
+  void Create(std::string const &vertex_shader_path,
+      std::string const &fragment_shader_path);
+
+  GLuint program_id(void) {
+    return this->program_id_;
+  }
+
+ private:
   void Create(std::shared_ptr<VertexShader> const &vertex_shader,
       std::shared_ptr<FragmentShader> const &fragment_shader);
 
   GLuint program_id_;
 };
 
-}  // namespace Shaders
+}  // namespace GL

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/shaders/shader.h"
+#include "shader.h"
 
 #include <boost/format.hpp>
 
@@ -10,7 +10,7 @@
 #include <iterator>
 #include <vector>
 
-namespace Shaders {
+namespace GL {
 
 Shader::Shader(std::string const &path) {
   this->path_ = path;
@@ -71,4 +71,4 @@ Shader::~Shader() {
   }
 }
 
-}  // namespace Shaders
+}  // namespace GL

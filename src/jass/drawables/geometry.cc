@@ -9,9 +9,9 @@
 
 #include <boost/format.hpp>
 
-#include "jass/shaders/vertex_shader.h"
-#include "jass/shaders/fragment_shader.h"
-#include "jass/shaders/program.h"
+#include "jass/gl/vertex_shader.h"
+#include "jass/gl/fragment_shader.h"
+#include "jass/gl/program.h"
 
 #include "jass/gl/vertex_array_object.h"
 #include "jass/gl/vertex_buffer_object.h"
@@ -46,18 +46,9 @@ void Geometry::Create() {
               materials_[0].diffuse_texname);
   this->texture_ = GL::Texture::MakeTexture(image);
 
-  auto vertex_shader =
-      std::make_shared<Shaders::VertexShader>(
-          "resources/shaders/3default.vert");
-  vertex_shader->Create();
-
-  auto fragment_shader =
-      std::make_shared<Shaders::FragmentShader>(
-          "resources/shaders/3default.frag");
-  fragment_shader->Create();
-
-  this->program_ = std::make_shared<Shaders::Program>();
-  program_->Create(vertex_shader, fragment_shader);
+  this->program_ = std::make_shared<GL::Program>();
+  program_->Create("resources/shaders/3default.vert",
+      "resources/shaders/3default.frag");
 
   this->vao_ = std::make_shared<GL::VertexArrayObject>();
   vao_->Create();
@@ -71,7 +62,8 @@ void Geometry::Create() {
   this->pvbo_ = std::make_shared<GL::VertexBufferObject>(GL_ARRAY_BUFFER);
   pvbo_->Create();
 
-  this->ivbo_ = std::make_shared<GL::VertexBufferObject>(GL_ELEMENT_ARRAY_BUFFER);
+  this->ivbo_ =
+      std::make_shared<GL::VertexBufferObject>(GL_ELEMENT_ARRAY_BUFFER);
   ivbo_->Create();
 }
 
@@ -103,19 +95,19 @@ void Geometry::Render() {
   std::function<void(void)> vao_func = [tvbo, nvbo, pvbo, ivbo, program,
       model, mvp, texture, positions, normals, indices, color, material,
       texcoords] () {
-    glUseProgram(program->program_id_);
+    glUseProgram(program->program_id());
 
     std::function<void(GLenum)> tvbo_func = [program, texture,
         texcoords] (GLenum target) {
       glActiveTexture(GL_TEXTURE0);
       texture->Bind();
-      glUniform1i(glGetUniformLocation(program->program_id_, "tex"), 0);
+      glUniform1i(glGetUniformLocation(program->program_id(), "tex"), 0);
 
       glBufferData(target,
           texcoords.size() * sizeof(decltype(texcoords)::value_type),
           texcoords.data(), GL_STATIC_DRAW);
 
-      GLint loc_tex_coord = glGetAttribLocation(program->program_id_, "vUV");
+      GLint loc_tex_coord = glGetAttribLocation(program->program_id(), "vUV");
 
       glVertexAttribPointer(
           loc_tex_coord,
@@ -136,7 +128,7 @@ void Geometry::Render() {
           normals.size() * sizeof(decltype(normals)::value_type),
           normals.data(), GL_STATIC_DRAW);
 
-      GLint loc_vn = glGetAttribLocation(program->program_id_, "vNormal");
+      GLint loc_vn = glGetAttribLocation(program->program_id(), "vNormal");
 
       glVertexAttribPointer(
           loc_vn,
@@ -157,7 +149,7 @@ void Geometry::Render() {
           positions.size() * sizeof(decltype(positions)::value_type),
           positions.data(), GL_STATIC_DRAW);
 
-      GLint loc_vert = glGetAttribLocation(program->program_id_, "vPosition");
+      GLint loc_vert = glGetAttribLocation(program->program_id(), "vPosition");
 
       glVertexAttribPointer(
           loc_vert,
@@ -169,20 +161,20 @@ void Geometry::Render() {
 
       glEnableVertexAttribArray(loc_vert);
 
-      GLint loc_mvp = glGetUniformLocation(program->program_id_, "mvp");
+      GLint loc_mvp = glGetUniformLocation(program->program_id(), "mvp");
       glUniformMatrix4fv(loc_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 
-      GLint loc_model = glGetUniformLocation(program->program_id_, "model");
+      GLint loc_model = glGetUniformLocation(program->program_id(), "model");
       glUniformMatrix4fv(loc_model, 1, GL_FALSE, glm::value_ptr(model));
 
       GLint loc_mat_amb =
-          glGetUniformLocation(program->program_id_, "material.ambient");
+          glGetUniformLocation(program->program_id(), "material.ambient");
       GLint loc_mat_diff =
-          glGetUniformLocation(program->program_id_, "material.diffuse");
+          glGetUniformLocation(program->program_id(), "material.diffuse");
       GLint loc_mat_spec =
-          glGetUniformLocation(program->program_id_, "material.specular");
+          glGetUniformLocation(program->program_id(), "material.specular");
       GLint loc_math_shine =
-          glGetUniformLocation(program->program_id_, "material.shininess");
+          glGetUniformLocation(program->program_id(), "material.shininess");
 
       glUniform3fv(loc_mat_amb, 1, glm::value_ptr(color));
       // glUniform3f(loc_mat_amb,  material.ambient[0] * color.x,
@@ -192,13 +184,13 @@ void Geometry::Render() {
       glUniform1f(loc_math_shine, material.shininess);
 
       GLint loc_lig_amb =
-          glGetUniformLocation(program->program_id_, "light.ambient");
+          glGetUniformLocation(program->program_id(), "light.ambient");
       GLint loc_lig_diff =
-          glGetUniformLocation(program->program_id_, "light.diffuse");
+          glGetUniformLocation(program->program_id(), "light.diffuse");
       GLint loc_lig_spec =
-          glGetUniformLocation(program->program_id_, "light.specular");
+          glGetUniformLocation(program->program_id(), "light.specular");
       GLint loc_lig_pos =
-          glGetUniformLocation(program->program_id_, "light.position");
+          glGetUniformLocation(program->program_id(), "light.position");
 
       glUniform3f(loc_lig_amb, 1.0f, 1.0f, 1.0f);
       glUniform3f(loc_lig_diff, 1.0f, 1.0f, 1.0f);

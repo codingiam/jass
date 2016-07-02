@@ -8,7 +8,7 @@
 
 #include <string>
 
-namespace Shaders {
+namespace GL {
 
 class Shader {
  public:
@@ -31,4 +31,4 @@ class Shader {
   std::string path_;
 };
 
-}  // namespace Shaders
+}  // namespace GL
