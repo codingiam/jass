@@ -9,19 +9,19 @@
 namespace Subsystems {
 
 DevIL::DevIL() {
-  this->il_initialized_ = false;
+  this->subsystem_initialized_ = false;
 }
 
 DevIL::~DevIL() {
-  if (il_initialized_) {
+  if (subsystem_initialized_) {
     ilShutDown();
-    this->il_initialized_ = false;
+    this->subsystem_initialized_ = false;
   }
 }
 
 void DevIL::Initialize() {
   ilInit();
-  this->il_initialized_ = true;
+  this->subsystem_initialized_ = true;
 }
 
 }  // namespace Subsystems

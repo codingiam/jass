@@ -18,7 +18,7 @@ class DevIL {
   void Initialize(void);
 
  private:
-  bool il_initialized_;
+  bool subsystem_initialized_;
 };
 
 }  // namespace Subsystems

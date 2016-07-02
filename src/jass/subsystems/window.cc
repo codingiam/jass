@@ -8,8 +8,6 @@
 
 #include <iostream>
 
-#include "jass/utils/debug.h"
-
 #include "jass/states/state.h"
 
 namespace {
@@ -25,7 +23,6 @@ Window::Window() {
   this->subsystem_initialized_ = false;
   this->sdl_window_ = nullptr;
   this->gl_context_ = nullptr;
-  this->glew_initialized_ = false;
 }
 
 Window::~Window() {
@@ -49,7 +46,7 @@ void Window::Initialize() {
   this->subsystem_initialized_ = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
   if (!subsystem_initialized_) {
     boost::format message =
-        boost::format("Could not initialise SDL subsystem: %s") %
+        boost::format("Could not initialize SDL subsystem: %s") %
         SDL_GetError();
     throw std::runtime_error(message.str());
   }
@@ -94,59 +91,11 @@ void Window::Initialize() {
     throw std::runtime_error(message.str());
   }
 
-  {
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
-    this->glew_initialized_ = err == GLEW_OK;
-    if (!glew_initialized_) {
-      boost::format message =
-          boost::format("Could not initialise GLEW subsystem: %s") %
-          glewGetErrorString(err);
-      throw std::runtime_error(message.str());
-    }
-    glGetError();  // ignore
+  if (SDL_GL_SetSwapInterval(0) == -1) {
+    std::cerr << "Could not configure swap interval. " << std::endl;
   }
 
-  // SDL_GL_SetSwapInterval(0);  // vsync
-
-  std::cout << "SDL initialised succesfully. " <<
-  "Video information follows: " << std::endl;
-
-  // std::cout << " Screen BPP : " <<
-  //   SDL_GetVideoSurface()->format->BitsPerPixel << std::endl;
-  std::cout << " Vendor     : " << glGetString(GL_VENDOR) << std::endl;
-  std::cout << " Renderer   : " << glGetString(GL_RENDERER) << std::endl;
-  std::cout << " Version    : " << glGetString(GL_VERSION) << std::endl;
-  // std::cout << " Extensions : " <<
-  // glGetString(GL_EXTENSIONS) << std::endl;
-
-  // int value;
-
-  // SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &value);
-  // std::cout << " Red component " << value << "b" << std::endl;
-
-  // SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &value);
-  // std::cout << " Green component " << value << "b" << std::endl;
-
-  // SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &value);
-  // std::cout << " Blue component " << value << "b" << std::endl;
-
-  EnableOpenGLErrorCallback();
-
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-  glClearDepth(1.0f);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
-
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);
-
-  glViewport(0, 0, kWidth, kHeight);
-
-  std::cout << "OpenGL initialized." << std::endl;
+  std::cout << "SDL initialized succesfully. " << std::endl;
 }
 
 void Window::SwapBuffers() {

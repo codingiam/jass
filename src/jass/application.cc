@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "jass/subsystems/window.h"
+#include "jass/subsystems/gl.h"
 #include "jass/subsystems/devil.h"
 #include "jass/states/states_manager.h"
 
@@ -23,6 +24,7 @@ Application::~Application() {
 
 void Application::Initialize() {
   InitializeWindow();
+  InitializeGL();
   InitializeDevIL();
   InitializeStates();
 }
@@ -37,6 +39,11 @@ void Application::ShutDown() {
 void Application::InitializeWindow() {
   this->window_ = std::make_shared<Subsystems::Window>();
   window_->Initialize();
+}
+
+void Application::InitializeGL() {
+  this->gl_ = std::make_shared<Subsystems::GL>();
+  gl_->Initialize();
 }
 
 void Application::InitializeDevIL() {

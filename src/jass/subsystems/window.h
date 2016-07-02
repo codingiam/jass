@@ -31,8 +31,6 @@ class Window {
 
   bool subsystem_initialized_;
 
-  bool glew_initialized_;
-
   SDL_GLContext gl_context_;
   SDL_Window *sdl_window_;
 };
