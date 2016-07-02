@@ -23,14 +23,14 @@ struct Projectile {
     this->owner_ = owner;
   }
 
-  void Update(const uint32_t dt) {
-    uint32_t diff = dt > 25 ? 25 : dt;
+  void Update(const double dt) {
+    double diff = dt > 0.25 ? 0.25 : dt;
 
     GLfloat amy = -0.5f * glm::cos(glm::pi<float>() * angle_ / 180);
     GLfloat amx = 0.5f * glm::sin(glm::pi<float>() * angle_ / 180);
 
-    ypos_ += amy * 0.5f * (diff / 25.0f);
-    xpos_ += amx * 0.5f * (diff / 25.0f);
+    ypos_ += amy * (diff / 0.15);
+    xpos_ += amx * (diff / 0.15);
   }
 
   GLuint owner_;
@@ -44,7 +44,7 @@ Projectiles::Projectiles() {
 Projectiles::~Projectiles() {
 }
 
-void Projectiles::Update(const uint32_t dt,
+void Projectiles::Update(const double dt,
       Ship *const red_ship,
       Ship *const blue_ship) {
   for (auto it = projectiles_.begin(); it != projectiles_.end(); ) {

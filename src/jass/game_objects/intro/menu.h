@@ -22,17 +22,17 @@ class Menu : public GameObject {
   void Create(void) override;
   void Start(void) override;
 
-  void Update(const uint32_t dt) override;
+  void Update(const double dt) override;
   void Render(void) override;
 
  private:
   std::shared_ptr<Drawables::Bitmap> bg_action_;
 
-  uint32_t ticks_action_;
+  double ticks_action_;
 
-  uint32_t speed_action_;
+  const double speed_action_;
 
-  float blue_action_;
+  double blue_action_;
 };
 
 }  // namespace Intro

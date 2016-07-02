@@ -23,7 +23,7 @@ class Intro : public State {
   Intro(void);
   ~Intro(void);
 
-  void Update(const uint32_t dt, const uint8_t *keystate) override;
+  void Update(const double dt, const bool *keys_states) override;
   void Render(void) override;
 
  protected:

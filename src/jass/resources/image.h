@@ -7,7 +7,7 @@
 
 #include <GL/glew.h>
 
-#include <IL/il.h>
+#include <il.h>
 
 #include <boost/filesystem.hpp>
 

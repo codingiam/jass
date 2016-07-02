@@ -26,7 +26,7 @@ namespace GameObjects {
 namespace Play {
 
 Ship::Ship(const GLfloat xpos, const GLfloat ypos, const uint32_t id,
-    const GLfloat angle, std::array<uint32_t, 6> const &keys) :
+    const GLfloat angle, std::array<int, 6> const &keys) :
   ixpos_(xpos), iypos_(ypos), id_(id), iangle_(angle), keys_(keys) {
 }
 
@@ -57,16 +57,16 @@ void Ship::Start() {
   this->ticks_ = 0;
 }
 
-void Ship::Update(const uint32_t dt, const uint8_t *keystate) {
+void Ship::Update(const double dt, const bool *keys_states) {
   ticks_ += dt;
 
-  if ((ticks_ - last_time_ACC_) > 150) {
-    if (keystate[keys_[K_UP]]) {
+  if ((ticks_ - last_time_ACC_) > 0.15) {
+    if (keys_states[keys_[K_UP]]) {
       accel_ += 0.055f;
       if (accel_ > 1.0f) this->accel_ = 1.0f;
     }
 
-    if (keystate[keys_[K_DOWN]]) {
+    if (keys_states[keys_[K_DOWN]]) {
       accel_ -= 0.055f;
       if (accel_ < -1.0f) this->accel_ = -1.0f;
     }
@@ -84,12 +84,12 @@ void Ship::Update(const uint32_t dt, const uint8_t *keystate) {
     this->last_time_ACC_ = ticks_;
   }
 
-  if ((ticks_ - last_time_ROT_) > 100) {
-    if (keystate[keys_[K_LEFT]]) {
+  if ((ticks_ - last_time_ROT_) > 0.10) {
+    if (keys_states[keys_[K_LEFT]]) {
       angle_ += 10.0f;
     }
 
-    if (keystate[keys_[K_RIGHT]]) {
+    if (keys_states[keys_[K_RIGHT]]) {
       angle_ -= 10.0f;
     }
 
@@ -99,8 +99,8 @@ void Ship::Update(const uint32_t dt, const uint8_t *keystate) {
     this->last_time_ROT_ = ticks_;
   }
 
-  if ((ticks_ - last_time_SHO_) > 100) {
-    if ((keystate[keys_[K_SHOOT]]) && (energy_ >= 0.15f)) {
+  if ((ticks_ - last_time_SHO_) > 0.10) {
+    if ((keys_states[keys_[K_SHOOT]]) && (energy_ >= 0.15f)) {
       std::shared_ptr<States::Play> play =
         std::static_pointer_cast<States::Play>(
             States::State::Find(States::kPlay).lock());
@@ -111,23 +111,24 @@ void Ship::Update(const uint32_t dt, const uint8_t *keystate) {
       play->AddProjectile(xpos_ + amx, ypos_ + amy, angle_, id_);
 
       energy_ -= 0.15f;
-
-      this->last_time_SHO_ = ticks_;
+    } else {
+      energy_ += 0.01f;
     }
 
-    energy_ += 0.01f;
     if (energy_ > 1.0f) this->energy_ = 1.0f;
+
+    this->last_time_SHO_ = ticks_;
   }
 
-  uint32_t diff = ticks_ - last_time_MOV_;
+  double diff = ticks_ - last_time_MOV_;
 
-  if (diff > 100) diff = 100;
+  if (diff > 0.10) diff = 0.10;
 
   GLfloat amy = - cos(3.141516f * angle_ / 180);
   GLfloat amx = sin(3.141516f * angle_ / 180);
 
-  ypos_ += accel_ * 0.25f * (diff / 100.f) * amy;
-  xpos_ += accel_ * 0.25f * (diff / 100.f) * amx;
+  ypos_ += accel_ * 0.25f * diff * amy;
+  xpos_ += accel_ * 0.25f * diff * amx;
 
   if (xpos_ <= -5.8f) this->xpos_ = 5.75f;
   if (xpos_ >= 5.8f) this->xpos_ = -5.75f;
@@ -135,7 +136,7 @@ void Ship::Update(const uint32_t dt, const uint8_t *keystate) {
   if (ypos_ <= -4.5f) this->ypos_ = 4.45f;
   if (ypos_ >= 4.5f) this->ypos_ = -4.45f;
 
-  if (diff > 100) {
+  if (diff > 0.10) {
     this->last_time_MOV_ = ticks_;
   }
 }

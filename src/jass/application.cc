@@ -33,7 +33,7 @@ void Application::ShutDown() {
   states_manager_.reset();
   devil_.reset();
   window_.reset();
-  SDL_Quit();
+//  SDL_Quit();
 }
 
 void Application::InitializeWindow() {

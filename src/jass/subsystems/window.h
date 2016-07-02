@@ -6,7 +6,7 @@
 #define JASS_SUBSYSTEMS_WINDOW_H_
 
 #include <GL/glew.h>
-#include <SDL.h>
+#include <GLFW/glfw3.h>
 
 namespace Subsystems {
 
@@ -27,12 +27,11 @@ class Window {
   void SwapBuffers(void);
 
  private:
-  void Tick(const uint32_t dt);
+  void Tick(const double dt);
 
   bool subsystem_initialized_;
 
-  SDL_GLContext gl_context_;
-  SDL_Window *sdl_window_;
+  GLFWwindow *window_;
 };
 
 }  // namespace Subsystems

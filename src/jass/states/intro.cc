@@ -53,16 +53,16 @@ void Intro::Start() {
 void Intro::Stop() {
 }
 
-void Intro::Update(const uint32_t dt, const uint8_t *keystate) {
+void Intro::Update(const double dt, const bool *keys_states) {
   bg_intro_->Update(dt);
   bg_intro_text_->Update(dt);
   bg_action_->Update(dt);
 
-  if (keystate[SDL_SCANCODE_SPACE])
-      State::SetState(State::Find(States::kPlay).lock().get());
+  if (keys_states[GLFW_KEY_SPACE])
+    State::SetState(State::Find(States::kPlay).lock().get());
 
-  if (keystate[SDL_SCANCODE_F10])
-      State::SetState(NULL);
+  if (keys_states[GLFW_KEY_F10])
+    State::SetState(NULL);
 }
 
 void Intro::Render() {

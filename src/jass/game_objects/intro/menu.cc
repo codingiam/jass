@@ -9,9 +9,7 @@
 namespace GameObjects {
 namespace Intro {
 
-Menu::Menu() {
-  this->ticks_action_ = 0;
-  this->speed_action_ = 2 * 1000;
+Menu::Menu() : speed_action_(2.0) {
 }
 
 Menu::~Menu() {
@@ -27,12 +25,12 @@ void Menu::Create() {
   this->bg_action_->Create();
 }
 
-void Menu::Update(const uint32_t dt) {
+void Menu::Update(const double dt) {
   this->ticks_action_ += dt;
 
-  this->blue_action_ = static_cast<float>(ticks_action_) / speed_action_;
+  this->blue_action_ = ticks_action_ / speed_action_;
 
-  if (blue_action_ >= 1.0f) this->ticks_action_ -= speed_action_;
+  if (blue_action_ >= 1.0) this->ticks_action_ -= speed_action_;
 }
 
 void Menu::Render() {

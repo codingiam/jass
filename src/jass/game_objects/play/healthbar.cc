@@ -28,7 +28,7 @@ void Healthbar::Create() {
 void Healthbar::Start() {
 }
 
-void Healthbar::Update(const uint32_t dt) {
+void Healthbar::Update(const double dt) {
   this->life_ =
       std::static_pointer_cast<Ship>(parent_.lock())->GetLife();
 }

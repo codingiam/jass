@@ -11,40 +11,42 @@
 #include "jass/drawables/font.h"
 
 namespace {
-  const std::array<const char *, 10> introText = {
-    "  Acest joc este proiectul nostru pentru",
-    "cursul de grafica.",
-    "  Sper ca va v-a face placere sa-l jucati si",
-    "bineintles sa ne dati o nota pe masura",
-    "efortului.",
-    "  Scopul jocului este sa scapati cu nava",
-    "intacta din batalie.",
-    " ",
-    "  Si acuma urmeaza tastele:",
-    " "
-  };
+const std::array<const char *, 10> introText = {
+  "  Acest joc este proiectul nostru pentru",
+  "cursul de grafica.",
+  "  Sper ca va v-a face placere sa-l jucati si",
+  "bineintles sa ne dati o nota pe masura",
+  "efortului.",
+  "  Scopul jocului este sa scapati cu nava",
+  "intacta din batalie.",
+  " ",
+  "  Si acuma urmeaza tastele:",
+  " "
+};
+
+uint32_t intro_text_size(void) {
+  uint32_t size_intro_text = 0;
+
+  for (int i = 0; i < 10; i++) {
+    size_intro_text += strlen(introText[i]);
+  }
+
+  return size_intro_text;
+}
 }  // namespace
 
 namespace GameObjects {
 namespace Intro {
 
-Text::Text() {
-  this->ticks_intro_text_ = 0;
-
-  this->speed_intro_text_ = 10 * 1000;
-
-  this->size_intro_text_ = 0;
-
-  for (int i = 0; i < 10; i++) {
-    this->size_intro_text_ += strlen(introText[i]);  // introText[i].length();
-  }
+Text::Text() : speed_intro_text_(10.0), size_intro_text_(intro_text_size()) {
 }
 
 Text::~Text() {
 }
 
 void Text::Start() {
-  this->ticks_intro_text_ = 0;
+  this->ticks_intro_text_ = 0.0;
+  this->show_to_ = 0;
 }
 
 void Text::Create() {
@@ -52,13 +54,12 @@ void Text::Create() {
   this->font_->Create();
 }
 
-void Text::Update(const uint32_t dt) {
+void Text::Update(const double dt) {
   this->ticks_intro_text_ += dt;
 
-  this->position_text_ =
-    static_cast<float>(ticks_intro_text_) / speed_intro_text_;
+  this->position_text_ = ticks_intro_text_ / speed_intro_text_;
 
-  if (position_text_ >= 1.0f) this->position_text_ = 1.0f;
+  if (position_text_ >= 1.0) this->position_text_ = 1.0;
 
   this->show_to_ = (uint32_t) (size_intro_text_ * position_text_);
 }

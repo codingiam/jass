@@ -7,136 +7,125 @@
 #include <boost/format.hpp>
 
 #include <iostream>
+#include <iomanip>
 
 #include "jass/states/state.h"
 
 namespace {
-const uint32_t TARGET_FPS = 60;
-const uint32_t MAX_DT = 1000;  // ms
 
-const uint32_t TARGET_DT = MAX_DT / TARGET_FPS;
+const uint32_t TARGET_FPS = 60;
+const double MAX_DT = 1.0;  // second
+const double TARGET_DT = MAX_DT / TARGET_FPS;
+
+bool keys_states[GLFW_KEY_LAST + 1] = { false };
+
+void ErrorCallback(int error, const char *description)
+{
+  fprintf(stderr, "Error: %s\n", description);
+  throw std::runtime_error("glfw call returned an error");
+}
+
+void KeyCallback(GLFWwindow *window, int key, int scancode, int action,
+    int mods)
+{
+  if (key >= 0 && key <= GLFW_KEY_LAST)
+    keys_states[key] = action != GLFW_RELEASE;
+}
+
 }
 
 namespace Subsystems {
 
 Window::Window() {
   this->subsystem_initialized_ = false;
-  this->sdl_window_ = nullptr;
-  this->gl_context_ = nullptr;
+  this->window_ = nullptr;
 }
 
 Window::~Window() {
-  if (gl_context_) {
-    SDL_GL_DeleteContext(gl_context_);
-    this->gl_context_ = nullptr;
-  }
-
-  if (sdl_window_) {
-    SDL_DestroyWindow(sdl_window_);
-    this->sdl_window_ = nullptr;
+  if (window_) {
+    glfwDestroyWindow(window_);
+    this->window_ = nullptr;
   }
 
   if (subsystem_initialized_) {
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+    glfwTerminate();
     this->subsystem_initialized_ = false;
   }
 }
 
 void Window::Initialize() {
-  this->subsystem_initialized_ = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
+  glfwSetErrorCallback(ErrorCallback);
+
+  this->subsystem_initialized_ = glfwInit() == GL_TRUE;
   if (!subsystem_initialized_) {
-    boost::format message =
-        boost::format("Could not initialize SDL subsystem: %s") %
-        SDL_GetError();
-    throw std::runtime_error(message.str());
+    throw std::runtime_error("Could not initialize GLFW subsystem.");
   }
 
-  SDL_ShowCursor(SDL_DISABLE);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
-      SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
-      SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 0);
+  glfwWindowHint(GLFW_RED_BITS, 8);
+  glfwWindowHint(GLFW_GREEN_BITS, 8);
+  glfwWindowHint(GLFW_BLUE_BITS, 8);
+  glfwWindowHint(GLFW_ALPHA_BITS, 0);
 
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
+  glfwWindowHint(GLFW_DEPTH_BITS, 24);
+  glfwWindowHint(GLFW_STENCIL_BITS, 0);
 
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
 
-  uint32_t video_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;  // SDL_HWSURFACE
-
-//  if (kFull == (true)) {
-//    video_flags |= SDL_WINDOW_FULLSCREEN;
-//  }
-
-  this->sdl_window_ = SDL_CreateWindow("J.A.S.S - Project",
-      SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      kWidth, kHeight,
-      video_flags);
-  if (!sdl_window_) {
+  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+  this->window_ = glfwCreateWindow(kWidth, kHeight, "J.A.S.S - Project",
+      NULL, NULL);
+  if (!window_) {
     throw std::runtime_error("Could not create window");
   }
 
-  this->gl_context_ = SDL_GL_CreateContext(sdl_window_);
-  if (!gl_context_) {
-    boost::format message =
-        boost::format("Could not create OpenGL context: %s") % SDL_GetError();
-    throw std::runtime_error(message.str());
-  }
+  glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-  if (SDL_GL_SetSwapInterval(0) == -1) {
-    std::cerr << "Could not configure swap interval. " << std::endl;
-  }
+  glfwSetKeyCallback(window_, KeyCallback);
+
+  glfwMakeContextCurrent(window_);
+
+  glfwSwapInterval(0);
 
   std::cout << "SDL initialized succesfully. " << std::endl;
 }
 
 void Window::SwapBuffers() {
-  SDL_GL_SwapWindow(sdl_window_);
+  glfwSwapBuffers(window_);
 }
 
 void Window::Run() {
-  uint32_t dt = TARGET_DT;
-  uint32_t begin_ms = SDL_GetTicks();
+  double dt = TARGET_DT;
+  double last = glfwGetTime();
 
-  while (States::State::GetState() != NULL) {
+  while (!glfwWindowShouldClose(window_) && States::State::GetState() != NULL) {
     Tick(dt);
 
-    const uint32_t end_ms = SDL_GetTicks();
+    glfwPollEvents();
 
-    dt = end_ms - begin_ms;
+    const double now = glfwGetTime();
+
+    dt = now - last;
 
     if (dt > MAX_DT) {
       dt = TARGET_DT;
     }
 
-    begin_ms = end_ms;
+    last = now;
   }
 }
 
-void Window::Tick(const uint32_t dt) {
-  const uint8_t *keys_state = SDL_GetKeyboardState(NULL);
-
-  States::State::GetState()->Update(dt, keys_state);
+void Window::Tick(const double dt) {
+  States::State::GetState()->Update(dt, keys_states);
 
   States::State::GetState()->Render();
 
   SwapBuffers();
-
-  SDL_Event sdl_event;
-
-  while (SDL_PollEvent(&sdl_event)) {
-    if (sdl_event.type == SDL_QUIT) {
-      States::State::SetState(NULL);
-    }
-  }
 
   States::State::Swap();
 }

@@ -25,11 +25,11 @@ class GameObject {
   virtual void Create(void) { }
   virtual void Start(void) { }
 
-  virtual void Update(const uint32_t dt,
+  virtual void Update(const double dt,
       Play::Ship *const red_ship,
       Play::Ship *const blue_ship) {}
-  virtual void Update(const uint32_t dt, const uint8_t *keystate) { }
-  virtual void Update(const uint32_t dt) { }
+  virtual void Update(const double dt, const bool *keys_states) { }
+  virtual void Update(const double dt) { }
   virtual void Render(void) { }
 
 //  virtual bool Updatable(void) { return false; }

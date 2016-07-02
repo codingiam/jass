@@ -28,7 +28,7 @@ class Play : public State {
   Play(void);
   ~Play(void);
 
-  void Update(const uint32_t dt, const uint8_t *keystate) override;
+  void Update(const double dt, const bool *keys_states) override;
   void Render(void) override;
 
   void AddProjectile(const GLfloat xpos, const GLfloat ypos,

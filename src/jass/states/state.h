@@ -21,7 +21,7 @@ class State {
 
   virtual void Create(void) = 0;
   virtual void Start(void) = 0;
-  virtual void Update(const uint32_t dt, const uint8_t *keystate) = 0;
+  virtual void Update(const double dt, const bool *keys_states) = 0;
   virtual void Render(void) = 0;
   virtual void Stop(void) = 0;
   virtual void Destroy(void) { }

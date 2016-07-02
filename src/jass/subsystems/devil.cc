@@ -4,7 +4,7 @@
 
 #include "jass/subsystems/devil.h"
 
-#include <IL/il.h>
+#include <il.h>
 
 namespace Subsystems {
 

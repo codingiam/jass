@@ -29,7 +29,7 @@ class Projectiles : public GameObject {
 
   void Create(void) override;
 
-  void Update(const uint32_t dt,
+  void Update(const double dt,
       Ship *const red_ship,
       Ship *const blue_ship) override;
   void Render(void) override;

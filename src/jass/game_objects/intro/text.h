@@ -22,20 +22,20 @@ class Text : public GameObject {
   void Create(void) override;
   void Start(void) override;
 
-  void Update(const uint32_t dt) override;
+  void Update(const double dt) override;
   void Render(void) override;
 
  private:
   std::shared_ptr<Drawables::Font> font_;
 
-  uint32_t ticks_intro_text_;
-  uint32_t speed_intro_text_;
+  double ticks_intro_text_;
+  const double speed_intro_text_;
 
-  float position_text_;
+  double position_text_;
 
   uint32_t show_to_;
 
-  uint32_t size_intro_text_;
+  const uint32_t size_intro_text_;
 };
 
 }  // namespace Intro

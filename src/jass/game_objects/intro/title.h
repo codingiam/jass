@@ -22,7 +22,7 @@ class Title : public GameObject {
   void Create(void) override;
   void Start(void) override;
 
-  void Update(const uint32_t dt) override;
+  void Update(const double dt) override;
   void Render(void) override;
 
  private:
