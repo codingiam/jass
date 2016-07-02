@@ -18,7 +18,7 @@
 
 namespace Drawables {
 
-Bitmap::Bitmap(std::string const &path) : path_(path) {
+Bitmap::Bitmap(boost::filesystem::path const &path) : path_(path) {
   this->width_ = 0;
   this->height_ = 0;
 }

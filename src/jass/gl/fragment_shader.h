@@ -13,7 +13,7 @@ namespace GL {
 
 class FragmentShader : public Shader {
  public:
-  explicit FragmentShader(std::string const &path);
+  explicit FragmentShader(boost::filesystem::path const &path);
   ~FragmentShader(void);
 
   void Create(void) override;

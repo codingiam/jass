@@ -8,7 +8,7 @@
 
 namespace GL {
 
-FragmentShader::FragmentShader(std::string const &path) : Shader(path) {
+FragmentShader::FragmentShader(boost::filesystem::path const &path) : Shader(path) {
 }
 
 FragmentShader::~FragmentShader() {

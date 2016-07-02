@@ -7,6 +7,8 @@
 
 #include <GL/glew.h>
 
+#include <boost/filesystem.hpp>
+
 #include <memory>
 #include <string>
 
@@ -20,8 +22,8 @@ class Program {
   Program(void);
   ~Program(void);
 
-  void Create(std::string const &vertex_shader_path,
-      std::string const &fragment_shader_path);
+  void Create(boost::filesystem::path const &vertex_shader_path,
+      boost::filesystem::path const &fragment_shader_path);
 
   GLuint program_id(void) {
     return this->program_id_;

@@ -5,15 +5,13 @@
 #ifndef JASS_GL_VERTEX_SHADER_H_
 #define JASS_GL_VERTEX_SHADER_H_
 
-#include <string>
-
 #include "jass/gl/shader.h"
 
 namespace GL {
 
 class VertexShader : public Shader {
  public:
-  explicit VertexShader(std::string const &path);
+  explicit VertexShader(boost::filesystem::path const &path);
   ~VertexShader(void);
 
   void Create(void) override;

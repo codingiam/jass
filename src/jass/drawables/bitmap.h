@@ -7,6 +7,8 @@
 
 #include <GL/glew.h>
 
+#include <boost/filesystem.hpp>
+
 #include <string>
 #include <memory>
 
@@ -23,7 +25,7 @@ namespace Drawables {
 
 class Bitmap : public Drawable {
  public:
-  explicit Bitmap(std::string const &path);
+  explicit Bitmap(boost::filesystem::path const &path);
   virtual ~Bitmap(void);
 
   void Create(void) override;
@@ -37,7 +39,7 @@ class Bitmap : public Drawable {
 
   std::shared_ptr<GL::Texture> texture_;
 
-  std::string path_;
+  boost::filesystem::path path_;
 
   GLfloat width_;
   GLfloat height_;

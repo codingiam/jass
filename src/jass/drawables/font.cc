@@ -20,7 +20,7 @@
 
 namespace Drawables {
 
-Font::Font(std::string const &path) : path_(path) {
+Font::Font(boost::filesystem::path const &path) : path_(path) {
 }
 
 Font::~Font() {

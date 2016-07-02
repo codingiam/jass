@@ -21,7 +21,7 @@
 
 namespace Drawables {
 
-Geometry::Geometry(std::string const &path) : path_(path) {
+Geometry::Geometry(boost::filesystem::path const &path) : path_(path) {
 }
 
 Geometry::~Geometry() {

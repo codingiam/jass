@@ -12,7 +12,7 @@
 
 namespace GL {
 
-Shader::Shader(std::string const &path) {
+Shader::Shader(boost::filesystem::path const &path) {
   this->path_ = path;
   this->shader_id_ = 0;
 }
@@ -53,7 +53,7 @@ void Shader::Create(const GLenum shader_type) {
 }
 
 std::string Shader::LoadSource() {
-  std::ifstream data_source { path_, std::ifstream::in };
+  std::ifstream data_source { path_.c_str(), std::ifstream::in };
   if (!data_source.is_open()) {
     boost::format message =
       boost::format("Could not load shader: %s") % path_;

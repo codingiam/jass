@@ -7,13 +7,15 @@
 
 #include <GL/glew.h>
 
+#include <boost/filesystem.hpp>
+
 #include <string>
 
 namespace GL {
 
 class Shader {
  public:
-  explicit Shader(std::string const &path);
+  explicit Shader(boost::filesystem::path const &path);
   virtual ~Shader(void);
 
   virtual void Create(void) = 0;
@@ -29,7 +31,7 @@ class Shader {
   std::string LoadSource(void);
 
   GLuint shader_id_;
-  std::string path_;
+  boost::filesystem::path path_;
 };
 
 }  // namespace GL

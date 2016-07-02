@@ -5,6 +5,8 @@
 #ifndef JASS_DRAWABLES_FONT_H_
 #define JASS_DRAWABLES_FONT_H_
 
+#include <boost/filesystem.hpp>
+
 #include <string>
 #include <memory>
 
@@ -21,7 +23,7 @@ namespace Drawables {
 
 class Font : public Drawable {
  public:
-  explicit Font(std::string const &path);
+  explicit Font(boost::filesystem::path const &path);
   virtual ~Font(void);
 
   void Create(void) override;
@@ -36,7 +38,7 @@ class Font : public Drawable {
 
   std::shared_ptr<GL::Texture> texture_;
 
-  std::string path_;
+  boost::filesystem::path path_;
 
   std::string text_;
 

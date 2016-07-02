@@ -26,8 +26,8 @@ Program::~Program() {
   }
 }
 
-void Program::Create(std::string const &vertex_shader_path,
-    std::string const &fragment_shader_path) {
+void Program::Create(boost::filesystem::path const &vertex_shader_path,
+    boost::filesystem::path const &fragment_shader_path) {
   auto vertex_shader =
       std::make_shared<VertexShader>(vertex_shader_path);
   vertex_shader->Create();

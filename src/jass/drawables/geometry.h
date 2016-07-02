@@ -5,6 +5,8 @@
 #ifndef JASS_DRAWABLES_GEOMETRY_H_
 #define JASS_DRAWABLES_GEOMETRY_H_
 
+#include <boost/filesystem.hpp>
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -23,7 +25,7 @@ namespace Drawables {
 
 class Geometry : public Drawable {
  public:
-  explicit Geometry(std::string const &path);
+  explicit Geometry(boost::filesystem::path const &path);
   virtual ~Geometry(void);
 
   void Create(void) override;
@@ -35,7 +37,7 @@ class Geometry : public Drawable {
   std::vector<tinyobj::shape_t> shapes_;
   std::vector<tinyobj::material_t> materials_;
 
-  std::string path_;
+  boost::filesystem::path path_;
 
   std::shared_ptr<GL::Texture> texture_;
 

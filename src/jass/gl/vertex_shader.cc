@@ -4,11 +4,9 @@
 
 #include "jass/gl/vertex_shader.h"
 
-#include <string>
-
 namespace GL {
 
-VertexShader::VertexShader(std::string const &path) : Shader(path) {
+VertexShader::VertexShader(boost::filesystem::path const &path) : Shader(path) {
 }
 
 VertexShader::~VertexShader() {
