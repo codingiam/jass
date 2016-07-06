@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 
 #include <memory>
+#include <functional>
 
 namespace Resources {
 class Image;

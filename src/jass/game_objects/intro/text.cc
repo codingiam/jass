@@ -4,6 +4,8 @@
 
 #include "jass/game_objects/intro/text.h"
 
+#include <array>
+
 #include "jass/resources/image.h"
 
 #include "jass/drawables/font.h"

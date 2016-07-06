@@ -36,14 +36,11 @@ void Shader::Create(const GLenum shader_type) {
     glGetShaderiv(shader_id_, GL_INFO_LOG_LENGTH, &log_length);
 
     if (log_length > 0) {
-      std::vector<char> error_message;
+      std::unique_ptr<GLchar[]> error_message = std::make_unique<GLchar[]>(log_length);
 
-      error_message.reserve(static_cast<size_t>(log_length));
+      glGetShaderInfoLog(shader_id_, log_length, NULL, error_message.get());
 
-      glGetShaderInfoLog(shader_id_, log_length, NULL,
-          &error_message[0]);
-
-      fprintf(stderr, "%s\n", &error_message[0]);
+      fprintf(stderr, "%s\n", error_message.get());
     }
 
     boost::format message =

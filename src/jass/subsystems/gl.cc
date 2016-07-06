@@ -38,7 +38,7 @@ void GL::Initialize() {
     glGetError();  // ignore
   }
 
-  EnableOpenGLErrorCallback();
+  // EnableOpenGLErrorCallback();
 
   std::cout << "Video information follows: " << std::endl;
 

@@ -8,6 +8,7 @@
 #include <glm/gtx/transform.hpp>
 
 #include <vector>
+#include <array>
 
 #include "jass/resources/image.h"
 #include "jass/gl/texture.h"

@@ -1,4 +1,4 @@
-#version 430 core
+#version 410 core
 
 in vec2 fTexCoord;
 in vec3 fNormal;
@@ -24,7 +24,7 @@ uniform vec3 viewPos;
 uniform Material material;
 uniform Light light;
 
-layout(binding = 0) uniform sampler2D tex;
+uniform sampler2D tex;
 
 out vec4 color;
 

@@ -7,7 +7,7 @@
 #include <GL/glew.h>
 
 #include <execinfo.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #include <boost/format.hpp>
 
