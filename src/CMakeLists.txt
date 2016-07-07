@@ -1,0 +1,60 @@
+IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Wno-unused-parameter -Wno-missing-braces -Wpedantic -D_DEBUG -fsanitize=address -fno-omit-frame-pointer")
+ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Wno-unused-parameter -Wpedantic -D_DEBUG")
+ENDIF()
+
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY
+    ${CMAKE_SOURCE_DIR}/exe)
+
+FILE(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
+
+ADD_EXECUTABLE(jass ${SRC_FILES})
+
+IF(APPLE)
+
+INCLUDE_DIRECTORIES(
+    ${OPENGL_INCLUDE_DIR}
+    ${GLEW_INCLUDE_DIRS}
+    ${GLM_INCLUDE_DIR}
+    ${GLFW3_INCLUDE_DIR}
+    ${IL_INCLUDE_DIR}
+    ${Boost_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+TARGET_LINK_LIBRARIES(jass
+    ${OPENGL_LIBRARIES}
+    ${GLEW_LIBRARIES}
+    ${GLFW3_LIBRARY}
+    ${IL_LIBRARIES}
+    ${Boost_LIBRARIES}
+)
+
+ELSE()
+
+INCLUDE_DIRECTORIES(
+    ${OPENGL_INCLUDE_DIR}
+    ${GLEW_INCLUDE_DIRS}
+    ${GLM_INCLUDE_DIR}
+    ${IL_INCLUDE_DIR}
+    ${Boost_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+TARGET_LINK_LIBRARIES(jass
+    ${OPENGL_LIBRARIES}
+    ${GLEW_LIBRARIES}
+    glfw
+    ${IL_LIBRARIES}
+    ${Boost_LIBRARIES}
+)
+
+ENDIF()
+
+SET_PROPERTY(TARGET jass PROPERTY CXX_STANDARD 14)
+
+# get_cmake_property(_variableNames VARIABLES)
+# foreach (_variableName ${_variableNames})
+#   message(STATUS "${_variableName}=${${_variableName}}")
+# endforeach()
