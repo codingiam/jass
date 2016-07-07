@@ -5,7 +5,7 @@
 #ifndef JASS_RESOURCES_IMAGE_H_
 #define JASS_RESOURCES_IMAGE_H_
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <il.h>
 

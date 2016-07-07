@@ -5,7 +5,7 @@
 #ifndef JASS_DRAWABLES_BITMAP_H_
 #define JASS_DRAWABLES_BITMAP_H_
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <boost/filesystem.hpp>
 

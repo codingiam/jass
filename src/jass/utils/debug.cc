@@ -4,7 +4,7 @@
 
 #include "jass/utils/debug.h"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <execinfo.h>
 #include <stdlib.h>
@@ -30,22 +30,22 @@ void Backtrace() {
   free(strings);
 }
 
-void APIENTRY OpenGLCallbackFunction(GLenum source,
-                                     GLenum type,
-                                     GLuint id,
-                                     GLenum severity,
-                                     GLsizei length,
-                                     const GLchar *message,
-                                     const void *userParam) {
-  if (type != GL_DEBUG_TYPE_OTHER) {
-    const GLchar *msg = length > 0 ? message : "";
-    std::cerr << boost::format("OpenGL error: source = %08x, type = %08x, "
-        "id = %u, severity = %08x, userParam = %08x, message = %s") %
-        source % type % id % severity % userParam % msg << std::endl;
-    Backtrace();
-    throw std::runtime_error("OpenGL call returned an error");
-  }
-}
+// void APIENTRY OpenGLCallbackFunction(GLenum source,
+//                                      GLenum type,
+//                                      GLuint id,
+//                                      GLenum severity,
+//                                      GLsizei length,
+//                                      const GLchar *message,
+//                                      const void *userParam) {
+//   if (type != GL_DEBUG_TYPE_OTHER) {
+//     const GLchar *msg = length > 0 ? message : "";
+//     std::cerr << boost::format("OpenGL error: source = %08x, type = %08x, "
+//         "id = %u, severity = %08x, userParam = %08x, message = %s") %
+//         source % type % id % severity % userParam % msg << std::endl;
+//     Backtrace();
+//     throw std::runtime_error("OpenGL call returned an error");
+//   }
+// }
 
 void CheckOpenGLError(const char *stmt, const char *fname, int line) {
   GLenum err = glGetError();
@@ -63,14 +63,14 @@ void CheckOpenGLError(const char *stmt, const char *fname, int line) {
 }
 
 void EnableOpenGLErrorCallback() {
-  GL_CHECK(glEnable(GL_DEBUG_OUTPUT));
+  // GL_CHECK(glEnable(GL_DEBUG_OUTPUT));
 
-  GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS));
+  // GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS));
 
-  GL_CHECK(glDebugMessageCallback(OpenGLCallbackFunction, nullptr));
+  // GL_CHECK(glDebugMessageCallback(OpenGLCallbackFunction, nullptr));
 
-  GLuint unusedIds = 0;
+  // GLuint unusedIds = 0;
 
-  GL_CHECK(glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE,
-    0, &unusedIds, GL_TRUE));
+  // GL_CHECK(glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE,
+  //   0, &unusedIds, GL_TRUE));
 }

@@ -5,7 +5,7 @@
 #ifndef JASS_GAME_OBJECTS_PLAY_PROJECTILES_H_
 #define JASS_GAME_OBJECTS_PLAY_PROJECTILES_H_
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <vector>
 

@@ -5,7 +5,7 @@
 #ifndef JASS_STATES_PLAY_H_
 #define JASS_STATES_PLAY_H_
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <vector>
 

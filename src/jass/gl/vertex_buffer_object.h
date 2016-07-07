@@ -5,7 +5,7 @@
 #ifndef JASS_GL_VERTEX_BUFFER_OBJECT_H_
 #define JASS_GL_VERTEX_BUFFER_OBJECT_H_
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <functional>
 

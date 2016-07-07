@@ -15,7 +15,6 @@ IF(APPLE)
 
 INCLUDE_DIRECTORIES(
     ${OPENGL_INCLUDE_DIR}
-    ${GLEW_INCLUDE_DIRS}
     ${GLM_INCLUDE_DIR}
     ${GLFW3_INCLUDE_DIR}
     ${IL_INCLUDE_DIR}
@@ -25,7 +24,6 @@ INCLUDE_DIRECTORIES(
 
 TARGET_LINK_LIBRARIES(jass
     ${OPENGL_LIBRARIES}
-    ${GLEW_LIBRARIES}
     ${GLFW3_LIBRARY}
     ${IL_LIBRARIES}
     ${Boost_LIBRARIES}
@@ -36,7 +34,6 @@ ELSE()
 
 INCLUDE_DIRECTORIES(
     ${OPENGL_INCLUDE_DIR}
-    ${GLEW_INCLUDE_DIRS}
     ${GLM_INCLUDE_DIR}
     ${IL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
@@ -45,7 +42,6 @@ INCLUDE_DIRECTORIES(
 
 TARGET_LINK_LIBRARIES(jass
     ${OPENGL_LIBRARIES}
-    ${GLEW_LIBRARIES}
     glfw
     ${IL_LIBRARIES}
     ${Boost_LIBRARIES}
@@ -55,8 +51,3 @@ TARGET_LINK_LIBRARIES(jass
 ENDIF()
 
 SET_PROPERTY(TARGET jass PROPERTY CXX_STANDARD 14)
-
-# get_cmake_property(_variableNames VARIABLES)
-# foreach (_variableName ${_variableNames})
-#   message(STATUS "${_variableName}=${${_variableName}}")
-# endforeach()

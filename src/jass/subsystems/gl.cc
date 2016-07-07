@@ -4,7 +4,8 @@
 
 #include "jass/subsystems/gl.h"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #include <boost/format.hpp>
 
@@ -25,17 +26,10 @@ GL::~GL() {
 }
 
 void GL::Initialize() {
-  {
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
-    this->subsystem_initialized_ = err == GLEW_OK;
-    if (!subsystem_initialized_) {
-      boost::format message =
-          boost::format("Could not initialize GLEW: %s") %
-          glewGetErrorString(err);
-      throw std::runtime_error(message.str());
-    }
-    glGetError();  // ignore
+  this->subsystem_initialized_ = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+
+  if (!subsystem_initialized_) {
+    throw std::runtime_error("Could not initialize OpenGL Loading Library.");
   }
 
   // EnableOpenGLErrorCallback();

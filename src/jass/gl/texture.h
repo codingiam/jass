@@ -5,7 +5,7 @@
 #ifndef JASS_GL_TEXTURE_H_
 #define JASS_GL_TEXTURE_H_
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <memory>
 #include <functional>

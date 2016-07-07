@@ -5,7 +5,7 @@
 #ifndef JASS_DRAWABLES_PRIMITIVES_H_
 #define JASS_DRAWABLES_PRIMITIVES_H_
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <vector>
 #include <memory>

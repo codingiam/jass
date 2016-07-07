@@ -5,7 +5,7 @@
 #ifndef JASS_SUBSYSTEMS_WINDOW_H_
 #define JASS_SUBSYSTEMS_WINDOW_H_
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Subsystems {

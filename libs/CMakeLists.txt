@@ -1,10 +1,15 @@
-FILE(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
+IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Wno-unused-parameter -Wno-missing-braces -Wpedantic -D_DEBUG -fsanitize=address -fno-omit-frame-pointer")
+ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Wno-unused-parameter -Wpedantic -D_DEBUG")
+ENDIF()
+
+ENABLE_LANGUAGE(C)
+
+FILE(GLOB_RECURSE SRC_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
 
 ADD_LIBRARY(libs ${SRC_FILES})
 
 TARGET_INCLUDE_DIRECTORIES(libs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-# get_cmake_property(_variableNames VARIABLES)
-# foreach (_variableName ${_variableNames})
-#   message(STATUS "${_variableName}=${${_variableName}}")
-# endforeach()
