@@ -11,8 +11,10 @@
 #include <vector>
 #include <memory>
 
+#include <tiny_obj_loader.h>
+
 #include "jass/drawables/drawable.h"
-#include "jass/resources/tiny_obj_loader.h"
+
 
 namespace GL {
 class VertexArrayObject;

@@ -29,6 +29,7 @@ TARGET_LINK_LIBRARIES(jass
     ${GLFW3_LIBRARY}
     ${IL_LIBRARIES}
     ${Boost_LIBRARIES}
+    libs
 )
 
 ELSE()
@@ -48,6 +49,7 @@ TARGET_LINK_LIBRARIES(jass
     glfw
     ${IL_LIBRARIES}
     ${Boost_LIBRARIES}
+    libs
 )
 
 ENDIF()

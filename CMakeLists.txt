@@ -25,6 +25,7 @@ IF(NOT (CMAKE_BUILD_TYPE MATCHES "Debug"))
     MESSAGE(WARNING "Only Debug build is configured")
 ENDIF()
 
+ADD_SUBDIRECTORY(libs)
 ADD_SUBDIRECTORY(src)
 
 # get_cmake_property(_variableNames VARIABLES)

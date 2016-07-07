@@ -4,4 +4,4 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 
-#include "jass/resources/tiny_obj_loader.h"
+#include "tiny_obj_loader.h"
