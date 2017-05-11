@@ -1,5 +1,5 @@
 /jass.xcodeproj/
-/exe/jass
+/exe/
 *.dll
 /Debug/*
 /stdout.txt
@@ -8,3 +8,4 @@
 /.idea/
 /build/
 /.vscode/
+/extern/
