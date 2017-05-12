@@ -6,7 +6,10 @@
 
 #include <glad/glad.h>
 
-#include <execinfo.h>
+#ifndef _WINDOWS
+  #include <execinfo.h>
+#endif
+
 #include <stdlib.h>
 
 #include <boost/format.hpp>
@@ -16,6 +19,8 @@
 #ifndef APIENTRY
   #define APIENTRY
 #endif
+
+#ifndef _WINDOWS
 
 void Backtrace() {
   void *array[15];
@@ -29,6 +34,8 @@ void Backtrace() {
 
   free(strings);
 }
+
+#endif
 
 // void APIENTRY OpenGLCallbackFunction(GLenum source,
 //                                      GLenum type,

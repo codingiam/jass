@@ -2,6 +2,8 @@ IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Wno-unused-parameter -Wno-missing-braces -Wpedantic -D_DEBUG -fsanitize=address -fno-omit-frame-pointer")
 ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Wextra -Wno-unused-parameter -Wpedantic -D_DEBUG")
+ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Od -W0 -D_DEBUG")
 ENDIF()
 
 ENABLE_LANGUAGE(C)

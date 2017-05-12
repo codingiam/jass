@@ -32,7 +32,7 @@ void Geometry::Create() {
   std::string err;
 
   bool ret = tinyobj::LoadObj(shapes_, materials_, err,
-      path_.c_str(), "resources/objects/");
+      path_.string().c_str(), "resources/objects/");
 
   if (!ret) {
     boost::format message =

@@ -69,7 +69,7 @@ void Bitmap::Render() {
   };
 
   std::function<void(void)> func_vbo = [vbo, program, model, mp, texture,
-      g_vertex_buffer_data, color] () {
+      &g_vertex_buffer_data, color] () {
     glUseProgram(program->program_id());
 
     glActiveTexture(GL_TEXTURE0);
@@ -77,7 +77,7 @@ void Bitmap::Render() {
     glUniform1i(glGetUniformLocation(program->program_id(), "tex"), 0);
 
     std::function<void(GLenum)> func =
-        [g_vertex_buffer_data] (GLenum target) {
+        [&g_vertex_buffer_data] (GLenum target) {
           glBufferData(target, sizeof(g_vertex_buffer_data),
               g_vertex_buffer_data, GL_STATIC_DRAW);
     };
