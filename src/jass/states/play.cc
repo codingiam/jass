@@ -6,7 +6,7 @@
 
 #include "jass/application.h"
 #include "jass/states/states_manager.h"
-#include "jass/subsystems/window.h"
+#include "jass/subsystems/gl_window.h"
 #include "jass/resources/image.h"
 
 #include "jass/game_objects/play/background.h"

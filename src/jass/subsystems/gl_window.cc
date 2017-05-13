@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/subsystems/window.h"
+#include "jass/subsystems/gl_window.h"
 
 #include <boost/format.hpp>
 
@@ -36,12 +36,12 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action,
 
 namespace Subsystems {
 
-Window::Window() {
+GLWindow::GLWindow() {
   this->subsystem_initialized_ = false;
   this->window_ = nullptr;
 }
 
-Window::~Window() {
+GLWindow::~GLWindow() {
   if (window_) {
     glfwDestroyWindow(window_);
     this->window_ = nullptr;
@@ -53,7 +53,7 @@ Window::~Window() {
   }
 }
 
-void Window::Initialize() {
+void GLWindow::Initialize() {
   glfwSetErrorCallback(ErrorCallback);
 
   this->subsystem_initialized_ = glfwInit() == GL_TRUE;
@@ -95,11 +95,11 @@ void Window::Initialize() {
   std::cout << "SDL initialized succesfully. " << std::endl;
 }
 
-void Window::SwapBuffers() {
+void GLWindow::SwapBuffers() {
   glfwSwapBuffers(window_);
 }
 
-void Window::Run() {
+void GLWindow::Run() {
   double dt = TARGET_DT;
   double last = glfwGetTime();
 
@@ -120,7 +120,7 @@ void Window::Run() {
   }
 }
 
-void Window::Tick(const double dt) {
+void GLWindow::Tick(const double dt) {
   States::State::GetState()->Update(dt, keys_states);
 
   States::State::GetState()->Render();

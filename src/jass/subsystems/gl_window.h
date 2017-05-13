@@ -10,15 +10,15 @@
 
 namespace Subsystems {
 
-class Window {
+class GLWindow {
  public:
   enum { kWidth = 800, kHeight = 600, /*kBpp = 24, kFull = false */};
 
-  Window(const Window &) = delete;
-  Window & operator=(const Window &) = delete;
+  GLWindow(const GLWindow &) = delete;
+  GLWindow & operator=(const GLWindow &) = delete;
 
-  Window(void);
-  ~Window(void);
+  GLWindow(void);
+  ~GLWindow(void);
 
   void Initialize(void);
 

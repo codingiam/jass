@@ -8,7 +8,7 @@
 #include <memory>
 
 namespace Subsystems {
-class Window;
+class GLWindow;
 class GL;
 class DevIL;
 }
@@ -37,7 +37,7 @@ class Application  {
   void InitializeDevIL(void);
   void InitializeStates(void);
 
-  std::shared_ptr<Subsystems::Window> window_;
+  std::shared_ptr<Subsystems::GLWindow> window_;
   std::shared_ptr<Subsystems::GL> gl_;
   std::shared_ptr<Subsystems::DevIL> devil_;
   std::shared_ptr<States::StatesManager> states_manager_;
