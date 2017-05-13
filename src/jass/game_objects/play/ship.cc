@@ -127,8 +127,8 @@ void Ship::Update(const double dt, const bool *keys_states) {
   GLfloat amy = - cos(3.141516f * angle_ / 180);
   GLfloat amx = sin(3.141516f * angle_ / 180);
 
-  ypos_ += accel_ * 0.25f * diff * amy;
-  xpos_ += accel_ * 0.25f * diff * amx;
+  ypos_ += static_cast<GLfloat>(accel_ * 0.25f * diff * amy);
+  xpos_ += static_cast<GLfloat>(accel_ * 0.25f * diff * amx);
 
   if (xpos_ <= -5.8f) this->xpos_ = 5.75f;
   if (xpos_ >= 5.8f) this->xpos_ = -5.75f;

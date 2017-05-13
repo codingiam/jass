@@ -31,7 +31,7 @@ void Title::Create() {
 }
 
 void Title::Update(const double dt) {
-  this->ticks_title_ += dt;
+  this->ticks_title_ += static_cast<uint32_t>(dt);
   this->alpha_title_ = static_cast<float>(ticks_title_) / speed_title_;
   if (alpha_title_ >= 1.0f) this->alpha_title_ = 1.0f;
 }

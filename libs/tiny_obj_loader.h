@@ -1,4 +1,6 @@
+#pragma warning(disable : 4068)
 #pragma GCC system_header
+#pragma warning(default : 4068)
 
 //
 // Copyright 2012-2016, Syoyo Fujita.

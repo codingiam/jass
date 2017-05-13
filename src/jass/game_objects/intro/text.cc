@@ -25,13 +25,13 @@ const std::array<const char *, 10> introText = {
 };
 
 uint32_t intro_text_size(void) {
-  uint32_t size_intro_text = 0;
+  size_t size_intro_text = 0;
 
   for (int i = 0; i < 10; i++) {
     size_intro_text += strlen(introText[i]);
   }
 
-  return size_intro_text;
+  return static_cast<uint32_t>(size_intro_text);
 }
 }  // namespace
 

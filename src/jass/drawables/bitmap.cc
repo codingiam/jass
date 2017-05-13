@@ -31,8 +31,8 @@ Bitmap::~Bitmap() {
 void Bitmap::Create(void) {
   std::shared_ptr<Resources::Image> image = Resources::Image::MakeImage(path_);
   this->texture_ = GL::Texture::MakeTexture(image);
-  this->width_ = image->width();
-  this->height_ = image->height();
+  this->width_ = static_cast<GLfloat>(image->width());
+  this->height_ = static_cast<GLfloat>(image->height());
 
   this->program_ = std::make_shared<GL::Program>();
   program_->Create("resources/shaders/2default.vert",

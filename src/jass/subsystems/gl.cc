@@ -26,7 +26,7 @@ GL::~GL() {
 }
 
 void GL::Initialize() {
-  this->subsystem_initialized_ = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+  this->subsystem_initialized_ = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) != 0;
 
   if (!subsystem_initialized_) {
     throw std::runtime_error("Could not initialize OpenGL Loading Library.");

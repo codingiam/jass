@@ -29,8 +29,8 @@ struct Projectile {
     GLfloat amy = -0.5f * glm::cos(glm::pi<float>() * angle_ / 180);
     GLfloat amx = 0.5f * glm::sin(glm::pi<float>() * angle_ / 180);
 
-    ypos_ += amy * (diff / 0.15);
-    xpos_ += amx * (diff / 0.15);
+    ypos_ += static_cast<GLfloat>(amy * (diff / 0.15));
+    xpos_ += static_cast<GLfloat>(amx * (diff / 0.15));
   }
 
   GLuint owner_;
