@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "jass/subsystems/gl_window.h"
-#include "jass/subsystems/gl.h"
+#include "jass/subsystems/gl_renderer.h"
 #include "jass/subsystems/devil.h"
 #include "jass/states/states_manager.h"
 
@@ -42,7 +42,7 @@ void Application::InitializeWindow() {
 }
 
 void Application::InitializeGL() {
-  this->gl_ = std::make_shared<Subsystems::GL>();
+  this->gl_ = std::make_shared<Subsystems::GLRenderer>();
   gl_->Initialize();
 }
 

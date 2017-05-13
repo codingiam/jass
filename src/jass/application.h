@@ -9,7 +9,7 @@
 
 namespace Subsystems {
 class GLWindow;
-class GL;
+class GLRenderer;
 class DevIL;
 }
 
@@ -38,7 +38,7 @@ class Application  {
   void InitializeStates(void);
 
   std::shared_ptr<Subsystems::GLWindow> window_;
-  std::shared_ptr<Subsystems::GL> gl_;
+  std::shared_ptr<Subsystems::GLRenderer> gl_;
   std::shared_ptr<Subsystems::DevIL> devil_;
   std::shared_ptr<States::StatesManager> states_manager_;
 };

@@ -7,13 +7,13 @@
 
 namespace Subsystems {
 
-class GL {
+class GLRenderer {
  public:
-  GL(const GL &) = delete;
-  GL & operator=(const GL &) = delete;
+  GLRenderer(const GLRenderer &) = delete;
+  GLRenderer & operator=(const GLRenderer &) = delete;
 
-  GL(void);
-  ~GL(void);
+  GLRenderer(void);
+  ~GLRenderer(void);
 
   void Initialize(void);
 

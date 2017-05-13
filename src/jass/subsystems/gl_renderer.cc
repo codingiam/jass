@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "jass/subsystems/gl.h"
+#include "jass/subsystems/gl_renderer.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -15,17 +15,17 @@
 
 namespace Subsystems {
 
-GL::GL() {
+GLRenderer::GLRenderer() {
   this->subsystem_initialized_ = false;
 }
 
-GL::~GL() {
+GLRenderer::~GLRenderer() {
   if (subsystem_initialized_) {
     this->subsystem_initialized_ = false;
   }
 }
 
-void GL::Initialize() {
+void GLRenderer::Initialize() {
   this->subsystem_initialized_ = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) != 0;
 
   if (!subsystem_initialized_) {
