@@ -37,29 +37,29 @@ void Backtrace() {
 
 #endif
 
-// void APIENTRY OpenGLCallbackFunction(GLenum source,
-//                                      GLenum type,
-//                                      GLuint id,
-//                                      GLenum severity,
-//                                      GLsizei length,
-//                                      const GLchar *message,
-//                                      const void *userParam) {
-//   if (type != GL_DEBUG_TYPE_OTHER) {
-//     const GLchar *msg = length > 0 ? message : "";
-//     std::cerr << boost::format("OpenGL error: source = %08x, type = %08x, "
-//         "id = %u, severity = %08x, userParam = %08x, message = %s") %
-//         source % type % id % severity % userParam % msg << std::endl;
-//     Backtrace();
-//     throw std::runtime_error("OpenGL call returned an error");
-//   }
-// }
+void APIENTRY OpenGLCallbackFunction(GLenum source,
+                                     GLenum type,
+                                     GLuint id,
+                                     GLenum severity,
+                                     GLsizei length,
+                                     const GLchar *message,
+                                     const void *userParam) {
+  if (type != GL_DEBUG_TYPE_OTHER_ARB) {
+    const GLchar *msg = length > 0 ? message : "";
+    std::cerr << boost::format("OpenGL error: source = %08x, type = %08x, "
+        "id = %u, severity = %08x, userParam = %08x, message = %s") %
+        source % type % id % severity % userParam % msg << std::endl;
+    // Backtrace();
+    throw std::runtime_error("OpenGL call returned an error");
+  }
+}
 
 void CheckOpenGLError(const char *stmt, const char *fname, int line) {
   GLenum err = glGetError();
   if (err != GL_NO_ERROR) {
     std::cerr <<
-    boost::format("OpenGL error %08x, at %s:%i - for %s") %
-    err % fname % line % stmt << std::endl;
+      boost::format("OpenGL error %08x, at %s:%i - for %s") %
+      err % fname % line % stmt << std::endl;
     throw std::runtime_error("OpenGL call returned an error");
   }
 }
@@ -69,15 +69,15 @@ void CheckOpenGLError(const char *stmt, const char *fname, int line) {
   ::CheckOpenGLError(#stmt, __FILE__, __LINE__); \
 }
 
-void EnableOpenGLErrorCallback() {
+void InitializeOpenGLErrorCallback() {
   // GL_CHECK(glEnable(GL_DEBUG_OUTPUT));
 
-  // GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS));
+  GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB));
 
-  // GL_CHECK(glDebugMessageCallback(OpenGLCallbackFunction, nullptr));
+  GL_CHECK(glDebugMessageCallbackARB(OpenGLCallbackFunction, nullptr));
 
-  // GLuint unusedIds = 0;
+  GLuint unusedIds = 0;
 
-  // GL_CHECK(glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE,
-  //   0, &unusedIds, GL_TRUE));
+  GL_CHECK(glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE,
+    0, &unusedIds, GL_TRUE));
 }

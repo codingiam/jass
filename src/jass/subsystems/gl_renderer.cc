@@ -32,7 +32,7 @@ void GLRenderer::Initialize() {
     throw std::runtime_error("Could not initialize OpenGL Loading Library.");
   }
 
-  // EnableOpenGLErrorCallback();
+  InitializeOpenGLErrorCallback();
 
   std::cout << "Video information follows: " << std::endl;
 

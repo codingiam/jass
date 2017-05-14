@@ -66,6 +66,7 @@ void GLWindow::Initialize() {
 
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
   glfwWindowHint(GLFW_RED_BITS, 8);
   glfwWindowHint(GLFW_GREEN_BITS, 8);
@@ -92,7 +93,7 @@ void GLWindow::Initialize() {
 
   glfwSwapInterval(0);
 
-  std::cout << "SDL initialized succesfully. " << std::endl;
+  std::cout << "GLFW initialized succesfully. " << std::endl;
 }
 
 void GLWindow::SwapBuffers() {

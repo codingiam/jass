@@ -13,7 +13,7 @@
 
 #endif
 
-void EnableOpenGLErrorCallback(void);
+void InitializeOpenGLErrorCallback(void);
 
 #else
 
