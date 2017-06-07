@@ -36,9 +36,11 @@ void GLRenderer::Initialize() {
 
   std::cout << "Video information follows: " << std::endl;
 
-  std::cout << " Vendor     : " << glGetString(GL_VENDOR) << std::endl;
-  std::cout << " Renderer   : " << glGetString(GL_RENDERER) << std::endl;
-  std::cout << " Version    : " << glGetString(GL_VERSION) << std::endl;
+  std::cout << " Vendor   : " << glGetString(GL_VENDOR) << std::endl;
+  std::cout << " Renderer : " << glGetString(GL_RENDERER) << std::endl;
+  std::cout << " Version  : " << glGetString(GL_VERSION) << std::endl;
+  std::cout << " GLSL     : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+  std::cout << " ARB_debug_output : " << (glfwExtensionSupported("GL_ARB_debug_output") == 1) << std::endl;
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
