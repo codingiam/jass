@@ -5,6 +5,8 @@
 #ifndef JASS_GL_SHADER_H_
 #define JASS_GL_SHADER_H_
 
+#define GLSL(version, shader)  "#version " #version "\n" #shader
+
 #include <glad/glad.h>
 
 #include <boost/filesystem.hpp>
