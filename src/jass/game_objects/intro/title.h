@@ -7,6 +7,8 @@
 
 #include "jass/game_objects/game_object.h"
 
+#include <cstdint>
+
 namespace Drawables {
 class Bitmap;
 }

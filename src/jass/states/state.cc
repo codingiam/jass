@@ -4,6 +4,7 @@
 
 #include "jass/states/state.h"
 
+#include <stdexcept>
 #include <utility>
 
 namespace States {
