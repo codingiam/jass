@@ -51,9 +51,6 @@ class Ship : public GameObject {
   GLfloat life_;
   GLfloat energy_;
 
-  double last_time_ACC_;
-  double last_time_MOV_;
-  double last_time_ROT_;
   double last_time_SHO_;
 
   double ticks_;

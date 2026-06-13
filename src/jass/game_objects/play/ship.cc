@@ -49,9 +49,6 @@ void Ship::Start() {
   this->life_ = 1.0f;
   this->energy_ = 1.0f;
 
-  this->last_time_ACC_ = 0;
-  this->last_time_MOV_ = 0;
-  this->last_time_ROT_ = 0;
   this->last_time_SHO_ = 0;
 
   this->ticks_ = 0;
@@ -60,45 +57,48 @@ void Ship::Start() {
 void Ship::Update(const double dt, const bool *keys_states) {
   ticks_ += dt;
 
-  if ((ticks_ - last_time_ACC_) > 0.15) {
-    if (keys_states[keys_[K_UP]]) {
-      accel_ += 0.055f;
-      if (accel_ > 1.0f) this->accel_ = 1.0f;
-    }
+  // Per-second rates so that motion is smooth and frame-rate independent.
+  constexpr GLfloat kThrustRate = 0.3667f;  // thrust ramp per second
+  constexpr GLfloat kDragRate = 0.1667f;    // passive deceleration per second
+  constexpr GLfloat kRotSpeed = 100.0f;     // degrees per second
+  constexpr GLfloat kMoveSpeed = 3.0f;      // world units per second at full thrust
+  constexpr GLfloat kEnergyRegen = 0.1f;    // energy recovered per second
 
-    if (keys_states[keys_[K_DOWN]]) {
-      accel_ -= 0.055f;
-      if (accel_ < -1.0f) this->accel_ = -1.0f;
-    }
+  const GLfloat fdt = static_cast<GLfloat>(dt);
 
-    if (accel_ < 0) {
-      accel_ += 0.025f;
-      if (accel_ > 0.0f) this->accel_ = 0.0f;
-    }
-
-    if (accel_ > 0) {
-      accel_ -= 0.025f;
-      if (accel_ < 0.0f) this->accel_ = 0.0f;
-    }
-
-    this->last_time_ACC_ = ticks_;
+  if (keys_states[keys_[K_UP]]) {
+    accel_ += kThrustRate * fdt;
   }
 
-  if ((ticks_ - last_time_ROT_) > 0.10) {
-    if (keys_states[keys_[K_LEFT]]) {
-      angle_ += 10.0f;
-    }
-
-    if (keys_states[keys_[K_RIGHT]]) {
-      angle_ -= 10.0f;
-    }
-
-    if (angle_ > 360.0f) angle_ -= 360.0f;
-    if (angle_ < 0.0f) angle_ += 360.0f;
-
-    this->last_time_ROT_ = ticks_;
+  if (keys_states[keys_[K_DOWN]]) {
+    accel_ -= kThrustRate * fdt;
   }
 
+  // Drag always pulls the acceleration back toward zero.
+  const GLfloat drag = kDragRate * fdt;
+  if (accel_ > 0.0f) {
+    accel_ -= drag;
+    if (accel_ < 0.0f) this->accel_ = 0.0f;
+  } else if (accel_ < 0.0f) {
+    accel_ += drag;
+    if (accel_ > 0.0f) this->accel_ = 0.0f;
+  }
+
+  if (accel_ > 1.0f) this->accel_ = 1.0f;
+  if (accel_ < -1.0f) this->accel_ = -1.0f;
+
+  if (keys_states[keys_[K_LEFT]]) {
+    angle_ += kRotSpeed * fdt;
+  }
+
+  if (keys_states[keys_[K_RIGHT]]) {
+    angle_ -= kRotSpeed * fdt;
+  }
+
+  if (angle_ > 360.0f) angle_ -= 360.0f;
+  if (angle_ < 0.0f) angle_ += 360.0f;
+
+  // Shooting stays rate-limited so the fire rate does not scale with FPS.
   if ((ticks_ - last_time_SHO_) > 0.10) {
     if ((keys_states[keys_[K_SHOOT]]) && (energy_ >= 0.15f)) {
       std::shared_ptr<States::Play> play =
@@ -111,34 +111,25 @@ void Ship::Update(const double dt, const bool *keys_states) {
       play->AddProjectile(xpos_ + amx, ypos_ + amy, angle_, id_);
 
       energy_ -= 0.15f;
-    } else {
-      energy_ += 0.01f;
     }
-
-    if (energy_ > 1.0f) this->energy_ = 1.0f;
 
     this->last_time_SHO_ = ticks_;
   }
 
-  double diff = ticks_ - last_time_MOV_;
-
-  if (diff > 0.10) diff = 0.10;
+  energy_ += kEnergyRegen * fdt;
+  if (energy_ > 1.0f) this->energy_ = 1.0f;
 
   GLfloat amy = - cos(3.141516f * angle_ / 180);
   GLfloat amx = sin(3.141516f * angle_ / 180);
 
-  ypos_ += static_cast<GLfloat>(accel_ * 0.25f * diff * amy);
-  xpos_ += static_cast<GLfloat>(accel_ * 0.25f * diff * amx);
+  ypos_ += accel_ * kMoveSpeed * fdt * amy;
+  xpos_ += accel_ * kMoveSpeed * fdt * amx;
 
   if (xpos_ <= -5.8f) this->xpos_ = 5.75f;
   if (xpos_ >= 5.8f) this->xpos_ = -5.75f;
 
   if (ypos_ <= -4.5f) this->ypos_ = 4.45f;
   if (ypos_ >= 4.5f) this->ypos_ = -4.45f;
-
-  if (diff > 0.10) {
-    this->last_time_MOV_ = ticks_;
-  }
 }
 
 void Ship::Render() {
